@@ -51,8 +51,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.scoreLabel = self.childNodeWithName("scorelabel") as? SKLabelNode
         self.highScoreLabel = self.childNodeWithName("highScoreLabel") as? SKLabelNode
         self.levelLabel = self.childNodeWithName("levelLabel") as? SKLabelNode
-        
-        self.scoreLabel?.color = SKColor.blackColor()
+        self.dangerZone = self.childNodeWithName("dangerZone") as? SKSpriteNode
+        self.endZone = self.childNodeWithName("endZone") as? SKSpriteNode
+
         
         //define collision bitmasks
         self.dangerZone!.physicsBody = SKPhysicsBody(rectangleOfSize: dangerZone!.size)
