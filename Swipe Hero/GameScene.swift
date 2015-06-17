@@ -9,6 +9,9 @@
 import SpriteKit
 
 class GameScene: SKScene {
+    
+    var arrows: Array<Arrow> = []
+    
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
 //        let myLabel = SKLabelNode(fontNamed:"Chalkduster")
@@ -93,4 +96,6 @@ class GameScene: SKScene {
         /* Called before each frame is rendered */
 
     }
+    
+    
 }
