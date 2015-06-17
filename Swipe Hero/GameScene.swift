@@ -8,6 +8,12 @@
 
 import SpriteKit
 
+enum Side
+    
+{
+    case RIGHT,LEFT;
+}
+
 class GameScene: SKScene {
     
     var arrows: Array<Arrow> = []
@@ -127,5 +133,9 @@ class GameScene: SKScene {
 
     }
     
+    func validateSwipe(side:Side, direction:Direction)
+    {
+        
+    }
     
 }
