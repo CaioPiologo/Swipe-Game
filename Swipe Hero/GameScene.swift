@@ -21,12 +21,20 @@ class GameScene: SKScene {
     var levelLabel:SKLabelNode?
     var score:Int = 0;
     var level:Int = 0;
+    var difficulty:Float = 0;
     var highScore = 0;
     var userDefaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
+        //get high score from user defaults
+        self.highScore = userDefaults.integerForKey(HIGHSCOREKEY)
+        NSLog("\(highScore)");
         
+        //initialize labels
+        self.scoreLabel = self.childNodeWithName("scorelabel") as? SKLabelNode
+        self.highScoreLabel = self.childNodeWithName("highScoreLabel") as? SKLabelNode
+        self.levelLabel = self.childNodeWithName("levelLabel") as? SKLabelNode
         /*Right and Left Views, zones that recognize each gesture*/
         var leftView : UIView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
         leftView.backgroundColor = UIColor.clearColor()
@@ -79,8 +87,10 @@ class GameScene: SKScene {
     {
         self.score = 0
         self.level = level
+        self.difficulty = Float(level)
         updateLabels()
         //do somethign else
+        newLevel()
     }
     
     func updateLabels()
@@ -131,9 +141,9 @@ class GameScene: SKScene {
         validateSwipe(RIGHT, direction: Direction.DOWN)
     }
     
-    func addArrow(side:Int){
+    func addArrow(side:Int, baseSpeed:NSTimeInterval){
         let randomDir: Direction = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
-        let randomSpeed = NSTimeInterval(5 + arc4random_uniform(2))
+        let randomSpeed = NSTimeInterval(baseSpeed) + NSTimeInterval(arc4random_uniform(5))/10
         let newArrow = Arrow(direction: randomDir, imageNamed: "up-Arrow")
         //rotates arrow depending on its direction
         if(randomDir == Direction.UP){
@@ -153,9 +163,13 @@ class GameScene: SKScene {
             newArrow.position = CGPointMake(3*size.width/4, size.height+newArrow.size.height)
             arrowQueue[RIGHT].push(newArrow)
         }
-        let actionMove = SKAction.moveTo(CGPoint(x: newArrow.position.x, y: -size.height), duration: randomSpeed)
-        newArrow.runAction(actionMove)
-        
+        let move = SKAction.moveTo(CGPoint(x: newArrow.position.x, y: -size.height), duration: randomSpeed)
+        let destroy = SKAction.removeFromParent()
+        newArrow.runAction(SKAction.sequence([move, destroy]))
+        addScore()
+        addScore()
+        addScore()
+
         self.addChild(newArrow)
         
     }
@@ -165,6 +179,11 @@ class GameScene: SKScene {
         
         if(score % 15 == 0){
             level++
+            if(level >= 5){
+                difficulty += 0.2
+            } else {
+                difficulty = Float(level)
+            }
         }
         
         if(score > highScore){
@@ -207,22 +226,29 @@ class GameScene: SKScene {
         //TODO: atualizar arrowSpeed em função dos leveis
         var wait = SKAction.waitForDuration(arrowSpeed)
         var run = SKAction.runBlock {
-            var randGeneration = arc4random_uniform(2)
-//            var randGeneration = 2
+            var randGeneration = arc4random_uniform(4)
+            var level = 1
+            if(self.level >= 5){
+                
+            } else {
+                level = self.level
+            }
+            var baseSpeed = NSTimeInterval(10 - level)
+            
             switch(randGeneration){
             case 0:
-                self.addArrow(LEFT)
+                self.addArrow(LEFT, baseSpeed: baseSpeed)
                 break
             case 1:
-                self.addArrow(RIGHT)
+                self.addArrow(RIGHT, baseSpeed: baseSpeed)
                 break
             default:
-                self.addArrow(LEFT)
-                self.addArrow(RIGHT)
+                self.addArrow(LEFT, baseSpeed: baseSpeed)
+                self.addArrow(RIGHT, baseSpeed: baseSpeed)
                 break
             }
         }
-        self.runAction(SKAction.repeatAction((SKAction.sequence([wait, run])), count: 15))
+        self.runAction(SKAction.repeatActionForever((SKAction.sequence([wait, run]))))
     }
     
 //    func validateSwipe(side:Side, direction:Direction)

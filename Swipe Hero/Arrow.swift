@@ -19,7 +19,8 @@ class Arrow:SKSpriteNode {
     convenience init(direction:Direction, imageNamed:String) {
         let color = UIColor()
         let texture = SKTexture(imageNamed: imageNamed)
-        let size = CGSizeMake(50.0, 50.0)
+        //TODO: ajustar tamanho da seta
+        let size = CGSizeMake(texture.size().width/3.5, texture.size().height/3.5)
         self.init(texture: texture, color: color, size: size, direction:direction)
         
     }
