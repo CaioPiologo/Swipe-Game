@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Caio. All rights reserved.
 //
 import SpriteKit
+import UIKit
 
 enum Direction:UInt32 {
     case UP, RIGHT, DOWN, LEFT
@@ -18,8 +19,11 @@ class Arrow:SKSpriteNode {
     convenience init(direction:Direction, imageNamed:String) {
         let color = UIColor()
         let texture = SKTexture(imageNamed: imageNamed)
-        let size = CGSizeMake(50.0, 50.0)
+        //TODO: ajustar tamanho da seta
+        let size = CGSizeMake(texture.size().width/3.5, texture.size().height/3.5)
         self.init(texture: texture, color: color, size: size, direction:direction)
+        self.physicsBody = SKPhysicsBody(rectangleOfSize: self.size)
+        self.physicsBody!.collisionBitMask = PhysicsCategory.arrow
         
     }
     
@@ -30,7 +34,5 @@ class Arrow:SKSpriteNode {
     init(texture: SKTexture!, color: UIColor!, size: CGSize, direction:Direction) {
         self.direction = direction
         super.init(texture: texture, color: color, size: size)
-        self.position = CGPointMake(500, 500)
     }
-
 }

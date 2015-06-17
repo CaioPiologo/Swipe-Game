@@ -7,20 +7,31 @@
 //
 
 import SpriteKit
+import CoreGraphics
 
 let LEFT = 0
 let RIGHT = 1
 let HIGHSCOREKEY = "HighScoreKey"
 
-class GameScene: SKScene {
+struct PhysicsCategory {
+    static let arrow:UInt32 = 0b1 //1
+    static let dangerZone:UInt32 = 0b10 //2
+    static let endZone:UInt32 = 0b100 //4
+}
+
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
+    //variables
     var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
     var arrowSpeed:NSTimeInterval = 1.0
     var scoreLabel:SKLabelNode?;
     var highScoreLabel:SKLabelNode?;
     var levelLabel:SKLabelNode?
+    var endZone:SKSpriteNode?
+    var dangerZone:SKSpriteNode?
     var score:Int = 0;
     var level:Int = 0;
+    var difficulty:Float = 0;
     var highScore = 0;
     var userDefaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
     
@@ -29,12 +40,12 @@ class GameScene: SKScene {
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
-        
         //get high score from user defaults
         self.highScore = userDefaults.integerForKey(HIGHSCOREKEY)
         NSLog("\(highScore)");
         
         //initialize labels
+        self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         self.scoreLabel = self.childNodeWithName("scorelabel") as? SKLabelNode
         self.highScoreLabel = self.childNodeWithName("highScoreLabel") as? SKLabelNode
         self.levelLabel = self.childNodeWithName("levelLabel") as? SKLabelNode
@@ -122,8 +133,10 @@ class GameScene: SKScene {
     {
         self.score = 0
         self.level = level
+        self.difficulty = Float(level)
         updateLabels()
         //do somethign else
+        newLevel()
     }
     
     func updateLabels()
@@ -174,10 +187,11 @@ class GameScene: SKScene {
         validateSwipe(RIGHT, direction: Direction.DOWN)
     }
     
-    func addArrow(side:Int){
+    func addArrow(side:Int, baseSpeed:NSTimeInterval){
         let randomDir: Direction = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
+        let randomSpeed = NSTimeInterval(baseSpeed) + NSTimeInterval(arc4random_uniform(5))/10
         let newArrow = Arrow(direction: randomDir, imageNamed: "up-Arrow")
-
+        //rotates arrow depending on its direction
         if(randomDir == Direction.UP){
             newArrow.zRotation += 0
         } else if(randomDir == Direction.DOWN){
@@ -187,7 +201,7 @@ class GameScene: SKScene {
         } else {
             newArrow.zRotation += CGFloat(3*M_PI/2)
         }
-        
+        //chooses which side to generate the arrow
         if(side == 0){
             newArrow.position = CGPointMake(size.width/4, size.height+newArrow.size.height)
             arrowQueue[LEFT].push(newArrow)
@@ -195,19 +209,27 @@ class GameScene: SKScene {
             newArrow.position = CGPointMake(3*size.width/4, size.height+newArrow.size.height)
             arrowQueue[RIGHT].push(newArrow)
         }
-        let actionMove = SKAction.moveTo(CGPoint(x: newArrow.position.x, y: -size.height), duration: 5.0)
-        newArrow.runAction(actionMove)
-        
-        
+        let move = SKAction.moveTo(CGPoint(x: newArrow.position.x, y: -size.height), duration: randomSpeed)
+        let destroy = SKAction.removeFromParent()
+        newArrow.runAction(SKAction.sequence([move, destroy]))
+        addScore()
+        addScore()
+        addScore()
+
         self.addChild(newArrow)
         
     }
     
     func addScore(){
-        score++
+        self.score++
         
         if(score % 15 == 0){
             level++
+            if(level >= 5){
+                difficulty += 0.2
+            } else {
+                difficulty = Float(level)
+            }
         }
         
         if(score > highScore){
@@ -248,24 +270,52 @@ self.runAction(missAction)
         /* Called before each frame is rendered */
     }
     
+    func didBeginContact(contact: SKPhysicsContact)
+    {
+        let collision = contact.bodyA.collisionBitMask|contact.bodyB.collisionBitMask;
+        if(collision == (PhysicsCategory.arrow | PhysicsCategory.dangerZone))
+        {
+            //play danger animation
+        }else if(collision == (PhysicsCategory.arrow | PhysicsCategory.endZone))
+        {
+            NSLog("Perdeu playboy!");
+        }
+    }
+    
+    func didEndContact(contact: SKPhysicsContact) {
+        let collision = contact.bodyA.collisionBitMask|contact.bodyB.collisionBitMask;
+        if(collision == (PhysicsCategory.arrow | PhysicsCategory.dangerZone))
+        {
+            //stop danger animation
+        }
+    }
+    
     func newLevel(){
+        //TODO: atualizar arrowSpeed em função dos leveis
         var wait = SKAction.waitForDuration(arrowSpeed)
         var run = SKAction.runBlock {
-            var randGeneration = arc4random_uniform(3)
+            var randGeneration = arc4random_uniform(4)
+            var level = 1
+            if(self.level >= 5){
+                
+            } else {
+                level = self.level
+            }
+            var baseSpeed = NSTimeInterval(10 - level)
+            
             switch(randGeneration){
             case 0:
-                self.addArrow(LEFT)
+                self.addArrow(LEFT, baseSpeed: baseSpeed)
                 break
             case 1:
-                self.addArrow(RIGHT)
+                self.addArrow(RIGHT, baseSpeed: baseSpeed)
                 break
             default:
-                self.addArrow(LEFT)
-                self.addArrow(RIGHT)
+                self.addArrow(LEFT, baseSpeed: baseSpeed)
+                self.addArrow(RIGHT, baseSpeed: baseSpeed)
                 break
             }
         }
-        self.runAction(SKAction.repeatAction((SKAction.sequence([wait, run])), count: 15))
+        self.runAction(SKAction.repeatActionForever((SKAction.sequence([wait, run]))))
     }
-    
 }
