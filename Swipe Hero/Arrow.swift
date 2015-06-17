@@ -22,6 +22,7 @@ class Arrow:SKSpriteNode {
         //TODO: ajustar tamanho da seta
         let size = CGSizeMake(texture.size().width/3.5, texture.size().height/3.5)
         self.init(texture: texture, color: color, size: size, direction:direction)
+        self.physicsBody!.collisionBitMask = PhysicsCategory.arrow
         
     }
     

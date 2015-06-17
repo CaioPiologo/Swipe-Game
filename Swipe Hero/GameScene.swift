@@ -12,13 +12,22 @@ let LEFT = 0
 let RIGHT = 1
 let HIGHSCOREKEY = "HighScoreKey"
 
-class GameScene: SKScene {
+struct PhysicsCategory {
+    static let arrow:UInt32 = 0b1 //1
+    static let dangerZone:UInt32 = 0b10 //2
+    static let endZone:UInt32 = 0b100 //4
+}
+
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
+    //variables
     var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
     var arrowSpeed:NSTimeInterval = 1.0
     var scoreLabel:SKLabelNode?;
     var highScoreLabel:SKLabelNode?;
     var levelLabel:SKLabelNode?
+    var endZone:SKSpriteNode?
+    var dangerZone:SKSpriteNode?
     var score:Int = 0;
     var level:Int = 0;
     var difficulty:Float = 0;
@@ -77,6 +86,9 @@ class GameScene: SKScene {
         rightView.addGestureRecognizer(swipeLeftRightViewRecognizer)
         rightView.addGestureRecognizer(swipeUpRightViewRecognizer)
         rightView.addGestureRecognizer(swipeDownRightViewRecognizer)
+        
+        //set collision
+        
         
         //start the game
         self.restart(1)
@@ -175,7 +187,7 @@ class GameScene: SKScene {
     }
     
     func addScore(){
-        score++
+        self.score++
         
         if(score % 15 == 0){
             level++
@@ -221,7 +233,27 @@ class GameScene: SKScene {
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
     }
-    /*Called when the player passes a level*/
+    
+    func didBeginContact(contact: SKPhysicsContact)
+    {
+        let collision = contact.bodyA.collisionBitMask|contact.bodyB.collisionBitMask;
+        if(collision == (PhysicsCategory.arrow | PhysicsCategory.dangerZone))
+        {
+            //play danger animation
+        }else if(collision == (PhysicsCategory.arrow | PhysicsCategory.endZone))
+        {
+            NSLog("Perdeu playboy!");
+        }
+    }
+    
+    func didEndContact(contact: SKPhysicsContact) {
+        let collision = contact.bodyA.collisionBitMask|contact.bodyB.collisionBitMask;
+        if(collision == (PhysicsCategory.arrow | PhysicsCategory.dangerZone))
+        {
+            //stop danger animation
+        }
+    }
+    
     func newLevel(){
         //TODO: atualizar arrowSpeed em função dos leveis
         var wait = SKAction.waitForDuration(arrowSpeed)
@@ -250,10 +282,4 @@ class GameScene: SKScene {
         }
         self.runAction(SKAction.repeatActionForever((SKAction.sequence([wait, run]))))
     }
-    
-//    func validateSwipe(side:Side, direction:Direction)
-//    {
-//        
-//    }
-    
 }
