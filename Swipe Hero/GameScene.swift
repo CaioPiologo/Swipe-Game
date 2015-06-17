@@ -187,7 +187,7 @@ class GameScene: SKScene {
             arrow = arrowQueue[RIGHT].getPosition(0)
             currentQueue = RIGHT
         }
-addScore()
+        addScore()
         /*Check swipe's direction*/
         if(arrow != nil){
             if(arrow!.direction == direction){
@@ -207,7 +207,7 @@ addScore()
         //TODO: atualizar arrowSpeed em função dos leveis
         var wait = SKAction.waitForDuration(arrowSpeed)
         var run = SKAction.runBlock {
-            var randGeneration = arc4random_uniform(3)
+            var randGeneration = arc4random_uniform(2)
 //            var randGeneration = 2
             switch(randGeneration){
             case 0:
