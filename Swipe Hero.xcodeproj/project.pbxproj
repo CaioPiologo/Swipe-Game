@@ -15,6 +15,7 @@
 		25EFA1081B31901400467AD7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1061B31901400467AD7 /* LaunchScreen.xib */; };
 		25EFA1141B31901500467AD7 /* Swipe_HeroTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA1131B31901500467AD7 /* Swipe_HeroTests.swift */; };
 		25EFA11E1B31966500467AD7 /* Arrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA11D1B31966500467AD7 /* Arrow.swift */; };
+		25EFA1241B31C09800467AD7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1231B31C09800467AD7 /* Images.xcassets */; };
 		8CEE01F21B31B25400D98C14 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEE01F11B31B25400D98C14 /* Queue.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,7 @@
 		25EFA1121B31901500467AD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		25EFA1131B31901500467AD7 /* Swipe_HeroTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Swipe_HeroTests.swift; sourceTree = "<group>"; };
 		25EFA11D1B31966500467AD7 /* Arrow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Arrow.swift; sourceTree = "<group>"; };
+		25EFA1231B31C09800467AD7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		8CEE01F11B31B25400D98C14 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -92,6 +94,7 @@
 				25EFA1011B31901400467AD7 /* Main.storyboard */,
 				25EFA1061B31901400467AD7 /* LaunchScreen.xib */,
 				25EFA0F71B31901400467AD7 /* Supporting Files */,
+				25EFA1231B31C09800467AD7 /* Images.xcassets */,
 			);
 			path = "Swipe Hero";
 			sourceTree = "<group>";
@@ -202,6 +205,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				25EFA1081B31901400467AD7 /* LaunchScreen.xib in Resources */,
+				25EFA1241B31C09800467AD7 /* Images.xcassets in Resources */,
 				25EFA0FC1B31901400467AD7 /* GameScene.sks in Resources */,
 				25EFA1031B31901400467AD7 /* Main.storyboard in Resources */,
 			);
