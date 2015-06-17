@@ -69,28 +69,36 @@ class GameScene: SKScene {
     
     func swipeRightLeftView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Right Left View")
+        validateSwipe(LEFT, direction: Direction.RIGHT)
     }
     func swipeLeftLeftView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Left Left View")
+        validateSwipe(LEFT, direction: Direction.LEFT)
     }
     func swipeUpLeftView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Up Left View")
+        validateSwipe(LEFT, direction: Direction.UP)
     }
     func swipeDownLeftView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Down Left View")
+        validateSwipe(LEFT, direction: Direction.DOWN)
     }
     
     func swipeRightRightView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Right Right View")
+        validateSwipe(RIGHT, direction: Direction.RIGHT)
     }
     func swipeLeftRightView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Left Right View")
+        validateSwipe(RIGHT, direction: Direction.LEFT)
     }
     func swipeUpRightView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Up Right View")
+        validateSwipe(RIGHT, direction: Direction.UP)
     }
     func swipeDownRightView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Down Right View")
+        validateSwipe(RIGHT, direction: Direction.DOWN)
     }
     
     func addArrow(side:Int){
@@ -122,6 +130,31 @@ class GameScene: SKScene {
         
     }
     
+    func validateSwipe(side: Int, direction: Direction){
+        
+        var arrow : Arrow?
+        var currentQueue : Int
+        
+        /*Get first arrow from queue*/
+        if(side == LEFT){
+            arrow = arrowQueue[LEFT].getPosition(0)
+            currentQueue = LEFT
+        }else{
+            arrow = arrowQueue[RIGHT].getPosition(0)
+            currentQueue = RIGHT
+        }
+        
+        /*Check swipe's direction*/
+        if(arrow != nil){
+            if(arrow!.direction == direction){
+                arrowQueue[currentQueue].pop()
+                //TODO: add score
+            }else{
+                //TODO: Wrong direction alert
+            }
+        }
+    }
+    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
     }
@@ -145,10 +178,5 @@ class GameScene: SKScene {
         }
         self.runAction(SKAction.repeatAction((SKAction.sequence([wait, run])), count: 15))
     }
-    
-//    func validateSwipe(side:Side, direction:Direction)
-//    {
-//        
-//    }
     
 }

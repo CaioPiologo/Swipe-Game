@@ -32,4 +32,5 @@ class Arrow:SKSpriteNode {
         super.init(texture: texture, color: color, size: size)
         self.position = CGPointMake(500, 500)
     }
+
 }
