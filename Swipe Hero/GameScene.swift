@@ -8,6 +8,12 @@
 
 import SpriteKit
 
+enum Side
+    
+{
+    case RIGHT,LEFT;
+}
+
 class GameScene: SKScene {
     
     var arrows: Array<Arrow> = []
@@ -64,6 +70,22 @@ class GameScene: SKScene {
         rightView.addGestureRecognizer(swipeUpRightViewRecognizer)
         rightView.addGestureRecognizer(swipeDownRightViewRecognizer)
         
+        var q:Queue<Arrow> = Queue<Arrow>()
+        q.push(Arrow(direction: .UP))
+        q.push(Arrow(direction: .DOWN))
+        q.push(Arrow(direction: .LEFT))
+        q.push(Arrow(direction: .RIGHT))
+        NSLog("\(q.length)")
+        NSLog("\(q.getPosition(2))")
+        NSLog("\(q.pop())")
+        NSLog("\(q.pop())")
+        NSLog("\(q.pop())")
+        NSLog("\(q.pop())")
+        NSLog("\(q.pop())")
+        NSLog("\(q.pop())")
+        NSLog("\(q.pop())")
+        NSLog("\(q.length)")
+        
     }
     
     func swipeRightLeftView(swipe:UISwipeGestureRecognizer) {
@@ -97,5 +119,9 @@ class GameScene: SKScene {
 
     }
     
+    func validateSwipe(side:Side, direction:Direction)
+    {
+        
+    }
     
 }
