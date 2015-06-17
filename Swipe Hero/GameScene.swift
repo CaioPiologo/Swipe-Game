@@ -27,6 +27,8 @@ class GameScene: SKScene {
 //        
 //        self.addChild(myLabel)
         
+        self.size = UIScreen.mainScreen().bounds.size
+        
         /*Right and Left Views*/
         var leftView : UIView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
         leftView.backgroundColor = UIColor.clearColor()
@@ -112,6 +114,33 @@ class GameScene: SKScene {
     }
     func swipeDownRightView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Down Right View")
+    }
+    
+    func addArrow(){
+        let randomDir: Direction = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
+        let randomPos: UInt32 = arc4random_uniform(2)
+        println(randomPos)
+        let newArrow:Arrow
+
+        if(randomDir == Direction.UP){
+            newArrow = Arrow(direction: randomDir, imageNamed: "upArrow")
+        } else if(randomDir == Direction.DOWN){
+            newArrow = Arrow(direction: randomDir, imageNamed: "downArrow")
+        } else if(randomDir == Direction.RIGHT){
+            newArrow = Arrow(direction: randomDir, imageNamed: "")
+        } else {
+            newArrow = Arrow(direction: randomDir, imageNamed: "")
+        }
+        
+//        if(randomPos == 0){
+            newArrow.position = CGPointMake(size.width/2, size.height+newArrow.size.height)
+ //       }
+        let actionMove = SKAction.moveTo(CGPoint(x: newArrow.position.x, y: -size.height), duration: 5.0)
+        newArrow.runAction(actionMove)
+        
+        arrows += [newArrow]
+        self.addChild(newArrow)
+        
     }
     
     override func update(currentTime: CFTimeInterval) {
