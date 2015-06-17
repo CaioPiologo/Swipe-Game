@@ -67,6 +67,13 @@ class Queue<T>
         return node!.value;
     }
     
+    func emptyQueue()
+    {
+        self.head = nil;
+        self.tail = nil;
+        self.length = 0;
+    }
+    
 }
 
 class Node<T>
