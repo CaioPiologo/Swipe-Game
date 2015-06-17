@@ -17,6 +17,7 @@ struct PhysicsCategory {
     static let arrow:UInt32 = 0b1 //1
     static let dangerZone:UInt32 = 0b10 //2
     static let endZone:UInt32 = 0b100 //4
+    static let world:UInt32 = 0b1000 //8
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -48,12 +49,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         //initialize labels
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
+        self.physicsWorld.contactDelegate = self
         self.scoreLabel = self.childNodeWithName("scorelabel") as? SKLabelNode
         self.highScoreLabel = self.childNodeWithName("highScoreLabel") as? SKLabelNode
         self.levelLabel = self.childNodeWithName("levelLabel") as? SKLabelNode
+        self.dangerZone = self.childNodeWithName("dangerZone") as? SKSpriteNode
+        self.endZone = self.childNodeWithName("endZone") as? SKSpriteNode
+
         
-        self.scoreLabel?.color = SKColor.blackColor()
-        
+        //define collision bitmasks
+        self.dangerZone!.physicsBody = SKPhysicsBody(rectangleOfSize: dangerZone!.size)
+        self.endZone!.physicsBody = SKPhysicsBody(rectangleOfSize: endZone!.size)
+        self.dangerZone!.physicsBody!.categoryBitMask = PhysicsCategory.dangerZone
+        self.dangerZone!.physicsBody!.contactTestBitMask = PhysicsCategory.arrow
+        self.dangerZone!.physicsBody!.collisionBitMask = 0
+        self.endZone!.physicsBody!.categoryBitMask = PhysicsCategory.endZone
+        self.endZone!.physicsBody!.contactTestBitMask = PhysicsCategory.arrow
+        self.endZone!.physicsBody!.collisionBitMask = 0
         
         /*Right and Left Views, zones that recognize each gesture*/
         var leftView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
@@ -273,18 +285,21 @@ self.runAction(missAction)
     
     func didBeginContact(contact: SKPhysicsContact)
     {
-        let collision = contact.bodyA.collisionBitMask|contact.bodyB.collisionBitMask;
+        NSLog("paiseh");
+        let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
         if(collision == (PhysicsCategory.arrow | PhysicsCategory.dangerZone))
         {
             //play danger animation
+            NSLog("COSTOOOOO");
         }else if(collision == (PhysicsCategory.arrow | PhysicsCategory.endZone))
         {
+            //end game
             NSLog("Perdeu playboy!");
         }
     }
     
     func didEndContact(contact: SKPhysicsContact) {
-        let collision = contact.bodyA.collisionBitMask|contact.bodyB.collisionBitMask;
+        let collision = contact.bodyA.categoryBitMask|contact.bodyB.categoryBitMask
         if(collision == (PhysicsCategory.arrow | PhysicsCategory.dangerZone))
         {
             //stop danger animation
