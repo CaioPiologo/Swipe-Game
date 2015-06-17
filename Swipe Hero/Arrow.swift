@@ -23,8 +23,10 @@ class Arrow:SKSpriteNode {
         let size = CGSizeMake(texture.size().width/3.5, texture.size().height/3.5)
         self.init(texture: texture, color: color, size: size, direction:direction)
         self.physicsBody = SKPhysicsBody(rectangleOfSize: self.size)
-        self.physicsBody!.collisionBitMask = PhysicsCategory.arrow
-        
+        self.physicsBody!.categoryBitMask = PhysicsCategory.arrow
+        self.physicsBody!.contactTestBitMask = PhysicsCategory.dangerZone | PhysicsCategory.endZone
+        self.physicsBody!.collisionBitMask = 0
+        self.physicsBody!.dynamic = false
     }
     
     required init?(coder aDecoder: NSCoder) {
