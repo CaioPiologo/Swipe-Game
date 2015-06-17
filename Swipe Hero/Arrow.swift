@@ -20,6 +20,7 @@ class Arrow:SKSpriteNode {
         let texture = SKTexture(imageNamed: imageNamed)
         let size = CGSizeMake(50.0, 50.0)
         self.init(texture: texture, color: color, size: size, direction:direction)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -31,6 +32,5 @@ class Arrow:SKSpriteNode {
         super.init(texture: texture, color: color, size: size)
         self.position = CGPointMake(500, 500)
     }
-    
 }
 
