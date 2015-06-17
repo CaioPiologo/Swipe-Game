@@ -74,6 +74,22 @@ class GameScene: SKScene {
         rightView.addGestureRecognizer(swipeUpRightViewRecognizer)
         rightView.addGestureRecognizer(swipeDownRightViewRecognizer)
         
+        var q:Queue<Arrow> = Queue<Arrow>()
+        q.push(Arrow(direction: .UP))
+        q.push(Arrow(direction: .DOWN))
+        q.push(Arrow(direction: .LEFT))
+        q.push(Arrow(direction: .RIGHT))
+        NSLog("\(q.length)")
+        NSLog("\(q.getPosition(2))")
+        NSLog("\(q.pop())")
+        NSLog("\(q.pop())")
+        NSLog("\(q.pop())")
+        NSLog("\(q.pop())")
+        NSLog("\(q.pop())")
+        NSLog("\(q.pop())")
+        NSLog("\(q.pop())")
+        NSLog("\(q.length)")
+        
     }
     
     func swipeRightLeftView(swipe:UISwipeGestureRecognizer) {
@@ -131,10 +147,41 @@ class GameScene: SKScene {
         }
     }
     
+    func addArrow(){
+        let randomDir: Direction = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
+        let randomPos: UInt32 = arc4random_uniform(2)
+        println(randomPos)
+        let newArrow:Arrow
+
+        if(randomDir == Direction.UP){
+            newArrow = Arrow(direction: randomDir, imageNamed: "upArrow")
+        } else if(randomDir == Direction.DOWN){
+            newArrow = Arrow(direction: randomDir, imageNamed: "downArrow")
+        } else if(randomDir == Direction.RIGHT){
+            newArrow = Arrow(direction: randomDir, imageNamed: "")
+        } else {
+            newArrow = Arrow(direction: randomDir, imageNamed: "")
+        }
+        
+//        if(randomPos == 0){
+            newArrow.position = CGPointMake(size.width/2, size.height+newArrow.size.height)
+ //       }
+        let actionMove = SKAction.moveTo(CGPoint(x: newArrow.position.x, y: -size.height), duration: 5.0)
+        newArrow.runAction(actionMove)
+        
+        arrows += [newArrow]
+        self.addChild(newArrow)
+        
+    }
+    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
 
     }
     
+    func validateSwipe(side:Side, direction:Direction)
+    {
+        
+    }
     
 }

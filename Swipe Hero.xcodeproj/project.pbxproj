@@ -16,6 +16,7 @@
 		25EFA1081B31901400467AD7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1061B31901400467AD7 /* LaunchScreen.xib */; };
 		25EFA1141B31901500467AD7 /* Swipe_HeroTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA1131B31901500467AD7 /* Swipe_HeroTests.swift */; };
 		25EFA11E1B31966500467AD7 /* Arrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA11D1B31966500467AD7 /* Arrow.swift */; };
+		8CEE01F21B31B25400D98C14 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEE01F11B31B25400D98C14 /* Queue.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		25EFA1121B31901500467AD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		25EFA1131B31901500467AD7 /* Swipe_HeroTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Swipe_HeroTests.swift; sourceTree = "<group>"; };
 		25EFA11D1B31966500467AD7 /* Arrow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Arrow.swift; sourceTree = "<group>"; };
+		8CEE01F11B31B25400D98C14 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +89,7 @@
 				25EFA0FB1B31901400467AD7 /* GameScene.sks */,
 				25EFA11D1B31966500467AD7 /* Arrow.swift */,
 				25EFA0FD1B31901400467AD7 /* GameScene.swift */,
+				8CEE01F11B31B25400D98C14 /* Queue.swift */,
 				25EFA0FF1B31901400467AD7 /* GameViewController.swift */,
 				25EFA1011B31901400467AD7 /* Main.storyboard */,
 				25EFA1041B31901400467AD7 /* Images.xcassets */,
@@ -222,6 +225,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8CEE01F21B31B25400D98C14 /* Queue.swift in Sources */,
 				25EFA0FE1B31901400467AD7 /* GameScene.swift in Sources */,
 				25EFA11E1B31966500467AD7 /* Arrow.swift in Sources */,
 				25EFA1001B31901400467AD7 /* GameViewController.swift in Sources */,
@@ -423,6 +427,7 @@
 				25EFA1191B31901500467AD7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		25EFA11A1B31901500467AD7 /* Build configuration list for PBXNativeTarget "Swipe HeroTests" */ = {
 			isa = XCConfigurationList;
@@ -431,6 +436,7 @@
 				25EFA11C1B31901500467AD7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
