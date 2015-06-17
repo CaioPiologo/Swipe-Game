@@ -8,9 +8,15 @@
 
 import SpriteKit
 
+enum Side {
+    case LEFT, RIGHT
+}
+
 class GameScene: SKScene {
     
     var arrows: Array<Arrow> = []
+    var leftArrows = []
+    var rightArrows = []
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
@@ -20,8 +26,12 @@ class GameScene: SKScene {
 //        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
 //        
 //        self.addChild(myLabel)
+        let dangerZone = SKShapeNode(rectOfSize: CGSize(width: size.width, height: size.height * 0.1))
+        dangerZone.fillColor = SKColor.redColor()
+        dangerZone.position = CGPointMake(size.width/2, size.height*0.05)
+        self.addChild(dangerZone)
         
-        /*Right and Left Views*/
+        /*Right and Left Views, zones that recognize each gesture*/
         var leftView : UIView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
         leftView.backgroundColor = UIColor.clearColor()
         
@@ -68,28 +78,57 @@ class GameScene: SKScene {
     
     func swipeRightLeftView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Right Left View")
+        validateSwipe(Side.LEFT, direction: Direction.RIGHT)
     }
     func swipeLeftLeftView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Left Left View")
+        validateSwipe(Side.LEFT, direction: Direction.LEFT)
     }
     func swipeUpLeftView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Up Left View")
+        validateSwipe(Side.LEFT, direction: Direction.UP)
     }
     func swipeDownLeftView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Down Left View")
+        validateSwipe(Side.LEFT, direction: Direction.DOWN)
     }
     
     func swipeRightRightView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Right Right View")
+        validateSwipe(Side.RIGHT, direction: Direction.RIGHT)
     }
     func swipeLeftRightView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Left Right View")
+        validateSwipe(Side.RIGHT, direction: Direction.LEFT)
     }
     func swipeUpRightView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Up Right View")
+        validateSwipe(Side.RIGHT, direction: Direction.UP)
     }
     func swipeDownRightView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Down Right View")
+        validateSwipe(Side.RIGHT, direction: Direction.DOWN)
+    }
+    
+    func validateSwipe(side: Side, direction: Direction){
+        
+        var arrow : Arrow
+        
+        /*Get first arrow from queue*/
+        if(side == Side.LEFT){
+            //TODO: Get first left arrow
+            arrow = leftArrows.getFirstArrow()
+        }else{
+            //TODO: Get first right arrow
+            arrow = rightArrows.getFirstArrow()
+        }
+        
+        /*Check swipe's direction*/
+        if(arrow.direction == direction){
+            //TODO: Destroy arrow, add score
+        }else{
+            //TODO: Wrong direction alert
+        }
     }
     
     override func update(currentTime: CFTimeInterval) {
