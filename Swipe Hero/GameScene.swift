@@ -15,8 +15,10 @@ let HIGHSCOREKEY = "HighScoreKey"
 class GameScene: SKScene {
     
     var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
+    var arrowSpeed:NSTimeInterval = 1.0
     var scoreLabel:SKLabelNode?;
     var highScoreLabel:SKLabelNode?;
+    var levelLabel:SKLabelNode?
     var score:Int = 0;
     var level:Int = 0;
     var highScore = 0;
@@ -32,6 +34,7 @@ class GameScene: SKScene {
         //initialize labels
         self.scoreLabel = self.childNodeWithName("scorelabel") as? SKLabelNode
         self.highScoreLabel = self.childNodeWithName("highScoreLabel") as? SKLabelNode
+        self.levelLabel = self.childNodeWithName("levelLabel") as? SKLabelNode
         
         
         /*Right and Left Views, zones that recognize each gesture*/
@@ -78,13 +81,15 @@ class GameScene: SKScene {
         rightView.addGestureRecognizer(swipeDownRightViewRecognizer)
         
         //start the game
-        self.restart(0)
+        self.restart(1)
     }
     
+    //Restart with initial level
     func restart(level:Int)
     {
         self.score = 0
         self.level = level
+        updateLabels()
         //do somethign else
     }
     
@@ -92,6 +97,7 @@ class GameScene: SKScene {
     {
         self.scoreLabel!.text = "\(self.score)"
         self.highScoreLabel!.text = "\(self.highScore)"
+        self.levelLabel!.text = "\(self.level)"
     }
     
     func changeHighScore(newScore:Int)
@@ -100,6 +106,7 @@ class GameScene: SKScene {
         self.highScore = newScore
     }
     
+    //Swipe Functions
     func swipeRightLeftView(swipe:UISwipeGestureRecognizer) {
         println("Swipe Right Left View")
         validateSwipe(LEFT, direction: Direction.RIGHT)
@@ -163,6 +170,20 @@ class GameScene: SKScene {
         
     }
     
+    func addScore(){
+        score++
+        
+        if(score % 15 == 0){
+            level++
+        }
+        
+        if(score > highScore){
+            changeHighScore(score)
+        }
+        
+        updateLabels()
+    }
+    
     func validateSwipe(side: Int, direction: Direction){
         
         var arrow : Arrow?
@@ -176,12 +197,12 @@ class GameScene: SKScene {
             arrow = arrowQueue[RIGHT].getPosition(0)
             currentQueue = RIGHT
         }
-        
+addScore()
         /*Check swipe's direction*/
         if(arrow != nil){
             if(arrow!.direction == direction){
                 arrowQueue[currentQueue].pop()
-                //TODO: add score
+                addScore()
             }else{
                 //TODO: Wrong direction alert
             }
