@@ -15,6 +15,7 @@ let HIGHSCOREKEY = "HighScoreKey"
 class GameScene: SKScene {
     
     var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
+    var arrowSpeed:NSTimeInterval = 1.0
     var scoreLabel:SKLabelNode?;
     var highScoreLabel:SKLabelNode?;
     var score:Int = 0;
@@ -24,6 +25,7 @@ class GameScene: SKScene {
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
+        self.size = UIScreen.mainScreen().bounds.size
         
         //get high score from user defaults
         self.highScore = userDefaults.integerForKey(HIGHSCOREKEY)
@@ -76,6 +78,9 @@ class GameScene: SKScene {
         rightView.addGestureRecognizer(swipeLeftRightViewRecognizer)
         rightView.addGestureRecognizer(swipeUpRightViewRecognizer)
         rightView.addGestureRecognizer(swipeDownRightViewRecognizer)
+        
+        //set collision
+        
         
         //start the game
         self.restart(0)
