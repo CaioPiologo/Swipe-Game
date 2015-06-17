@@ -15,6 +15,7 @@
 		25EFA1051B31901400467AD7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1041B31901400467AD7 /* Images.xcassets */; };
 		25EFA1081B31901400467AD7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1061B31901400467AD7 /* LaunchScreen.xib */; };
 		25EFA1141B31901500467AD7 /* Swipe_HeroTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA1131B31901500467AD7 /* Swipe_HeroTests.swift */; };
+		25EFA11E1B31966500467AD7 /* Arrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA11D1B31966500467AD7 /* Arrow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,7 @@
 		25EFA10D1B31901500467AD7 /* Swipe HeroTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Swipe HeroTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		25EFA1121B31901500467AD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		25EFA1131B31901500467AD7 /* Swipe_HeroTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Swipe_HeroTests.swift; sourceTree = "<group>"; };
+		25EFA11D1B31966500467AD7 /* Arrow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Arrow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 			children = (
 				25EFA0F91B31901400467AD7 /* AppDelegate.swift */,
 				25EFA0FB1B31901400467AD7 /* GameScene.sks */,
+				25EFA11D1B31966500467AD7 /* Arrow.swift */,
 				25EFA0FD1B31901400467AD7 /* GameScene.swift */,
 				25EFA0FF1B31901400467AD7 /* GameViewController.swift */,
 				25EFA1011B31901400467AD7 /* Main.storyboard */,
@@ -220,6 +223,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				25EFA0FE1B31901400467AD7 /* GameScene.swift in Sources */,
+				25EFA11E1B31966500467AD7 /* Arrow.swift in Sources */,
 				25EFA1001B31901400467AD7 /* GameViewController.swift in Sources */,
 				25EFA0FA1B31901400467AD7 /* AppDelegate.swift in Sources */,
 			);
