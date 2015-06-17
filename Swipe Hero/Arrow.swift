@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Caio. All rights reserved.
 //
 import SpriteKit
+import UIKit
 
 enum Direction:UInt32 {
     case UP, RIGHT, DOWN, LEFT
@@ -30,7 +31,5 @@ class Arrow:SKSpriteNode {
     init(texture: SKTexture!, color: UIColor!, size: CGSize, direction:Direction) {
         self.direction = direction
         super.init(texture: texture, color: color, size: size)
-        self.position = CGPointMake(500, 500)
     }
-
 }

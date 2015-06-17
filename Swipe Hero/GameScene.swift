@@ -20,7 +20,7 @@ class GameScene: SKScene {
         /* Setup your scene here */
         self.size = UIScreen.mainScreen().bounds.size
         
-        /*Right and Left Views*/
+        /*Right and Left Views, zones that recognize each gesture*/
         var leftView : UIView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
         leftView.backgroundColor = UIColor.clearColor()
         
@@ -103,8 +103,9 @@ class GameScene: SKScene {
     
     func addArrow(side:Int){
         let randomDir: Direction = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
+        let randomSpeed = NSTimeInterval(5 + arc4random_uniform(2))
         let newArrow = Arrow(direction: randomDir, imageNamed: "up-Arrow")
-
+        //rotates arrow depending on its direction
         if(randomDir == Direction.UP){
             newArrow.zRotation += 0
         } else if(randomDir == Direction.DOWN){
@@ -114,7 +115,7 @@ class GameScene: SKScene {
         } else {
             newArrow.zRotation += CGFloat(3*M_PI/2)
         }
-        
+        //chooses which side to generate the arrow
         if(side == 0){
             newArrow.position = CGPointMake(size.width/4, size.height+newArrow.size.height)
             arrowQueue[LEFT].push(newArrow)
@@ -122,9 +123,8 @@ class GameScene: SKScene {
             newArrow.position = CGPointMake(3*size.width/4, size.height+newArrow.size.height)
             arrowQueue[RIGHT].push(newArrow)
         }
-        let actionMove = SKAction.moveTo(CGPoint(x: newArrow.position.x, y: -size.height), duration: 5.0)
+        let actionMove = SKAction.moveTo(CGPoint(x: newArrow.position.x, y: -size.height), duration: randomSpeed)
         newArrow.runAction(actionMove)
-        
         
         self.addChild(newArrow)
         
@@ -158,11 +158,13 @@ class GameScene: SKScene {
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
     }
-    
+    /*Called when the player passes a level*/
     func newLevel(){
+        //TODO: atualizar arrowSpeed em função dos leveis
         var wait = SKAction.waitForDuration(arrowSpeed)
         var run = SKAction.runBlock {
             var randGeneration = arc4random_uniform(3)
+//            var randGeneration = 2
             switch(randGeneration){
             case 0:
                 self.addArrow(LEFT)
@@ -178,5 +180,10 @@ class GameScene: SKScene {
         }
         self.runAction(SKAction.repeatAction((SKAction.sequence([wait, run])), count: 15))
     }
+    
+//    func validateSwipe(side:Side, direction:Direction)
+//    {
+//        
+//    }
     
 }
