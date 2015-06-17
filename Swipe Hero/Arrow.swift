@@ -27,6 +27,9 @@ class Arrow:SKSpriteNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-
+    init(texture: SKTexture!, color: UIColor!, size: CGSize, direction:Direction) {
+        self.direction = direction
+        super.init(texture: texture, color: color, size: size)
+        self.position = CGPointMake(500, 500)
+    }
 }
-

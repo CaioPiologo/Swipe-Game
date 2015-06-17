@@ -8,15 +8,12 @@
 
 import SpriteKit
 
-enum Side
-    
-{
-    case RIGHT,LEFT;
-}
+let LEFT = 0
+let RIGHT = 1
 
 class GameScene: SKScene {
     
-    var arrows: Array<Arrow> = []
+    var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
@@ -26,9 +23,8 @@ class GameScene: SKScene {
 //        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
 //        
 //        self.addChild(myLabel)
-        
         self.size = UIScreen.mainScreen().bounds.size
-        
+
         /*Right and Left Views*/
         var leftView : UIView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
         leftView.backgroundColor = UIColor.clearColor()
@@ -101,7 +97,7 @@ class GameScene: SKScene {
         println("Swipe Down Right View")
     }
     
-    func addArrow(pos:Int){
+    func addArrow(side:Int){
         let randomDir: Direction = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
         let newArrow:Arrow
 
@@ -115,15 +111,17 @@ class GameScene: SKScene {
             newArrow = Arrow(direction: randomDir, imageNamed: "")
         }
         
-        if(pos == 0){
+        if(side == 0){
             newArrow.position = CGPointMake(size.width/4, size.height+newArrow.size.height)
+            arrowQueue[LEFT].push(newArrow)
         } else {
             newArrow.position = CGPointMake(3*size.width/4, size.height+newArrow.size.height)
+            arrowQueue[RIGHT].push(newArrow)
         }
         let actionMove = SKAction.moveTo(CGPoint(x: newArrow.position.x, y: -size.height), duration: 5.0)
         newArrow.runAction(actionMove)
         
-        arrows += [newArrow]
+        
         self.addChild(newArrow)
         
     }
@@ -133,9 +131,9 @@ class GameScene: SKScene {
 
     }
     
-    func validateSwipe(side:Side, direction:Direction)
-    {
-        
-    }
+//    func validateSwipe(side:Side, direction:Direction)
+//    {
+//        
+//    }
     
 }
