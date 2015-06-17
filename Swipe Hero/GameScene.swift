@@ -12,13 +12,22 @@ let LEFT = 0
 let RIGHT = 1
 let HIGHSCOREKEY = "HighScoreKey"
 
-class GameScene: SKScene {
+struct PhysicsCategory {
+    static let arrow:UInt32 = 0b1 //1
+    static let dangerZone:UInt32 = 0b10 //2
+    static let endZone:UInt32 = 0b100 //4
+}
+
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
+    //variables
     var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
     var arrowSpeed:NSTimeInterval = 1.0
     var scoreLabel:SKLabelNode?;
     var highScoreLabel:SKLabelNode?;
     var levelLabel:SKLabelNode?
+    var endZone:SKSpriteNode?
+    var dangerZone:SKSpriteNode?
     var score:Int = 0;
     var level:Int = 0;
     var highScore = 0;
@@ -26,7 +35,7 @@ class GameScene: SKScene {
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
-        self.size = UIScreen.mainScreen().bounds.size
+        //self.size = UIScreen.mainScreen().bounds.size
         
         //get high score from user defaults
         self.highScore = userDefaults.integerForKey(HIGHSCOREKEY)
@@ -37,6 +46,13 @@ class GameScene: SKScene {
         self.highScoreLabel = self.childNodeWithName("highScoreLabel") as? SKLabelNode
         self.levelLabel = self.childNodeWithName("levelLabel") as? SKLabelNode
         
+        //initilize SKSpriteNode Objects
+        self.dangerZone = self.childNodeWithName("dangerZone") as? SKSpriteNode
+        self.endZone = self.childNodeWithName("endZone") as? SKSpriteNode
+        
+        //define collision bitmasks
+        self.dangerZone!.physicsBody!.collisionBitMask = PhysicsCategory.dangerZone
+        self.endZone!.physicsBody!.collisionBitMask = PhysicsCategory.endZone
         
         /*Right and Left Views, zones that recognize each gesture*/
         var leftView : UIView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
@@ -175,7 +191,7 @@ class GameScene: SKScene {
     }
     
     func addScore(){
-        score++
+        self.score++
         
         if(score % 15 == 0){
             level++
@@ -217,6 +233,26 @@ addScore()
         /* Called before each frame is rendered */
     }
     
+    func didBeginContact(contact: SKPhysicsContact)
+    {
+        let collision = contact.bodyA.collisionBitMask|contact.bodyB.collisionBitMask;
+        if(collision == (PhysicsCategory.arrow | PhysicsCategory.dangerZone))
+        {
+            //play danger animation
+        }else if(collision == (PhysicsCategory.arrow | PhysicsCategory.endZone))
+        {
+            NSLog("Perdeu playboy!");
+        }
+    }
+    
+    func didEndContact(contact: SKPhysicsContact) {
+        let collision = contact.bodyA.collisionBitMask|contact.bodyB.collisionBitMask;
+        if(collision == (PhysicsCategory.arrow | PhysicsCategory.dangerZone))
+        {
+            //stop danger animation
+        }
+    }
+    
     func newLevel(){
         var wait = SKAction.waitForDuration(arrowSpeed)
         var run = SKAction.runBlock {
@@ -236,5 +272,4 @@ addScore()
         }
         self.runAction(SKAction.repeatAction((SKAction.sequence([wait, run])), count: 15))
     }
-    
 }

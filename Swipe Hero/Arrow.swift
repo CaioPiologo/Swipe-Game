@@ -20,6 +20,7 @@ class Arrow:SKSpriteNode {
         let texture = SKTexture(imageNamed: imageNamed)
         let size = CGSizeMake(50.0, 50.0)
         self.init(texture: texture, color: color, size: size, direction:direction)
+        self.physicsBody!.collisionBitMask = PhysicsCategory.arrow
         
     }
     
