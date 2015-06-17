@@ -112,7 +112,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.difficulty = Float(level)
         updateLabels()
         //do somethign else
-        newLevel()
+        startGame()
     }
     
     func updateLabels()
@@ -189,8 +189,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let destroy = SKAction.removeFromParent()
         newArrow.runAction(SKAction.sequence([move, destroy]))
         addScore()
-        addScore()
-        addScore()
 
         self.addChild(newArrow)
         
@@ -198,14 +196,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func addScore(){
         self.score++
-        
+        //TODO: ajustar dificuldade com a arrowspeed
         if(score % 15 == 0){
             level++
             if(level >= 5){
-                difficulty += 0.2
+                difficulty += Float(2/Float(self.level))
+                arrowSpeed -= NSTimeInterval(2/Float(self.level))
             } else {
                 difficulty = Float(level)
             }
+            if(difficulty >= 10){
+                difficulty = 10
+            }
+            println(arrowSpeed)
+            self.removeAllActions()
+            var wait = SKAction.waitForDuration(2.0)
+            var block = SKAction.runBlock{
+                self.startGame()
+            }
+            self.runAction(SKAction.sequence([wait, block]))
         }
         
         if(score > highScore){
@@ -264,18 +273,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    func newLevel(){
-        //TODO: atualizar arrowSpeed em função dos leveis
+    func startGame(){
         var wait = SKAction.waitForDuration(arrowSpeed)
         var run = SKAction.runBlock {
             var randGeneration = arc4random_uniform(4)
-            var level = 1
-            if(self.level >= 5){
-                
-            } else {
-                level = self.level
-            }
-            var baseSpeed = NSTimeInterval(10 - level)
+            var baseSpeed = NSTimeInterval(10 - self.difficulty)
             
             switch(randGeneration){
             case 0:
@@ -290,6 +292,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 break
             }
         }
-        self.runAction(SKAction.repeatActionForever((SKAction.sequence([wait, run]))))
+        self.runAction(SKAction.repeatActionForever(SKAction.sequence([wait, run])))
     }
 }
