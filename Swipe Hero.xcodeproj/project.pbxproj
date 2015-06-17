@@ -12,7 +12,6 @@
 		25EFA0FE1B31901400467AD7 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA0FD1B31901400467AD7 /* GameScene.swift */; };
 		25EFA1001B31901400467AD7 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA0FF1B31901400467AD7 /* GameViewController.swift */; };
 		25EFA1031B31901400467AD7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1011B31901400467AD7 /* Main.storyboard */; };
-		25EFA1051B31901400467AD7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1041B31901400467AD7 /* Images.xcassets */; };
 		25EFA1081B31901400467AD7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1061B31901400467AD7 /* LaunchScreen.xib */; };
 		25EFA1141B31901500467AD7 /* Swipe_HeroTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA1131B31901500467AD7 /* Swipe_HeroTests.swift */; };
 		25EFA11E1B31966500467AD7 /* Arrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA11D1B31966500467AD7 /* Arrow.swift */; };
@@ -37,7 +36,6 @@
 		25EFA0FD1B31901400467AD7 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		25EFA0FF1B31901400467AD7 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		25EFA1021B31901400467AD7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		25EFA1041B31901400467AD7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		25EFA1071B31901400467AD7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		25EFA10D1B31901500467AD7 /* Swipe HeroTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Swipe HeroTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		25EFA1121B31901500467AD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -92,7 +90,6 @@
 				8CEE01F11B31B25400D98C14 /* Queue.swift */,
 				25EFA0FF1B31901400467AD7 /* GameViewController.swift */,
 				25EFA1011B31901400467AD7 /* Main.storyboard */,
-				25EFA1041B31901400467AD7 /* Images.xcassets */,
 				25EFA1061B31901400467AD7 /* LaunchScreen.xib */,
 				25EFA0F71B31901400467AD7 /* Supporting Files */,
 			);
@@ -205,7 +202,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				25EFA1081B31901400467AD7 /* LaunchScreen.xib in Resources */,
-				25EFA1051B31901400467AD7 /* Images.xcassets in Resources */,
 				25EFA0FC1B31901400467AD7 /* GameScene.sks in Resources */,
 				25EFA1031B31901400467AD7 /* Main.storyboard in Resources */,
 			);

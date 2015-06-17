@@ -8,11 +8,8 @@
 
 import SpriteKit
 
-enum Side
-    
-{
-    case RIGHT,LEFT;
-}
+let LEFT = 0
+let RIGHT = 1
 
 class GameScene: SKScene {
     
@@ -104,10 +101,8 @@ class GameScene: SKScene {
         validateSwipe(Side.RIGHT, direction: Direction.DOWN)
     }
     
-    func addArrow(){
+    func addArrow(side:Int){
         let randomDir: Direction = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
-        let randomPos: UInt32 = arc4random_uniform(2)
-        println(randomPos)
         let newArrow:Arrow
 
         if(randomDir == Direction.UP){
@@ -120,13 +115,17 @@ class GameScene: SKScene {
             newArrow = Arrow(direction: randomDir, imageNamed: "")
         }
         
-//        if(randomPos == 0){
-            newArrow.position = CGPointMake(size.width/2, size.height+newArrow.size.height)
- //       }
+        if(side == 0){
+            newArrow.position = CGPointMake(size.width/4, size.height+newArrow.size.height)
+            arrowQueue[LEFT].push(newArrow)
+        } else {
+            newArrow.position = CGPointMake(3*size.width/4, size.height+newArrow.size.height)
+            arrowQueue[RIGHT].push(newArrow)
+        }
         let actionMove = SKAction.moveTo(CGPoint(x: newArrow.position.x, y: -size.height), duration: 5.0)
         newArrow.runAction(actionMove)
         
-        arrows += [newArrow]
+        
         self.addChild(newArrow)
         
     }
