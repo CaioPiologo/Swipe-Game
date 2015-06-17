@@ -92,6 +92,14 @@ class GameScene: SKScene {
         println("Swipe Down Right View")
     }
     
+    func addArrow(){
+        let randomDir: Direction = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
+        let newArrow = Arrow(direction: randomDir, imageNamed: "")
+        arrows += [newArrow]
+        self.addChild(newArrow)
+        
+    }
+    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
 
