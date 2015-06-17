@@ -135,21 +135,25 @@ class GameScene: SKScene {
     func validateSwipe(side: Int, direction: Direction){
         
         var arrow : Arrow?
+        var currentQueue : Int
         
         /*Get first arrow from queue*/
         if(side == LEFT){
             arrow = arrowQueue[LEFT].getPosition(0)
-            
+            currentQueue = LEFT
         }else{
             arrow = arrowQueue[RIGHT].getPosition(0)
-            
+            currentQueue = RIGHT
         }
         
         /*Check swipe's direction*/
-        if(arrow!.direction == direction){
-            //TODO: Destroy arrow, add score
-        }else{
-            //TODO: Wrong direction alert
+        if(arrow != nil){
+            if(arrow!.direction == direction){
+                arrowQueue[currentQueue].pop()
+                //TODO: add score
+            }else{
+                //TODO: Wrong direction alert
+            }
         }
     }
     
