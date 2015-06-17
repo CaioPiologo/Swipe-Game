@@ -66,7 +66,7 @@ class GameScene: SKScene {
         rightView.addGestureRecognizer(swipeUpRightViewRecognizer)
         rightView.addGestureRecognizer(swipeDownRightViewRecognizer)
         
-        addArrow()
+        addArrow(1)
     }
     
     func swipeRightLeftView(swipe:UISwipeGestureRecognizer) {
@@ -95,10 +95,8 @@ class GameScene: SKScene {
         println("Swipe Down Right View")
     }
     
-    func addArrow(){
+    func addArrow(pos:Int){
         let randomDir: Direction = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
-        let randomPos: UInt32 = arc4random_uniform(2)
-        println(randomPos)
         let newArrow:Arrow
 
         if(randomDir == Direction.UP){
@@ -111,9 +109,11 @@ class GameScene: SKScene {
             newArrow = Arrow(direction: randomDir, imageNamed: "")
         }
         
-//        if(randomPos == 0){
-            newArrow.position = CGPointMake(size.width/2, size.height+newArrow.size.height)
- //       }
+        if(pos == 0){
+            newArrow.position = CGPointMake(size.width/4, size.height+newArrow.size.height)
+        } else {
+            newArrow.position = CGPointMake(3*size.width/4, size.height+newArrow.size.height)
+        }
         let actionMove = SKAction.moveTo(CGPoint(x: newArrow.position.x, y: -size.height), duration: 5.0)
         newArrow.runAction(actionMove)
         
