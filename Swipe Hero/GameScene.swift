@@ -24,6 +24,9 @@ class GameScene: SKScene {
     var highScore = 0;
     var userDefaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
     
+    var scoreAction : SKAction!
+    var missAction : SKAction!
+    
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
         
@@ -36,9 +39,11 @@ class GameScene: SKScene {
         self.highScoreLabel = self.childNodeWithName("highScoreLabel") as? SKLabelNode
         self.levelLabel = self.childNodeWithName("levelLabel") as? SKLabelNode
         
+        self.scoreLabel?.color = SKColor.blackColor()
+        
         
         /*Right and Left Views, zones that recognize each gesture*/
-        var leftView : UIView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
+        var leftView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
         leftView.backgroundColor = UIColor.clearColor()
         
         var rightView = UIView(frame: CGRectMake(UIScreen.mainScreen().bounds.size.width/2, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
@@ -80,6 +85,34 @@ class GameScene: SKScene {
         rightView.addGestureRecognizer(swipeUpRightViewRecognizer)
         rightView.addGestureRecognizer(swipeDownRightViewRecognizer)
         
+        
+        self.scoreAction = SKAction.group([
+            SKAction.sequence([
+                SKAction.scaleTo(2.0, duration: 0.2),
+                SKAction.scaleTo(1.0, duration: 0.2)
+            
+            ]),
+            
+            SKAction.sequence([
+                
+                SKAction.colorizeWithColor(SKColor.orangeColor(), colorBlendFactor: 1.0, duration: 0.2),
+                
+                SKAction.runBlock(){
+                    self.scoreLabel?.color = SKColor.blackColor()
+                }
+                
+            ])
+            
+        ])
+        
+        self.missAction = SKAction.sequence([
+            
+            SKAction.colorizeWithColor(SKColor.redColor(), colorBlendFactor: 1.0, duration: 0.2),
+            
+            //SKAction.colorizeWithColorBlendFactor(0.0, duration: 0.1)
+            SKAction.colorizeWithColor(SKColor(red: 1, green: 240/255, blue: 216/255, alpha: 1), colorBlendFactor: 0.0, duration: 0.1)
+            
+        ])
         //start the game
         self.restart(1)
     }
@@ -182,6 +215,7 @@ class GameScene: SKScene {
         }
         
         updateLabels()
+        scoreLabel?.runAction(scoreAction)
     }
     
     func validateSwipe(side: Int, direction: Direction){
@@ -198,6 +232,7 @@ class GameScene: SKScene {
             currentQueue = RIGHT
         }
 addScore()
+self.runAction(missAction)
         /*Check swipe's direction*/
         if(arrow != nil){
             if(arrow!.direction == direction){
