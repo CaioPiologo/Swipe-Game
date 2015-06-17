@@ -136,16 +136,16 @@ class GameScene: SKScene {
     
     func addArrow(side:Int){
         let randomDir: Direction = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
-        let newArrow:Arrow
+        let newArrow = Arrow(direction: randomDir, imageNamed: "up-Arrow")
 
         if(randomDir == Direction.UP){
-            newArrow = Arrow(direction: randomDir, imageNamed: "upArrow")
+            newArrow.zRotation += 0
         } else if(randomDir == Direction.DOWN){
-            newArrow = Arrow(direction: randomDir, imageNamed: "downArrow")
+            newArrow.zRotation += CGFloat(M_PI/2)
         } else if(randomDir == Direction.RIGHT){
-            newArrow = Arrow(direction: randomDir, imageNamed: "")
+            newArrow.zRotation += CGFloat(M_PI)
         } else {
-            newArrow = Arrow(direction: randomDir, imageNamed: "")
+            newArrow.zRotation += CGFloat(3*M_PI/2)
         }
         
         if(side == 0){
@@ -190,7 +190,26 @@ class GameScene: SKScene {
     
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
-
+    }
+    
+    func newLevel(){
+        var wait = SKAction.waitForDuration(arrowSpeed)
+        var run = SKAction.runBlock {
+            var randGeneration = arc4random_uniform(3)
+            switch(randGeneration){
+            case 0:
+                self.addArrow(LEFT)
+                break
+            case 1:
+                self.addArrow(RIGHT)
+                break
+            default:
+                self.addArrow(LEFT)
+                self.addArrow(RIGHT)
+                break
+            }
+        }
+        self.runAction(SKAction.repeatAction((SKAction.sequence([wait, run])), count: 15))
     }
     
 }
