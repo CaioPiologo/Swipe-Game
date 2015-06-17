@@ -14,17 +14,12 @@ let RIGHT = 1
 class GameScene: SKScene {
     
     var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
+    var arrowSpeed:NSTimeInterval = 1.0
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
-//        let myLabel = SKLabelNode(fontNamed:"Chalkduster")
-//        myLabel.text = "Hello, World!";
-//        myLabel.fontSize = 65;
-//        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
-//        
-//        self.addChild(myLabel)
         self.size = UIScreen.mainScreen().bounds.size
-
+        
         /*Right and Left Views*/
         var leftView : UIView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
         leftView.backgroundColor = UIColor.clearColor()
@@ -68,7 +63,8 @@ class GameScene: SKScene {
         rightView.addGestureRecognizer(swipeUpRightViewRecognizer)
         rightView.addGestureRecognizer(swipeDownRightViewRecognizer)
         
-        addArrow(1)
+        newLevel()
+        
     }
     
     func swipeRightLeftView(swipe:UISwipeGestureRecognizer) {
@@ -99,16 +95,16 @@ class GameScene: SKScene {
     
     func addArrow(side:Int){
         let randomDir: Direction = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
-        let newArrow:Arrow
+        let newArrow = Arrow(direction: randomDir, imageNamed: "up-Arrow")
 
         if(randomDir == Direction.UP){
-            newArrow = Arrow(direction: randomDir, imageNamed: "upArrow")
+            newArrow.zRotation += 0
         } else if(randomDir == Direction.DOWN){
-            newArrow = Arrow(direction: randomDir, imageNamed: "downArrow")
+            newArrow.zRotation += CGFloat(M_PI/2)
         } else if(randomDir == Direction.RIGHT){
-            newArrow = Arrow(direction: randomDir, imageNamed: "")
+            newArrow.zRotation += CGFloat(M_PI)
         } else {
-            newArrow = Arrow(direction: randomDir, imageNamed: "")
+            newArrow.zRotation += CGFloat(3*M_PI/2)
         }
         
         if(side == 0){
@@ -128,7 +124,26 @@ class GameScene: SKScene {
     
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
-
+    }
+    
+    func newLevel(){
+        var wait = SKAction.waitForDuration(arrowSpeed)
+        var run = SKAction.runBlock {
+            var randGeneration = arc4random_uniform(3)
+            switch(randGeneration){
+            case 0:
+                self.addArrow(LEFT)
+                break
+            case 1:
+                self.addArrow(RIGHT)
+                break
+            default:
+                self.addArrow(LEFT)
+                self.addArrow(RIGHT)
+                break
+            }
+        }
+        self.runAction(SKAction.repeatAction((SKAction.sequence([wait, run])), count: 15))
     }
     
 //    func validateSwipe(side:Side, direction:Direction)
