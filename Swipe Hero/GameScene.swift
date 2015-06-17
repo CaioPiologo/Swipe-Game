@@ -7,6 +7,7 @@
 //
 
 import SpriteKit
+import CoreGraphics
 
 let LEFT = 0
 let RIGHT = 1
@@ -41,9 +42,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         NSLog("\(highScore)");
         
         //initialize labels
+        self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         self.scoreLabel = self.childNodeWithName("scorelabel") as? SKLabelNode
         self.highScoreLabel = self.childNodeWithName("highScoreLabel") as? SKLabelNode
         self.levelLabel = self.childNodeWithName("levelLabel") as? SKLabelNode
+        
+        //initilize SKSpriteNode Objects
+        self.dangerZone = self.childNodeWithName("dangerZone") as? SKSpriteNode
+        self.endZone = self.childNodeWithName("endZone") as? SKSpriteNode
+        
+        //define collision bitmasks
+        self.dangerZone!.physicsBody = SKPhysicsBody(rectangleOfSize: dangerZone!.size)
+        self.endZone!.physicsBody = SKPhysicsBody(rectangleOfSize: endZone!.size)
+        self.dangerZone!.physicsBody!.collisionBitMask = PhysicsCategory.dangerZone
+        self.endZone!.physicsBody!.collisionBitMask = PhysicsCategory.endZone
+        
         /*Right and Left Views, zones that recognize each gesture*/
         var leftView : UIView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
         leftView.backgroundColor = UIColor.clearColor()
@@ -86,9 +99,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         rightView.addGestureRecognizer(swipeLeftRightViewRecognizer)
         rightView.addGestureRecognizer(swipeUpRightViewRecognizer)
         rightView.addGestureRecognizer(swipeDownRightViewRecognizer)
-        
-        //set collision
-        
         
         //start the game
         self.restart(1)
