@@ -9,6 +9,9 @@
 import SpriteKit
 
 class GameScene: SKScene {
+    
+    var arrows: Array<Arrow> = []
+    
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
 //        let myLabel = SKLabelNode(fontNamed:"Chalkduster")
@@ -17,11 +20,16 @@ class GameScene: SKScene {
 //        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
 //        
 //        self.addChild(myLabel)
-        
+        let dangerZone = SKShapeNode(rectOfSize: CGSize(width: size.width, height: size.height * 0.1))
+        dangerZone.fillColor = SKColor.redColor()
+        dangerZone.position = CGPointMake(size.width/2, size.height*0.05)
+        self.addChild(dangerZone)
     }
     
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
 
     }
+    
+    
 }
