@@ -22,6 +22,7 @@ struct PhysicsCategory {
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //variables
+    
     var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
     var arrowSpeed:NSTimeInterval = 1.0
     var scoreLabel:SKLabelNode?;
@@ -39,6 +40,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var missAction : SKAction!
     
     override func didMoveToView(view: SKView) {
+            
         /* Setup your scene here */
         //get high score from user defaults
         self.highScore = userDefaults.integerForKey(HIGHSCOREKEY)
@@ -120,7 +122,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             SKAction.colorizeWithColor(SKColor.redColor(), colorBlendFactor: 1.0, duration: 0.2),
             
-            //SKAction.colorizeWithColorBlendFactor(0.0, duration: 0.1)
             SKAction.colorizeWithColor(SKColor(red: 1, green: 240/255, blue: 216/255, alpha: 1), colorBlendFactor: 0.0, duration: 0.1)
             
         ])
