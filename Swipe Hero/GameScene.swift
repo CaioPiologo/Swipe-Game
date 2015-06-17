@@ -8,15 +8,13 @@
 
 import SpriteKit
 
-enum Side {
-    case LEFT, RIGHT
+enum Side
+    
+{
+    case RIGHT,LEFT;
 }
 
 class GameScene: SKScene {
-    
-    var arrows: Array<Arrow> = []
-    var leftArrows = []
-    var rightArrows = []
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
@@ -26,10 +24,6 @@ class GameScene: SKScene {
 //        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
 //        
 //        self.addChild(myLabel)
-        let dangerZone = SKShapeNode(rectOfSize: CGSize(width: size.width, height: size.height * 0.1))
-        dangerZone.fillColor = SKColor.redColor()
-        dangerZone.position = CGPointMake(size.width/2, size.height*0.05)
-        self.addChild(dangerZone)
         
         /*Right and Left Views, zones that recognize each gesture*/
         var leftView : UIView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
@@ -74,22 +68,6 @@ class GameScene: SKScene {
         rightView.addGestureRecognizer(swipeUpRightViewRecognizer)
         rightView.addGestureRecognizer(swipeDownRightViewRecognizer)
         
-        var q:Queue<Arrow> = Queue<Arrow>()
-        q.push(Arrow(direction: .UP))
-        q.push(Arrow(direction: .DOWN))
-        q.push(Arrow(direction: .LEFT))
-        q.push(Arrow(direction: .RIGHT))
-        NSLog("\(q.length)")
-        NSLog("\(q.getPosition(2))")
-        NSLog("\(q.pop())")
-        NSLog("\(q.pop())")
-        NSLog("\(q.pop())")
-        NSLog("\(q.pop())")
-        NSLog("\(q.pop())")
-        NSLog("\(q.pop())")
-        NSLog("\(q.pop())")
-        NSLog("\(q.length)")
-        
     }
     
     func swipeRightLeftView(swipe:UISwipeGestureRecognizer) {
@@ -126,27 +104,6 @@ class GameScene: SKScene {
         validateSwipe(Side.RIGHT, direction: Direction.DOWN)
     }
     
-    func validateSwipe(side: Side, direction: Direction){
-        
-        var arrow : Arrow
-        
-        /*Get first arrow from queue*/
-        if(side == Side.LEFT){
-            //TODO: Get first left arrow
-            arrow = leftArrows.getFirstArrow()
-        }else{
-            //TODO: Get first right arrow
-            arrow = rightArrows.getFirstArrow()
-        }
-        
-        /*Check swipe's direction*/
-        if(arrow.direction == direction){
-            //TODO: Destroy arrow, add score
-        }else{
-            //TODO: Wrong direction alert
-        }
-    }
-    
     func addArrow(){
         let randomDir: Direction = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
         let randomPos: UInt32 = arc4random_uniform(2)
@@ -174,14 +131,30 @@ class GameScene: SKScene {
         
     }
     
+    func validateSwipe(side: Side, direction: Direction){
+        
+        var arrow : Arrow
+        
+        /*Get first arrow from queue*/
+        if(side == Side.LEFT){
+            //TODO: Get first left arrow
+            arrow = leftArrows.getFirstArrow()
+        }else{
+            //TODO: Get first right arrow
+            arrow = rightArrows.getFirstArrow()
+        }
+        
+        /*Check swipe's direction*/
+        if(arrow.direction == direction){
+            //TODO: Destroy arrow, add score
+        }else{
+            //TODO: Wrong direction alert
+        }
+    }
+    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
 
-    }
-    
-    func validateSwipe(side:Side, direction:Direction)
-    {
-        
     }
     
 }
