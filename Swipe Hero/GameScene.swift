@@ -279,6 +279,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.highScoreText?.hidden = false
                 self.swipeLabel?.hidden = true
                 self.heroLabel?.hidden = true
+                
+                self.leftLight?.texture = nil
+                self.leftLight?.removeActionForKey("dangerAction")
+                self.rightLight?.texture = nil
+                self.rightLight?.removeActionForKey("dangerAction")
+                self.leftBulb?.texture = SKTexture(imageNamed: "bulb_off")
+                self.leftBulb?.removeActionForKey("dangerAction")
+                self.rightBulb?.texture = SKTexture(imageNamed: "bulb_off")
+                self.rightBulb?.removeActionForKey("dangerAction")
             } else {
                 self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
             }
@@ -561,6 +570,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func endGame(){
         self.addChild(self.startButton!)
+        self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
         self.scoreLabel?.hidden = true
         self.levelLabel?.hidden = true
         self.leftView.hidden = true
