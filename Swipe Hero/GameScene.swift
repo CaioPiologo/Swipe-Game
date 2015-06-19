@@ -27,9 +27,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
     var arrowSpeed:NSTimeInterval = 1.0
+    var leftView: UIView!
+    var rightView: UIView!
     var arrowParent : SKSpriteNode!
-    var scoreLabel:SKLabelNode?;
-    var highScoreLabel:SKLabelNode?;
+    var swipeLabel: SKSpriteNode?
+    var heroLabel: SKSpriteNode?
+    var scoreText: SKLabelNode?
+    var highScoreText: SKLabelNode?
+    var levelText: SKLabelNode?
+    var scoreLabel:SKLabelNode?
+    var highScoreLabel:SKLabelNode?
     var levelLabel:SKLabelNode?
     var endZone:SKSpriteNode?
     var dangerZone:SKSpriteNode?
@@ -38,6 +45,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var rightBulb : SKSpriteNode?
     var leftLight : SKSpriteNode?
     var rightLight : SKSpriteNode?
+    var startButton: SKSpriteNode?
     var score:Int = 0;
     var level:Int = 0;
     var difficulty:Float = 0;
@@ -71,7 +79,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.arrowParent.anchorPoint.y = -self.size.height/2
         self.arrowParent.position = self.position
         self.addChild(arrowParent)
-        
+
         //get high score from user defaults
         self.highScore = userDefaults.integerForKey(HIGHSCOREKEY)
         NSLog("\(highScore)");
@@ -79,12 +87,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //initialize labels
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         self.physicsWorld.contactDelegate = self
+        self.swipeLabel = self.childNodeWithName("swipeLabel") as? SKSpriteNode
+        self.heroLabel = self.childNodeWithName("heroLabel") as? SKSpriteNode
+        self.scoreText = self.childNodeWithName("scoreText") as? SKLabelNode
+        self.scoreText?.hidden = true
+        self.levelText = self.childNodeWithName("levelText") as? SKLabelNode
+        self.levelText?.hidden = true
+        self.highScoreText = self.childNodeWithName("highScoreText") as? SKLabelNode
+        self.highScoreText?.hidden = true
         self.scoreLabel = self.childNodeWithName("scorelabel") as? SKLabelNode
+        self.scoreLabel?.hidden = true
         self.highScoreLabel = self.childNodeWithName("highScoreLabel") as? SKLabelNode
+        self.highScoreLabel?.hidden = true
         self.levelLabel = self.childNodeWithName("levelLabel") as? SKLabelNode
+        self.levelLabel?.hidden = true
         self.dangerZone = self.childNodeWithName("dangerZone") as? SKSpriteNode
         self.endZone = self.childNodeWithName("endZone") as? SKSpriteNode
-
+        self.startButton = self.childNodeWithName("playButton") as? SKSpriteNode
         
         //define collision bitmasks
         self.dangerZone!.physicsBody = SKPhysicsBody(rectangleOfSize: dangerZone!.size)
@@ -97,11 +116,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.endZone!.physicsBody!.collisionBitMask = 0
         
         /*Right and Left Views, zones that recognize each gesture*/
-        var leftView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
+        leftView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
         leftView.backgroundColor = UIColor.clearColor()
+        leftView.hidden = true
         
-        var rightView = UIView(frame: CGRectMake(UIScreen.mainScreen().bounds.size.width/2, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
+        rightView = UIView(frame: CGRectMake(UIScreen.mainScreen().bounds.size.width/2, 0, UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height))
         rightView.backgroundColor = UIColor.clearColor()
+        rightView.hidden = true
         
         self.view?.addSubview(leftView)
         self.view?.addSubview(rightView)
@@ -128,6 +149,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let swipeLeftRightViewRecognizer: UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action:"swipeLeftRightView:")
         let swipeUpRightViewRecognizer: UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action:"swipeUpRightView:")
         let swipeDownRightViewRecognizer: UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action:"swipeDownRightView:")
+        let touchButtonRecognizer: UIGestureRecognizer = UIGestureRecognizer(target: self, action: "playButton")
         
         swipeRightRightViewRecognizer.direction = .Right
         swipeLeftRightViewRecognizer.direction = .Left
@@ -138,7 +160,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         rightView.addGestureRecognizer(swipeLeftRightViewRecognizer)
         rightView.addGestureRecognizer(swipeUpRightViewRecognizer)
         rightView.addGestureRecognizer(swipeDownRightViewRecognizer)
-        
         
         self.scoreAction = SKAction.group([
             SKAction.playSoundFileNamed("swipe.wav", waitForCompletion: false),
@@ -163,19 +184,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.dangerActionLeft = SKAction.repeatActionForever(SKAction.rotateByAngle(4.34, duration: 1.0))
         self.dangerActionRight = SKAction.repeatActionForever(SKAction.rotateByAngle(-4.34, duration: 1.0))
-        
-        
-//        self.missAction = SKAction.sequence([
-//            
-//            
-//            
-//            SKAction.colorizeWithColor(SKColor.redColor(), colorBlendFactor: 1.0, duration: 0.2),
-//            
-//            SKAction.colorizeWithColor(SKColor(red: 1, green: 240/255, blue: 216/255, alpha: 1), colorBlendFactor: 0.0, duration: 0.1)
-//            
-//        ])
         //start the game
-        self.restart(1)
+//        self.restart(1)
     }
     
     //Restart with initial level
@@ -237,6 +247,44 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         println("Swipe Down Right View")
         validateSwipe(RIGHT, direction: Direction.DOWN)
     }
+    
+    //Start game function
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        for touch: AnyObject in touches {
+            // Get the location of the touch in this scene
+            let location = touch.locationInNode(self)
+            let node = self.nodeAtPoint(location)
+            // Check if the location of the touch is within the button's bounds
+            if node.name == "playButton" {
+                self.startButton?.texture = SKTexture(imageNamed: "button_play_pressed_pixelated")
+            }
+        }
+    }
+    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+        for touch: AnyObject in touches {
+            // Get the location of the touch in this scene
+            let location = touch.locationInNode(self)
+            let node = self.nodeAtPoint(location)
+            // Check if the location of the touch is within the button's bounds
+            if node.name == "playButton" {
+                self.startButton?.removeFromParent()
+                self.startLevel()
+                self.scoreLabel?.hidden = false
+                self.highScoreLabel?.hidden = false
+                self.levelLabel?.hidden = false
+                self.leftView.hidden = false
+                self.rightView.hidden = false
+                self.scoreText?.hidden = false
+                self.levelText?.hidden = false
+                self.highScoreText?.hidden = false
+                self.swipeLabel?.hidden = true
+                self.heroLabel?.hidden = true
+            } else {
+                self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
+            }
+        }
+    }
+    
     //Function that creates and adds arrows to the scene
     func addArrow(side:Int){
         let arrowType = arc4random_uniform(5)
@@ -415,6 +463,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         arrowQueue[LEFT].emptyQueue()
         arrowQueue[RIGHT].emptyQueue()
+        endGame()
     }
     
     func arrowDidCollideWithDangetZone(){
@@ -508,5 +557,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(emitterNode)
         self.runAction(SKAction.waitForDuration(2), completion: { emitterNode.removeFromParent() })
         self.runAction(SKAction.playSoundFileNamed("explosion.wav", waitForCompletion: false))
+    }
+    
+    func endGame(){
+        self.addChild(self.startButton!)
+        self.scoreLabel?.hidden = true
+        self.levelLabel?.hidden = true
+        self.leftView.hidden = true
+        self.rightView.hidden = true
+        self.scoreText?.hidden = true
+        self.levelText?.hidden = true
+        self.highScoreText?.hidden = false
+        self.swipeLabel?.hidden = false
+        self.heroLabel?.hidden = false
     }
 }
