@@ -53,17 +53,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /* Setup your scene here */
         
         self.leftBulb = self.childNodeWithName("leftBulb") as? SKSpriteNode
-        self.leftBulb?.zPosition = 2
+        self.leftBulb?.zPosition = -1
         self.rightBulb = self.childNodeWithName("rightBulb") as? SKSpriteNode
-        self.rightBulb?.zPosition = 2
+        self.rightBulb?.zPosition = -1
         
         self.leftLight = self.childNodeWithName("leftLight") as? SKSpriteNode
         self.leftLight?.texture = nil
-        self.leftLight?.zPosition = 1.5
+        self.leftLight?.zPosition = 0
         
         self.rightLight = self.childNodeWithName("rightLight") as? SKSpriteNode
         self.rightLight?.texture = nil
-        self.rightLight?.zPosition = 1.5
+        self.rightLight?.zPosition = 0
         
         self.arrowParent = SKSpriteNode(color: SKColor.clearColor(), size: self.size)
         self.arrowParent.anchorPoint.x = -self.size.width/2
@@ -374,12 +374,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 arrow = arrowQueue[currentQueue].pop()
                 arrow!.runAction(SKAction.removeFromParent())
                 addScore()
-            }
             }else{
                 self.missAction()
                 //TODO: Wrong direction alert
             }
+        }else{
+            self.missAction()
         }
+    }
     
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
