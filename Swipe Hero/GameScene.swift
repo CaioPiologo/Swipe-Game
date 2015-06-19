@@ -35,6 +35,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var arrowInDangerZone:Int = 0
     var leftBulb : SKSpriteNode?
     var rightBulb : SKSpriteNode?
+    var leftLight : SKSpriteNode?
     var score:Int = 0;
     var level:Int = 0;
     var difficulty:Float = 0;
@@ -51,6 +52,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.leftBulb = self.childNodeWithName("leftBulb") as? SKSpriteNode
         self.rightBulb = self.childNodeWithName("rightBulb") as? SKSpriteNode
+        
+        self.leftLight = self.childNodeWithName("leftLight") as? SKSpriteNode
+        self.leftLight?.texture = nil
         
         self.arrowParent = SKSpriteNode(color: SKColor.clearColor(), size: self.size)
         self.arrowParent.anchorPoint.x = -self.size.width/2
@@ -145,8 +149,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         ])
         
-        self.dangerAction = SKAction.repeatActionForever(SKAction.rotateByAngle(0.5, duration: 0.3))
-        leftBulb?.runAction(self.dangerAction)
+        self.dangerAction = SKAction.repeatActionForever(SKAction.rotateByAngle(4.34, duration: 1.0))
         
         
 //        self.missAction = SKAction.sequence([
@@ -328,6 +331,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     arrowInDangerZone--
                     if(arrowInDangerZone == 0){
                         leftBulb?.texture = SKTexture(imageNamed: "bulb_off")
+                        leftBulb?.removeActionForKey("dangerAction")
+                        leftLight?.texture = nil
+                        leftLight?.removeActionForKey("dangerAction")
                     }
                 }
                 arrow = arrowQueue[currentQueue].pop()
@@ -357,6 +363,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func arrowDidCollideWithDangetZone(){
         arrowInDangerZone++
         leftBulb?.texture = SKTexture(imageNamed: "bulb_on")
+        leftBulb?.runAction(dangerAction, withKey: "dangerAction")
+        leftLight?.texture = SKTexture(imageNamed: "lights")
+        leftLight?.runAction(dangerAction, withKey: "dangerAction")
     }
     
     func arrowDidEndContactWithDangerZone(){
