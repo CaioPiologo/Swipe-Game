@@ -37,4 +37,12 @@ class Arrow:SKSpriteNode {
         self.direction = direction
         super.init(texture: texture, color: color, size: size)
     }
+    
+    func update(speed:CGFloat){
+        self.position.y -= speed * self.size.height
+        if(self.position.y < -self.size.height){
+            var destroy = SKAction.removeFromParent()
+            self.runAction(destroy)
+        }
+    }
 }

@@ -24,7 +24,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //variables
     var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
-    var arrowSpeed:NSTimeInterval = 1.0
+    var arrowSpeed:NSTimeInterval = 2.0
     var scoreLabel:SKLabelNode?;
     var highScoreLabel:SKLabelNode?;
     var levelLabel:SKLabelNode?
@@ -199,9 +199,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         validateSwipe(RIGHT, direction: Direction.DOWN)
     }
     
-    func addArrow(side:Int, baseSpeed:NSTimeInterval){
+    func addArrow(side:Int){
         let randomDir: Direction = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
-        let randomSpeed = NSTimeInterval(baseSpeed) + NSTimeInterval(arc4random_uniform(5))/10
         let newArrow = Arrow(direction: randomDir, imageNamed: "up-Arrow")
         //rotates arrow depending on its direction
         if(randomDir == Direction.UP){
@@ -221,36 +220,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             newArrow.position = CGPointMake(3*size.width/4, size.height+newArrow.size.height)
             arrowQueue[RIGHT].push(newArrow)
         }
-        let move = SKAction.moveTo(CGPoint(x: newArrow.position.x, y: -size.height), duration: randomSpeed)
-        let destroy = SKAction.removeFromParent()
-        newArrow.runAction(SKAction.sequence([move, destroy]))
         addScore()
-
+        addScore()
+        addScore()
+        
         self.addChild(newArrow)
         
     }
     
     func addScore(){
+        //TODO: ajustar dificuldade para dispositivo
         self.score++
-        //TODO: ajustar dificuldade com a arrowspeed
         if(score % 15 == 0){
             level++
             if(level >= 5){
                 difficulty += Float(2/Float(self.level))
-                arrowSpeed -= NSTimeInterval(2/Float(self.level))
+                arrowSpeed -= NSTimeInterval(1/Float(self.level))
             } else {
                 difficulty = Float(level)
             }
-            if(difficulty >= 10){
-                difficulty = 10
+            if(difficulty >= 15){
+                difficulty = 15
             }
-            println(arrowSpeed)
+            if(arrowSpeed <= 0.5){
+                arrowSpeed = 0.5
+            }
             self.removeAllActions()
-            var wait = SKAction.waitForDuration(2.0)
             var block = SKAction.runBlock{
                 self.startGame()
             }
-            self.runAction(SKAction.sequence([wait, block]))
+            self.runAction(block)
         }
         
         if(score > highScore){
@@ -274,8 +273,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             arrow = arrowQueue[RIGHT].getPosition(0)
             currentQueue = RIGHT
         }
-addScore()
-self.runAction(missAction)
+        addScore()
+        self.runAction(missAction)
         /*Check swipe's direction*/
         if(arrow != nil){
             if(arrow!.direction == direction){
@@ -289,20 +288,26 @@ self.runAction(missAction)
     
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+        for i in 0 ... self.arrowQueue[LEFT].length {
+            self.arrowQueue[LEFT].getPosition(i)?.update(CGFloat(self.difficulty/100) + CGFloat(0.05))
+        }
+        for i in 0 ... self.arrowQueue[RIGHT].length {
+            self.arrowQueue[RIGHT].getPosition(i)?.update(CGFloat(self.difficulty/100) + CGFloat(0.05))
+        }
     }
     
     func didBeginContact(contact: SKPhysicsContact)
     {
-        NSLog("paiseh");
+       // NSLog("paiseh");
         let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
         if(collision == (PhysicsCategory.arrow | PhysicsCategory.dangerZone))
         {
             //play danger animation
-            NSLog("COSTOOOOO");
+           // NSLog("COSTOOOOO");
         }else if(collision == (PhysicsCategory.arrow | PhysicsCategory.endZone))
         {
             //end game
-            NSLog("Perdeu playboy!");
+          //  NSLog("Perdeu playboy!");
         }
     }
     
@@ -317,19 +322,18 @@ self.runAction(missAction)
     func startGame(){
         var wait = SKAction.waitForDuration(arrowSpeed)
         var run = SKAction.runBlock {
-            var randGeneration = arc4random_uniform(4)
-            var baseSpeed = NSTimeInterval(10 - self.difficulty)
+            var randGeneration = arc4random_uniform(UInt32(self.difficulty))
             
             switch(randGeneration){
             case 0:
-                self.addArrow(LEFT, baseSpeed: baseSpeed)
+                self.addArrow(LEFT)
                 break
             case 1:
-                self.addArrow(RIGHT, baseSpeed: baseSpeed)
+                self.addArrow(RIGHT)
                 break
             default:
-                self.addArrow(LEFT, baseSpeed: baseSpeed)
-                self.addArrow(RIGHT, baseSpeed: baseSpeed)
+                self.addArrow(LEFT)
+                self.addArrow(RIGHT)
                 break
             }
         }
