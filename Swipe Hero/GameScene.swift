@@ -422,7 +422,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         arrowInDangerZone++
         
         if(arrowInDangerZone == 1){
-            SKAction.playSoundFileNamed("dangerZone.wav", waitForCompletion: false)
+            self.runAction(SKAction.playSoundFileNamed("dangerZone.wav", waitForCompletion: false))
         }
         
         leftBulb?.texture = SKTexture(imageNamed: "bulb_on")
@@ -508,5 +508,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         emitterNode.particleColorSequence = nil
         self.addChild(emitterNode)
         self.runAction(SKAction.waitForDuration(2), completion: { emitterNode.removeFromParent() })
+        self.runAction(SKAction.playSoundFileNamed("explosion.wav", waitForCompletion: false))
     }
 }
