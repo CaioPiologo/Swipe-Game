@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1CBCF11C1B348CE800C8A41A /* dangerZone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CBCF11B1B348CE800C8A41A /* dangerZone.wav */; };
 		1CBCF11E1B348CF200C8A41A /* swipe.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CBCF11D1B348CF200C8A41A /* swipe.wav */; };
 		1CBCF1201B348CF900C8A41A /* swipe2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CBCF11F1B348CF900C8A41A /* swipe2.wav */; };
 		1CFF0BBD1B34949700A2F941 /* explosion.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CFF0BBC1B34949700A2F941 /* explosion.wav */; };
+		1CFF0BBF1B3496C500A2F941 /* dangerZone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CFF0BBE1B3496C500A2F941 /* dangerZone.wav */; };
 		25EC12CD1B347CA500A563D2 /* ExplosionParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */; };
 		25EC12D81B34858500A563D2 /* borderWhitePixel.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 25EC12D71B34858500A563D2 /* borderWhitePixel.jpg */; };
 		25EFA0FA1B31901400467AD7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA0F91B31901400467AD7 /* AppDelegate.swift */; };
@@ -35,10 +35,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1CBCF11B1B348CE800C8A41A /* dangerZone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = dangerZone.wav; sourceTree = "<group>"; };
 		1CBCF11D1B348CF200C8A41A /* swipe.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = swipe.wav; sourceTree = "<group>"; };
 		1CBCF11F1B348CF900C8A41A /* swipe2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = swipe2.wav; sourceTree = "<group>"; };
 		1CFF0BBC1B34949700A2F941 /* explosion.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = explosion.wav; sourceTree = "<group>"; };
+		1CFF0BBE1B3496C500A2F941 /* dangerZone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = dangerZone.wav; sourceTree = "<group>"; };
 		25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ExplosionParticle.sks; sourceTree = "<group>"; };
 		25EC12D71B34858500A563D2 /* borderWhitePixel.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = borderWhitePixel.jpg; sourceTree = "<group>"; };
 		25EFA0F41B31901400467AD7 /* Swipe Hero.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swipe Hero.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,7 +78,7 @@
 		1CBCF11A1B348CB200C8A41A /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
-				1CBCF11B1B348CE800C8A41A /* dangerZone.wav */,
+				1CFF0BBE1B3496C500A2F941 /* dangerZone.wav */,
 				1CBCF11D1B348CF200C8A41A /* swipe.wav */,
 				1CBCF11F1B348CF900C8A41A /* swipe2.wav */,
 				1CFF0BBC1B34949700A2F941 /* explosion.wav */,
@@ -232,13 +232,12 @@
 			files = (
 				1CFF0BBD1B34949700A2F941 /* explosion.wav in Resources */,
 				25EFA1081B31901400467AD7 /* LaunchScreen.xib in Resources */,
+				1CFF0BBF1B3496C500A2F941 /* dangerZone.wav in Resources */,
 				1CBCF11E1B348CF200C8A41A /* swipe.wav in Resources */,
 				25EFA1241B31C09800467AD7 /* Images.xcassets in Resources */,
-				1CBCF11C1B348CE800C8A41A /* dangerZone.wav in Resources */,
 				25EFA0FC1B31901400467AD7 /* GameScene.sks in Resources */,
 				25EC12D81B34858500A563D2 /* borderWhitePixel.jpg in Resources */,
 				25EC12CD1B347CA500A563D2 /* ExplosionParticle.sks in Resources */,
-				1CBCF11C1B348CE800C8A41A /* dangerZone.wav in Resources */,
 				1CBCF1201B348CF900C8A41A /* swipe2.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
