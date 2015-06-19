@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		25EC12CD1B347CA500A563D2 /* ExplosionParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */; };
+		25EC12D81B34858500A563D2 /* borderWhitePixel.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 25EC12D71B34858500A563D2 /* borderWhitePixel.jpg */; };
 		25EFA0FA1B31901400467AD7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA0F91B31901400467AD7 /* AppDelegate.swift */; };
 		25EFA0FC1B31901400467AD7 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA0FB1B31901400467AD7 /* GameScene.sks */; };
 		25EFA0FE1B31901400467AD7 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA0FD1B31901400467AD7 /* GameScene.swift */; };
@@ -30,6 +32,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ExplosionParticle.sks; sourceTree = "<group>"; };
+		25EC12D71B34858500A563D2 /* borderWhitePixel.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = borderWhitePixel.jpg; sourceTree = "<group>"; };
 		25EFA0F41B31901400467AD7 /* Swipe Hero.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swipe Hero.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		25EFA0F81B31901400467AD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		25EFA0F91B31901400467AD7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -89,6 +93,8 @@
 				25EFA0FB1B31901400467AD7 /* GameScene.sks */,
 				25EFA11D1B31966500467AD7 /* Arrow.swift */,
 				25EFA0FD1B31901400467AD7 /* GameScene.swift */,
+				25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */,
+				25EC12D71B34858500A563D2 /* borderWhitePixel.jpg */,
 				8CEE01F11B31B25400D98C14 /* Queue.swift */,
 				25EFA0FF1B31901400467AD7 /* GameViewController.swift */,
 				25EFA1011B31901400467AD7 /* Main.storyboard */,
@@ -206,6 +212,8 @@
 			files = (
 				25EFA1081B31901400467AD7 /* LaunchScreen.xib in Resources */,
 				25EFA1241B31C09800467AD7 /* Images.xcassets in Resources */,
+				25EC12D81B34858500A563D2 /* borderWhitePixel.jpg in Resources */,
+				25EC12CD1B347CA500A563D2 /* ExplosionParticle.sks in Resources */,
 				25EFA0FC1B31901400467AD7 /* GameScene.sks in Resources */,
 				25EFA1031B31901400467AD7 /* Main.storyboard in Resources */,
 			);

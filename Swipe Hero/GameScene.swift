@@ -371,8 +371,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    func arrowDidCollideWithEndZone(arrow:SKSpriteNode){
-        //animateArrowDeath()
+    func arrowDidCollideWithEndZone(){
+        self.removeAllActions()
+        for i in 0 ... self.arrowQueue[LEFT].length {
+            var arrow = self.arrowQueue[LEFT].pop()
+            if(arrow != nil){
+                explosion(arrow!.position, color: arrow!.type)
+                arrow!.removeFromParent()
+            }
+        }
+        for i in 0 ... self.arrowQueue[RIGHT].length {
+            var arrow = self.arrowQueue[RIGHT].pop()
+            if(arrow != nil){
+                explosion(arrow!.position, color: arrow!.type)
+                arrow!.removeFromParent()
+            }
+        }
         arrowQueue[LEFT].emptyQueue()
         arrowQueue[RIGHT].emptyQueue()
     }
@@ -410,8 +424,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }else if(collision == (PhysicsCategory.arrow | PhysicsCategory.endZone))
         {
             //end game
-            
-      //      arrowDidCollideWithEndZone(arrow.node as! SKSpriteNode)
+            arrowDidCollideWithEndZone()
             //TODO: end game animation + end game view
         }
     }
@@ -444,5 +457,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
         self.runAction(SKAction.repeatActionForever(SKAction.sequence([wait, run])))
+    }
+    //Function that explodes the arrows
+    func explosion(pos: CGPoint, color:Int) {
+        var emitterNode = SKEmitterNode(fileNamed: "ExplosionParticle.sks")
+        emitterNode.particlePosition = pos
+        if(color == LEFT){
+            emitterNode.particleColor = UIColor.redColor()
+        } else {
+            emitterNode.particleColor = UIColor.blueColor()
+        }
+        emitterNode.particleColorBlendFactor = 1.0
+        emitterNode.particleColorSequence = nil
+        self.addChild(emitterNode)
+        self.runAction(SKAction.waitForDuration(2), completion: { emitterNode.removeFromParent() })
     }
 }
