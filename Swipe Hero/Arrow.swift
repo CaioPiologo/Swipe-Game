@@ -15,13 +15,14 @@ enum Direction:UInt32 {
 class Arrow:SKSpriteNode {
     
     var direction:Direction
+    var type:Int
     
-    convenience init(direction:Direction, imageNamed:String) {
+    convenience init(direction:Direction, type:Int, imageNamed:String) {
         let color = UIColor()
         let texture = SKTexture(imageNamed: imageNamed)
         //TODO: ajustar tamanho da seta
-        let size = CGSizeMake(texture.size().width/3.5, texture.size().height/3.5)
-        self.init(texture: texture, color: color, size: size, direction:direction)
+        let size = CGSizeMake(texture.size().width/2, texture.size().height/2)
+        self.init(texture: texture, color: color, size: size, direction:direction, type:type)
         self.physicsBody = SKPhysicsBody(rectangleOfSize: self.size)
         self.physicsBody!.categoryBitMask = PhysicsCategory.arrow
         self.physicsBody!.contactTestBitMask = PhysicsCategory.dangerZone | PhysicsCategory.endZone
@@ -33,8 +34,9 @@ class Arrow:SKSpriteNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(texture: SKTexture!, color: UIColor!, size: CGSize, direction:Direction) {
+    init(texture: SKTexture!, color: UIColor!, size: CGSize, direction:Direction, type:Int) {
         self.direction = direction
+        self.type = type
         super.init(texture: texture, color: color, size: size)
     }
     

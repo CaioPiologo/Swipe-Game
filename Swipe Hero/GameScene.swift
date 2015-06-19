@@ -213,17 +213,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     //Function that creates and adds arrows to the scene
     func addArrow(side:Int){
-        let randomDir = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
-        let newArrow = Arrow(direction: randomDir, imageNamed: "up-Arrow")
+        let arrowType = arc4random_uniform(5)
+        let randomDir = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue + 1))!
+        println(randomDir.rawValue)
+        let newArrow:Arrow
+        //defines arrow type
+        if(arrowType == 0){
+            newArrow = Arrow(direction: randomDir, type:LEFT, imageNamed: "arrow_wrong_pixelated")
+            newArrow.color = UIColor.redColor()
+        } else {
+            newArrow = Arrow(direction: randomDir, type:RIGHT, imageNamed: "arrow_pixelated")
+            newArrow.color = UIColor.blueColor()
+        }
+        newArrow.colorBlendFactor = 1
         //rotates arrow depending on its direction
         if(randomDir == Direction.UP){
-            newArrow.zRotation += 0
-        } else if(randomDir == Direction.LEFT){
-            newArrow.zRotation += CGFloat(M_PI/2)
-        } else if(randomDir == Direction.DOWN){
-            newArrow.zRotation += CGFloat(M_PI)
-        } else {
             newArrow.zRotation += CGFloat(3*M_PI/2)
+        } else if(randomDir == Direction.LEFT){
+            newArrow.zRotation += 0
+        } else if(randomDir == Direction.DOWN){
+            newArrow.zRotation += CGFloat(M_PI/2)
+        } else {
+            newArrow.zRotation += CGFloat(M_PI)
         }
         //chooses which side to generate the arrow
         if(side == 0){
@@ -238,8 +249,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         newArrow.physicsBody?.dynamic = true
         newArrow.physicsBody?.categoryBitMask = PhysicsCategory.arrow
         newArrow.physicsBody?.contactTestBitMask = PhysicsCategory.dangerZone | PhysicsCategory.endZone
-        newArrow.physicsBody?.collisionBitMask = 0
-        self.addChild(newArrow)
+        newArrow.physicsBody?.collisionBitMask = 0        
+        self.arrowParent.addChild(newArrow)
     }
     //Function that increases score and level through progress
     func addScore(){
@@ -273,12 +284,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         updateLabels()
         scoreLabel?.runAction(scoreAction)
     }
+    
+    func missAction(){
+        let initialX = self.arrowParent.position.x
+        let initialY = self.arrowParent.position.y
+        let amplitudeX = 32
+        let amplitudeY = 2
+        var newX : CGFloat
+        var newY : CGFloat
+        var randomActions : [SKAction] = []
+        var i = 0
+        
+        for i in 0..<10 {
+            let newX = initialX + CGFloat(arc4random_uniform(UInt32(amplitudeX))) - CGFloat(amplitudeX / 2)
+            let newY = initialY + CGFloat(arc4random_uniform(UInt32(amplitudeY))) - CGFloat(amplitudeY / 2)
+            randomActions.append(SKAction.moveTo(CGPointMake(newX, newY), duration: 0.015))
+        }
+        
+        var rep = SKAction.sequence(randomActions)
+        
+        self.arrowParent.runAction(rep)
+    }
+    
     //Function checks the swipe and the first arrow from the side queue direction
     func validateSwipe(side: Int, direction: Direction){
         
         var arrow : Arrow?
         var currentQueue : Int
-        
+        var comparingDir = direction
         /*Get first arrow from queue*/
         if(side == LEFT){
             arrow = arrowQueue[LEFT].getPosition(0)
@@ -287,11 +320,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             arrow = arrowQueue[RIGHT].getPosition(0)
             currentQueue = RIGHT
         }
-        //addScore()
-//        self.runAction(missAction)
         /*Check swipe's direction*/
         if(arrow != nil){
-            if(arrow!.direction.rawValue == direction.rawValue){
+            /*Checks arrow type and convert the direction to match*/
+            if(arrow!.type == LEFT){
+                if(direction == .UP){
+                    comparingDir = Direction.DOWN
+                } else if(direction == .RIGHT){
+                    comparingDir = Direction.LEFT
+                } else if(direction == Direction.DOWN){
+                    comparingDir = Direction.UP
+                } else if(direction == Direction.LEFT){
+                    comparingDir = Direction.RIGHT
+                }
+            }
+            if(arrow!.direction == comparingDir){
                 arrow = arrowQueue[currentQueue].pop()
                 arrow!.runAction(SKAction.removeFromParent())
                 addScore()
@@ -313,7 +356,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func arrowDidCollideWithEndZone(arrow:SKSpriteNode){
-        arrow.removeFromParent()
+        //animateArrowDeath()
+        arrowQueue[LEFT].emptyQueue()
+        arrowQueue[RIGHT].emptyQueue()
     }
     
     func didBeginContact(contact: SKPhysicsContact)
@@ -336,7 +381,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }else if(collision == (PhysicsCategory.arrow | PhysicsCategory.endZone))
         {
             //end game
-            arrowDidCollideWithEndZone(arrow.node as! SKSpriteNode)
+            
+      //      arrowDidCollideWithEndZone(arrow.node as! SKSpriteNode)
             //TODO: end game animation + end game view
         }
     }
