@@ -24,7 +24,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //variables
     var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
-    var arrowSpeed:NSTimeInterval = 2.0
+    var arrowSpeed:NSTimeInterval = 1.0
     var scoreLabel:SKLabelNode?;
     var highScoreLabel:SKLabelNode?;
     var levelLabel:SKLabelNode?
@@ -200,14 +200,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func addArrow(side:Int){
-        let randomDir: Direction = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
+        let randomDir = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
         let newArrow = Arrow(direction: randomDir, imageNamed: "up-Arrow")
         //rotates arrow depending on its direction
         if(randomDir == Direction.UP){
             newArrow.zRotation += 0
-        } else if(randomDir == Direction.DOWN){
+        } else if(randomDir == Direction.LEFT){
             newArrow.zRotation += CGFloat(M_PI/2)
-        } else if(randomDir == Direction.RIGHT){
+        } else if(randomDir == Direction.DOWN){
             newArrow.zRotation += CGFloat(M_PI)
         } else {
             newArrow.zRotation += CGFloat(3*M_PI/2)
@@ -220,12 +220,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             newArrow.position = CGPointMake(3*size.width/4, size.height+newArrow.size.height)
             arrowQueue[RIGHT].push(newArrow)
         }
-        addScore()
-        addScore()
-        addScore()
         
         self.addChild(newArrow)
-        
     }
     
     func addScore(){
@@ -273,12 +269,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             arrow = arrowQueue[RIGHT].getPosition(0)
             currentQueue = RIGHT
         }
-        addScore()
-        self.runAction(missAction)
         /*Check swipe's direction*/
         if(arrow != nil){
-            if(arrow!.direction == direction){
-                arrowQueue[currentQueue].pop()
+            if(arrow!.direction.rawValue == direction.rawValue){
+                arrow = arrowQueue[currentQueue].pop()
+                arrow!.runAction(SKAction.removeFromParent())
                 addScore()
             }else{
                 //TODO: Wrong direction alert
@@ -289,10 +284,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
         for i in 0 ... self.arrowQueue[LEFT].length {
-            self.arrowQueue[LEFT].getPosition(i)?.update(CGFloat(self.difficulty/100) + CGFloat(0.05))
+            self.arrowQueue[LEFT].getPosition(i)?.update(CGFloat(self.difficulty/100) + CGFloat(0.05), queue:arrowQueue[LEFT])
         }
         for i in 0 ... self.arrowQueue[RIGHT].length {
-            self.arrowQueue[RIGHT].getPosition(i)?.update(CGFloat(self.difficulty/100) + CGFloat(0.05))
+            self.arrowQueue[RIGHT].getPosition(i)?.update(CGFloat(self.difficulty/100) + CGFloat(0.05), queue:arrowQueue[RIGHT])
         }
     }
     
