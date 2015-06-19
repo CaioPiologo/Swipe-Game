@@ -32,6 +32,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var levelLabel:SKLabelNode?
     var endZone:SKSpriteNode?
     var dangerZone:SKSpriteNode?
+    var arrowInDangerZone:Int = 0
     var leftBulb : SKSpriteNode?
     var rightBulb : SKSpriteNode?
     var score:Int = 0;
@@ -41,6 +42,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var userDefaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
     
     var scoreAction : SKAction!
+    var dangerAction : SKAction!
 //    var missAction : SKAction!
     
     override func didMoveToView(view: SKView) {
@@ -143,6 +145,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         ])
         
+        self.dangerAction = SKAction.repeatActionForever(SKAction.rotateByAngle(0.5, duration: 0.3))
+        leftBulb?.runAction(self.dangerAction)
+        
         
 //        self.missAction = SKAction.sequence([
 //            
@@ -244,7 +249,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         newArrow.physicsBody?.categoryBitMask = PhysicsCategory.arrow
         newArrow.physicsBody?.contactTestBitMask = PhysicsCategory.dangerZone | PhysicsCategory.endZone
         newArrow.physicsBody?.collisionBitMask = 0
-        self.addChild(newArrow)
+        self.arrowParent.addChild(newArrow)
     }
     //Function that increases score and level through progress
     func addScore(){
@@ -278,6 +283,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         updateLabels()
         scoreLabel?.runAction(scoreAction)
     }
+    
+    func missAction(){
+        let initialX = self.arrowParent.position.x
+        let initialY = self.arrowParent.position.y
+        let amplitudeX = 32
+        let amplitudeY = 2
+        var newX : CGFloat
+        var newY : CGFloat
+        var randomActions : [SKAction] = []
+        var i = 0
+        
+        for i in 0..<10 {
+            let newX = initialX + CGFloat(arc4random_uniform(UInt32(amplitudeX))) - CGFloat(amplitudeX / 2)
+            let newY = initialY + CGFloat(arc4random_uniform(UInt32(amplitudeY))) - CGFloat(amplitudeY / 2)
+            randomActions.append(SKAction.moveTo(CGPointMake(newX, newY), duration: 0.015))
+        }
+        
+        var rep = SKAction.sequence(randomActions)
+        
+        self.arrowParent.runAction(rep)
+    }
+    
     //Function checks the swipe and the first arrow from the side queue direction
     func validateSwipe(side: Int, direction: Direction){
         
@@ -297,6 +324,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /*Check swipe's direction*/
         if(arrow != nil){
             if(arrow!.direction.rawValue == direction.rawValue){
+                if(CGRectIntersectsRect(arrow!.frame, dangerZone!.frame)){
+                    arrowInDangerZone--
+                    if(arrowInDangerZone == 0){
+                        leftBulb?.texture = SKTexture(imageNamed: "bulb_off")
+                    }
+                }
                 arrow = arrowQueue[currentQueue].pop()
                 arrow!.runAction(SKAction.removeFromParent())
                 addScore()
@@ -321,6 +354,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         arrow.removeFromParent()
     }
     
+    func arrowDidCollideWithDangetZone(){
+        arrowInDangerZone++
+        leftBulb?.texture = SKTexture(imageNamed: "bulb_on")
+    }
+    
+    func arrowDidEndContactWithDangerZone(){
+        arrowInDangerZone--
+        if(arrowInDangerZone == 0){
+            leftBulb?.texture = SKTexture(imageNamed: "bulb_off")
+        }
+    }
+    
     func didBeginContact(contact: SKPhysicsContact)
     {
         var arrow: SKPhysicsBody
@@ -336,6 +381,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let collision = arrow.categoryBitMask | secondBody.categoryBitMask
         if(collision == (PhysicsCategory.arrow | PhysicsCategory.dangerZone))
         {
+            arrowDidCollideWithDangetZone()
             //play danger animation
            // NSLog("COSTOOOOO");
         }else if(collision == (PhysicsCategory.arrow | PhysicsCategory.endZone))
@@ -350,6 +396,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let collision = contact.bodyA.categoryBitMask|contact.bodyB.categoryBitMask
         if(collision == (PhysicsCategory.arrow | PhysicsCategory.dangerZone))
         {
+            arrowDidEndContactWithDangerZone()
             //stop danger animation
         }
     }
