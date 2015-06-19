@@ -110,6 +110,8 @@
 				25EFA0FB1B31901400467AD7 /* GameScene.sks */,
 				25EFA11D1B31966500467AD7 /* Arrow.swift */,
 				25EFA0FD1B31901400467AD7 /* GameScene.swift */,
+				25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */,
+				25EC12D71B34858500A563D2 /* borderWhitePixel.jpg */,
 				8CEE01F11B31B25400D98C14 /* Queue.swift */,
 				25EFA0FF1B31901400467AD7 /* GameViewController.swift */,
 				25EFA1011B31901400467AD7 /* Main.storyboard */,
