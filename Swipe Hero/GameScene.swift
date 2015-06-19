@@ -23,8 +23,10 @@ struct PhysicsCategory {
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //variables
+    
     var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
     var arrowSpeed:NSTimeInterval = 1.0
+    var arrowParent : SKSpriteNode!
     var scoreLabel:SKLabelNode?;
     var highScoreLabel:SKLabelNode?;
     var levelLabel:SKLabelNode?
@@ -37,10 +39,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var userDefaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
     
     var scoreAction : SKAction!
-    var missAction : SKAction!
+//    var missAction : SKAction!
     
     override func didMoveToView(view: SKView) {
+            
         /* Setup your scene here */
+        
+        self.arrowParent = SKSpriteNode(color: SKColor.clearColor(), size: self.size)
+        self.arrowParent.anchorPoint.x = -self.size.width/2
+        self.arrowParent.anchorPoint.y = -self.size.height/2
+        self.arrowParent.position = self.position
+        self.addChild(arrowParent)
+        
         //get high score from user defaults
         self.highScore = userDefaults.integerForKey(HIGHSCOREKEY)
         NSLog("\(highScore)");
@@ -128,14 +138,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         ])
         
-        self.missAction = SKAction.sequence([
-            
-            SKAction.colorizeWithColor(SKColor.redColor(), colorBlendFactor: 1.0, duration: 0.2),
-            
-            //SKAction.colorizeWithColorBlendFactor(0.0, duration: 0.1)
-            SKAction.colorizeWithColor(SKColor(red: 1, green: 240/255, blue: 216/255, alpha: 1), colorBlendFactor: 0.0, duration: 0.1)
-            
-        ])
+        
+//        self.missAction = SKAction.sequence([
+//            
+//            
+//            
+//            SKAction.colorizeWithColor(SKColor.redColor(), colorBlendFactor: 1.0, duration: 0.2),
+//            
+//            SKAction.colorizeWithColor(SKColor(red: 1, green: 240/255, blue: 216/255, alpha: 1), colorBlendFactor: 0.0, duration: 0.1)
+//            
+//        ])
         //start the game
         self.restart(1)
     }
@@ -275,6 +287,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             arrow = arrowQueue[RIGHT].getPosition(0)
             currentQueue = RIGHT
         }
+        //addScore()
+//        self.runAction(missAction)
         /*Check swipe's direction*/
         if(arrow != nil){
             if(arrow!.direction.rawValue == direction.rawValue){
@@ -282,6 +296,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 arrow!.runAction(SKAction.removeFromParent())
                 addScore()
             }else{
+                self.missAction()
                 //TODO: Wrong direction alert
             }
         }
