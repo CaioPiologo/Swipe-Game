@@ -32,6 +32,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var levelLabel:SKLabelNode?
     var endZone:SKSpriteNode?
     var dangerZone:SKSpriteNode?
+    var leftBulb : SKSpriteNode?
+    var rightBulb : SKSpriteNode?
     var score:Int = 0;
     var level:Int = 0;
     var difficulty:Float = 0;
@@ -44,6 +46,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMoveToView(view: SKView) {
             
         /* Setup your scene here */
+        
+        self.leftBulb = self.childNodeWithName("leftBulb") as? SKSpriteNode
+        self.rightBulb = self.childNodeWithName("rightBulb") as? SKSpriteNode
         
         self.arrowParent = SKSpriteNode(color: SKColor.clearColor(), size: self.size)
         self.arrowParent.anchorPoint.x = -self.size.width/2
