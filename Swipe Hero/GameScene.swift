@@ -26,6 +26,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
     var arrowSpeed:NSTimeInterval = 1.0
+    var arrowParent : SKSpriteNode!
     var scoreLabel:SKLabelNode?;
     var highScoreLabel:SKLabelNode?;
     var levelLabel:SKLabelNode?
@@ -43,6 +44,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMoveToView(view: SKView) {
             
         /* Setup your scene here */
+        
+        self.arrowParent = SKSpriteNode(color: SKColor.clearColor(), size: self.size)
+        self.arrowParent.anchorPoint.x = -self.size.width/2
+        self.arrowParent.anchorPoint.y = -self.size.height/2
+        self.arrowParent.position = self.position
+        self.addChild(arrowParent)
+        
         //get high score from user defaults
         self.highScore = userDefaults.integerForKey(HIGHSCOREKEY)
         NSLog("\(highScore)");
@@ -225,7 +233,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             arrowQueue[RIGHT].push(newArrow)
         }
         
-        self.addChild(newArrow)
+        self.arrowParent.addChild(newArrow)
     }
     
     func addScore(){
@@ -261,8 +269,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func missAction(){
-        let initialX = self.position.x
-        let initialY = self.position.y
+        let initialX = self.arrowParent.position.x
+        let initialY = self.arrowParent.position.y
         let amplitudeX = 32
         let amplitudeY = 2
         var newX : CGFloat
@@ -278,7 +286,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         var rep = SKAction.sequence(randomActions)
         
-        self.runAction(rep)
+        self.arrowParent.runAction(rep)
     }
     
     func validateSwipe(side: Int, direction: Direction){
@@ -294,8 +302,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             arrow = arrowQueue[RIGHT].getPosition(0)
             currentQueue = RIGHT
         }
-        addScore()
-        self.missAction()
+        //addScore()
 //        self.runAction(missAction)
         /*Check swipe's direction*/
         if(arrow != nil){
@@ -304,6 +311,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 arrow!.runAction(SKAction.removeFromParent())
                 addScore()
             }else{
+                self.missAction()
                 //TODO: Wrong direction alert
             }
         }
