@@ -8,6 +8,7 @@
 
 import SpriteKit
 import CoreGraphics
+import AVFoundation
 
 let LEFT = 0
 let RIGHT = 1
@@ -140,6 +141,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         
         self.scoreAction = SKAction.group([
+            SKAction.playSoundFileNamed("swipe.wav", waitForCompletion: false),
+            
             SKAction.sequence([
                 SKAction.scaleTo(2.0, duration: 0.2),
                 SKAction.scaleTo(1.0, duration: 0.2)
@@ -318,6 +321,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var randomActions : [SKAction] = []
         var i = 0
         
+        randomActions.append(SKAction.playSoundFileNamed("swipe2.wav", waitForCompletion: false) )
+        
         for i in 0..<10 {
             let newX = initialX + CGFloat(arc4random_uniform(UInt32(amplitudeX))) - CGFloat(amplitudeX / 2)
             let newY = initialY + CGFloat(arc4random_uniform(UInt32(amplitudeY))) - CGFloat(amplitudeY / 2)
@@ -401,6 +406,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func arrowDidCollideWithDangetZone(){
         arrowInDangerZone++
+        
+        if(arrowInDangerZone == 1){
+            SKAction.playSoundFileNamed("dangerZone.wav", waitForCompletion: false)
+        }
+        
         leftBulb?.texture = SKTexture(imageNamed: "bulb_on")
         leftBulb?.runAction(dangerActionLeft, withKey: "dangerAction")
         leftLight?.texture = SKTexture(imageNamed: "lights")
@@ -409,6 +419,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         rightBulb?.runAction(dangerActionRight, withKey: "dangerAction")
         rightLight?.texture = SKTexture(imageNamed: "lights")
         rightLight?.runAction(dangerActionRight, withKey: "dangerAction")
+        
     }
     
     func arrowDidEndContactWithDangerZone(){

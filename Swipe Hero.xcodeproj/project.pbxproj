@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1CBCF11C1B348CE800C8A41A /* dangerZone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CBCF11B1B348CE800C8A41A /* dangerZone.wav */; };
+		1CBCF11E1B348CF200C8A41A /* swipe.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CBCF11D1B348CF200C8A41A /* swipe.wav */; };
+		1CBCF1201B348CF900C8A41A /* swipe2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CBCF11F1B348CF900C8A41A /* swipe2.wav */; };
+		1CBCF1221B348D0100C8A41A /* explosion.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CBCF1211B348D0100C8A41A /* explosion.wav */; };
 		25EFA0FA1B31901400467AD7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA0F91B31901400467AD7 /* AppDelegate.swift */; };
 		25EFA0FC1B31901400467AD7 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA0FB1B31901400467AD7 /* GameScene.sks */; };
 		25EFA0FE1B31901400467AD7 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA0FD1B31901400467AD7 /* GameScene.swift */; };
@@ -30,6 +34,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1CBCF11B1B348CE800C8A41A /* dangerZone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = dangerZone.wav; sourceTree = "<group>"; };
+		1CBCF11D1B348CF200C8A41A /* swipe.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = swipe.wav; sourceTree = "<group>"; };
+		1CBCF11F1B348CF900C8A41A /* swipe2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = swipe2.wav; sourceTree = "<group>"; };
+		1CBCF1211B348D0100C8A41A /* explosion.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = explosion.wav; sourceTree = "<group>"; };
 		25EFA0F41B31901400467AD7 /* Swipe Hero.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swipe Hero.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		25EFA0F81B31901400467AD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		25EFA0F91B31901400467AD7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -64,6 +72,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1CBCF11A1B348CB200C8A41A /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				1CBCF11B1B348CE800C8A41A /* dangerZone.wav */,
+				1CBCF11D1B348CF200C8A41A /* swipe.wav */,
+				1CBCF11F1B348CF900C8A41A /* swipe2.wav */,
+				1CBCF1211B348D0100C8A41A /* explosion.wav */,
+			);
+			name = Sounds;
+			path = ..;
+			sourceTree = "<group>";
+		};
 		25EFA0EB1B31901400467AD7 = {
 			isa = PBXGroup;
 			children = (
@@ -85,6 +105,7 @@
 		25EFA0F61B31901400467AD7 /* Swipe Hero */ = {
 			isa = PBXGroup;
 			children = (
+				1CBCF11A1B348CB200C8A41A /* Sounds */,
 				25EFA0F91B31901400467AD7 /* AppDelegate.swift */,
 				25EFA0FB1B31901400467AD7 /* GameScene.sks */,
 				25EFA11D1B31966500467AD7 /* Arrow.swift */,
@@ -205,9 +226,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				25EFA1081B31901400467AD7 /* LaunchScreen.xib in Resources */,
+				1CBCF11E1B348CF200C8A41A /* swipe.wav in Resources */,
+				1CBCF1221B348D0100C8A41A /* explosion.wav in Resources */,
 				25EFA1241B31C09800467AD7 /* Images.xcassets in Resources */,
+				1CBCF11C1B348CE800C8A41A /* dangerZone.wav in Resources */,
 				25EFA0FC1B31901400467AD7 /* GameScene.sks in Resources */,
 				25EFA1031B31901400467AD7 /* Main.storyboard in Resources */,
+				1CBCF1201B348CF900C8A41A /* swipe2.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
