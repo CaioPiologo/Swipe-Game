@@ -36,6 +36,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var leftBulb : SKSpriteNode?
     var rightBulb : SKSpriteNode?
     var leftLight : SKSpriteNode?
+    var rightLight : SKSpriteNode?
     var score:Int = 0;
     var level:Int = 0;
     var difficulty:Float = 0;
@@ -43,7 +44,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var userDefaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
     
     var scoreAction : SKAction!
-    var dangerAction : SKAction!
+    var dangerActionLeft : SKAction!
+    var dangerActionRight : SKAction!
 //    var missAction : SKAction!
     
     override func didMoveToView(view: SKView) {
@@ -51,10 +53,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /* Setup your scene here */
         
         self.leftBulb = self.childNodeWithName("leftBulb") as? SKSpriteNode
+        self.leftBulb?.zPosition = 2
         self.rightBulb = self.childNodeWithName("rightBulb") as? SKSpriteNode
+        self.rightBulb?.zPosition = 2
         
         self.leftLight = self.childNodeWithName("leftLight") as? SKSpriteNode
         self.leftLight?.texture = nil
+        self.leftLight?.zPosition = 1.5
+        
+        self.rightLight = self.childNodeWithName("rightLight") as? SKSpriteNode
+        self.rightLight?.texture = nil
+        self.rightLight?.zPosition = 1.5
         
         self.arrowParent = SKSpriteNode(color: SKColor.clearColor(), size: self.size)
         self.arrowParent.anchorPoint.x = -self.size.width/2
@@ -149,7 +158,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         ])
         
-        self.dangerAction = SKAction.repeatActionForever(SKAction.rotateByAngle(4.34, duration: 1.0))
+        self.dangerActionLeft = SKAction.repeatActionForever(SKAction.rotateByAngle(4.34, duration: 1.0))
+        self.dangerActionRight = SKAction.repeatActionForever(SKAction.rotateByAngle(-4.34, duration: 1.0))
         
         
 //        self.missAction = SKAction.sequence([
@@ -355,6 +365,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         leftBulb?.removeActionForKey("dangerAction")
                         leftLight?.texture = nil
                         leftLight?.removeActionForKey("dangerAction")
+                        rightBulb?.texture = SKTexture(imageNamed: "bulb_off")
+                        rightBulb?.removeActionForKey("dangerAction")
+                        rightLight?.texture = nil
+                        rightLight?.removeActionForKey("dangerAction")
                     }
                 }
                 arrow = arrowQueue[currentQueue].pop()
@@ -386,16 +400,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func arrowDidCollideWithDangetZone(){
         arrowInDangerZone++
         leftBulb?.texture = SKTexture(imageNamed: "bulb_on")
-        leftBulb?.runAction(dangerAction, withKey: "dangerAction")
+        leftBulb?.runAction(dangerActionLeft, withKey: "dangerAction")
         leftLight?.texture = SKTexture(imageNamed: "lights")
-        leftLight?.runAction(dangerAction, withKey: "dangerAction")
+        leftLight?.runAction(dangerActionLeft, withKey: "dangerAction")
+        rightBulb?.texture = SKTexture(imageNamed: "bulb_on")
+        rightBulb?.runAction(dangerActionRight, withKey: "dangerAction")
+        rightLight?.texture = SKTexture(imageNamed: "lights")
+        rightLight?.runAction(dangerActionRight, withKey: "dangerAction")
     }
     
     func arrowDidEndContactWithDangerZone(){
-        arrowInDangerZone--
-        if(arrowInDangerZone == 0){
-            leftBulb?.texture = SKTexture(imageNamed: "bulb_off")
-        }
+        
     }
     
     func didBeginContact(contact: SKPhysicsContact)
