@@ -344,16 +344,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     comparingDir = Direction.RIGHT
                 }
             }
-            if(arrow!.direction == comparingDir){
+            if(arrow!.direction.rawValue == comparingDir.rawValue){
+                if(CGRectIntersectsRect(arrow!.frame, dangerZone!.frame)){
+                    arrowInDangerZone--
+                    if(arrowInDangerZone == 0){
+                        leftBulb?.texture = SKTexture(imageNamed: "bulb_off")
+                    }
+                }
                 arrow = arrowQueue[currentQueue].pop()
                 arrow!.runAction(SKAction.removeFromParent())
                 addScore()
+            }
             }else{
                 self.missAction()
                 //TODO: Wrong direction alert
             }
         }
-    }
     
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
