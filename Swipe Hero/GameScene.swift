@@ -241,7 +241,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func addArrow(side:Int){
         let arrowType = arc4random_uniform(5)
         let randomDir = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue + 1))!
-        println(randomDir.rawValue)
         let newArrow:Arrow
         //defines arrow type
         if(arrowType == 0){
@@ -270,7 +269,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             newArrow.position = CGPointMake(3*size.width/4, size.height+newArrow.size.height)
             arrowQueue[RIGHT].push(newArrow)
         }
-        //sets its collision bitmaps
+        //sets its collision properties
         newArrow.physicsBody = SKPhysicsBody(rectangleOfSize: newArrow.size)
         newArrow.physicsBody?.dynamic = true
         newArrow.physicsBody?.categoryBitMask = PhysicsCategory.arrow
@@ -285,7 +284,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if(score % 15 == 0){
             level++
             if(level >= 5){
-                difficulty += Float(2/Float(self.level))
+                difficulty += Float(1/Float(self.level))
                 arrowSpeed -= NSTimeInterval(1/Float(self.level))
             } else {
                 difficulty = Float(level)

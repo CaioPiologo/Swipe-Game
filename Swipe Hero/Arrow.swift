@@ -42,10 +42,5 @@ class Arrow:SKSpriteNode {
     
     func update(speed:CGFloat, queue:Queue<Arrow>){
         self.position.y -= speed * self.size.height
-    /*    if(self.position.y < self.size.height * 0.5){
-            var destroy = SKAction.removeFromParent()
-            self.runAction(destroy)
-            queue.pop()
-        }*/
     }
 }
