@@ -147,8 +147,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.level = level
         self.difficulty = Float(level)
         updateLabels()
+        self.arrowSpeed = 1.0
         //do somethign else
-        startGame()
+        startLevel()
     }
     
     func updateLabels()
@@ -198,7 +199,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         println("Swipe Down Right View")
         validateSwipe(RIGHT, direction: Direction.DOWN)
     }
-    
+    //Function that creates and adds arrows to the scene
     func addArrow(side:Int){
         let randomDir = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue))!
         let newArrow = Arrow(direction: randomDir, imageNamed: "up-Arrow")
@@ -220,10 +221,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             newArrow.position = CGPointMake(3*size.width/4, size.height+newArrow.size.height)
             arrowQueue[RIGHT].push(newArrow)
         }
-        
+        //sets its collision bitmaps
+        newArrow.physicsBody = SKPhysicsBody(rectangleOfSize: newArrow.size)
+        newArrow.physicsBody?.dynamic = true
+        newArrow.physicsBody?.categoryBitMask = PhysicsCategory.arrow
+        newArrow.physicsBody?.contactTestBitMask = PhysicsCategory.dangerZone | PhysicsCategory.endZone
+        newArrow.physicsBody?.collisionBitMask = 0
         self.addChild(newArrow)
     }
-    
+    //Function that increases score and level through progress
     func addScore(){
         //TODO: ajustar dificuldade para dispositivo
         self.score++
@@ -243,7 +249,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             self.removeAllActions()
             var block = SKAction.runBlock{
-                self.startGame()
+                self.startLevel()
             }
             self.runAction(block)
         }
@@ -255,7 +261,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         updateLabels()
         scoreLabel?.runAction(scoreAction)
     }
-    
+    //Function checks the swipe and the first arrow from the side queue direction
     func validateSwipe(side: Int, direction: Direction){
         
         var arrow : Arrow?
@@ -291,10 +297,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    func arrowDidCollideWithEndZone(arrow:SKSpriteNode){
+        arrow.removeFromParent()
+    }
+    
     func didBeginContact(contact: SKPhysicsContact)
     {
+        var arrow: SKPhysicsBody
+        var secondBody: SKPhysicsBody
+        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
+            arrow = contact.bodyA
+            secondBody = contact.bodyB
+        } else {
+            arrow = contact.bodyB
+            secondBody = contact.bodyA
+        }
        // NSLog("paiseh");
-        let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+        let collision = arrow.categoryBitMask | secondBody.categoryBitMask
         if(collision == (PhysicsCategory.arrow | PhysicsCategory.dangerZone))
         {
             //play danger animation
@@ -302,7 +321,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }else if(collision == (PhysicsCategory.arrow | PhysicsCategory.endZone))
         {
             //end game
-          //  NSLog("Perdeu playboy!");
+            arrowDidCollideWithEndZone(arrow.node as! SKSpriteNode)
+            //TODO: end game animation + end game view
         }
     }
     
@@ -313,8 +333,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //stop danger animation
         }
     }
-    
-    func startGame(){
+    //Function called with each level or new game
+    func startLevel(){
         var wait = SKAction.waitForDuration(arrowSpeed)
         var run = SKAction.runBlock {
             var randGeneration = arc4random_uniform(UInt32(self.difficulty))
