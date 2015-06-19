@@ -38,7 +38,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var userDefaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
     
     var scoreAction : SKAction!
-    var missAction : SKAction!
+//    var missAction : SKAction!
     
     override func didMoveToView(view: SKView) {
             
@@ -130,13 +130,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         ])
         
-        self.missAction = SKAction.sequence([
-            
-            SKAction.colorizeWithColor(SKColor.redColor(), colorBlendFactor: 1.0, duration: 0.2),
-            
-            SKAction.colorizeWithColor(SKColor(red: 1, green: 240/255, blue: 216/255, alpha: 1), colorBlendFactor: 0.0, duration: 0.1)
-            
-        ])
+        
+//        self.missAction = SKAction.sequence([
+//            
+//            
+//            
+//            SKAction.colorizeWithColor(SKColor.redColor(), colorBlendFactor: 1.0, duration: 0.2),
+//            
+//            SKAction.colorizeWithColor(SKColor(red: 1, green: 240/255, blue: 216/255, alpha: 1), colorBlendFactor: 0.0, duration: 0.1)
+//            
+//        ])
         //start the game
         self.restart(1)
     }
@@ -261,6 +264,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel?.runAction(scoreAction)
     }
     
+    func missAction(){
+        let initialX = self.position.x
+        let initialY = self.position.y
+        let amplitudeX = 32
+        let amplitudeY = 2
+        var newX : CGFloat
+        var newY : CGFloat
+        var randomActions : [SKAction] = []
+        var i = 0
+        
+        for i in 0..<10 {
+            let newX = initialX + CGFloat(arc4random_uniform(UInt32(amplitudeX))) - CGFloat(amplitudeX / 2)
+            let newY = initialY + CGFloat(arc4random_uniform(UInt32(amplitudeY))) - CGFloat(amplitudeY / 2)
+            randomActions.append(SKAction.moveTo(CGPointMake(newX, newY), duration: 0.015))
+        }
+        
+        var rep = SKAction.sequence(randomActions)
+        
+        self.runAction(rep)
+    }
+    
     func validateSwipe(side: Int, direction: Direction){
         
         var arrow : Arrow?
@@ -275,7 +299,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             currentQueue = RIGHT
         }
         addScore()
-        self.runAction(missAction)
+        self.missAction()
+//        self.runAction(missAction)
         /*Check swipe's direction*/
         if(arrow != nil){
             if(arrow!.direction == direction){
