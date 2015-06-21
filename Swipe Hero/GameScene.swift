@@ -82,7 +82,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         //get high score from user defaults
         self.highScore = userDefaults.integerForKey(HIGHSCOREKEY)
-        NSLog("\(highScore)");
         
         //initialize labels
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
@@ -196,8 +195,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.difficulty = Float(level)
         updateLabels()
         self.arrowSpeed = 1.0
-        //do somethign else
-        startLevel()
     }
     
     func updateLabels()
@@ -269,6 +266,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if node.name == "playButton" {
                 self.startButton?.removeFromParent()
                 self.startLevel()
+                restart(1);
                 self.scoreLabel?.hidden = false
                 self.highScoreLabel?.hidden = false
                 self.levelLabel?.hidden = false

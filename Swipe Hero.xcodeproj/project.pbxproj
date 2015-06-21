@@ -54,6 +54,7 @@
 		25EFA1131B31901500467AD7 /* Swipe_HeroTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Swipe_HeroTests.swift; sourceTree = "<group>"; };
 		25EFA11D1B31966500467AD7 /* Arrow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Arrow.swift; sourceTree = "<group>"; };
 		25EFA1231B31C09800467AD7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		8C2491F11B372AA4004EEA65 /* I-pixel-u.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "I-pixel-u.ttf"; path = "../../../../Documents/BEPiD/Super Spaceagon/Super Spaceagon/Font/I-pixel-u.ttf"; sourceTree = "<group>"; };
 		8CEE01F11B31B25400D98C14 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -108,6 +109,7 @@
 		25EFA0F61B31901400467AD7 /* Swipe Hero */ = {
 			isa = PBXGroup;
 			children = (
+				8C2491F01B372A97004EEA65 /* Font */,
 				1CBCF11A1B348CB200C8A41A /* Sounds */,
 				25EFA0F91B31901400467AD7 /* AppDelegate.swift */,
 				25EFA0FB1B31901400467AD7 /* GameScene.sks */,
@@ -149,6 +151,14 @@
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
+		};
+		8C2491F01B372A97004EEA65 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				8C2491F11B372AA4004EEA65 /* I-pixel-u.ttf */,
+			);
+			path = Font;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
