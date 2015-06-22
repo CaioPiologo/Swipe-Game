@@ -397,6 +397,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var rep = SKAction.sequence(randomActions)
         
         self.arrowParent.runAction(rep)
+        self.sparkAt(CGPoint(x: 735, y: 1178),angle: 180)
+        self.sparkAt(CGPoint(x: 16, y: 668),angle: 0)
+        
     }
     
     //Function checks the swipe and the first arrow from the side queue direction
@@ -647,5 +650,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         menuMusicPlayer?.pause()
     }
     
+    //Function that explodes the arrows
+    func sparkAt(pos: CGPoint, angle:Float) {
+        var emitterNode = SKEmitterNode(fileNamed: "sparkParticle.sks")
+        emitterNode.particlePosition = pos
+        emitterNode.particleColorBlendFactor = 1.0
+        emitterNode.particleColorSequence = nil
+        emitterNode.emissionAngle = CGFloat(angle)
+        arrowParent.addChild(emitterNode)
+        self.runAction(SKAction.waitForDuration(1.5), completion: { emitterNode.removeFromParent() })
+    }
 
 }

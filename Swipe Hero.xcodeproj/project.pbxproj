@@ -23,7 +23,7 @@
 		25EFA1241B31C09800467AD7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1231B31C09800467AD7 /* Images.xcassets */; };
 		8C2491F61B3862E5004EEA65 /* Rhinoceros.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8C2491F51B3862E5004EEA65 /* Rhinoceros.mp3 */; };
 		8C2491F81B38631A004EEA65 /* I-pixel-u.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C2491F71B38631A004EEA65 /* I-pixel-u.ttf */; };
-		8C3874F11B38721200342F78 /* MyParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8C3874EF1B38721200342F78 /* MyParticle.sks */; };
+		8C3874F11B38721200342F78 /* sparkParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8C3874EF1B38721200342F78 /* sparkParticle.sks */; };
 		8C3874F21B38721200342F78 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C3874F01B38721200342F78 /* spark.png */; };
 		8C9EDC661B386FE8008AA852 /* menumusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8C9EDC651B386FE8008AA852 /* menumusic.mp3 */; };
 		8CEE01F21B31B25400D98C14 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEE01F11B31B25400D98C14 /* Queue.swift */; };
@@ -61,7 +61,7 @@
 		25EFA1231B31C09800467AD7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		8C2491F51B3862E5004EEA65 /* Rhinoceros.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Rhinoceros.mp3; sourceTree = "<group>"; };
 		8C2491F71B38631A004EEA65 /* I-pixel-u.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "I-pixel-u.ttf"; sourceTree = SOURCE_ROOT; };
-		8C3874EF1B38721200342F78 /* MyParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MyParticle.sks; sourceTree = "<group>"; };
+		8C3874EF1B38721200342F78 /* sparkParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = sparkParticle.sks; sourceTree = "<group>"; };
 		8C3874F01B38721200342F78 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		8C9EDC651B386FE8008AA852 /* menumusic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = menumusic.mp3; sourceTree = "<group>"; };
 		8CEE01F11B31B25400D98C14 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
@@ -123,7 +123,7 @@
 				8C2491F01B372A97004EEA65 /* Font */,
 				1CBCF11A1B348CB200C8A41A /* Sounds */,
 				25EFA0F91B31901400467AD7 /* AppDelegate.swift */,
-				8C3874EF1B38721200342F78 /* MyParticle.sks */,
+				8C3874EF1B38721200342F78 /* sparkParticle.sks */,
 				8C3874F01B38721200342F78 /* spark.png */,
 				25EFA0FB1B31901400467AD7 /* GameScene.sks */,
 				25EFA11D1B31966500467AD7 /* Arrow.swift */,
@@ -261,7 +261,7 @@
 				8C9EDC661B386FE8008AA852 /* menumusic.mp3 in Resources */,
 				8C2491F81B38631A004EEA65 /* I-pixel-u.ttf in Resources */,
 				25EFA1241B31C09800467AD7 /* Images.xcassets in Resources */,
-				8C3874F11B38721200342F78 /* MyParticle.sks in Resources */,
+				8C3874F11B38721200342F78 /* sparkParticle.sks in Resources */,
 				25EFA0FC1B31901400467AD7 /* GameScene.sks in Resources */,
 				25EC12D81B34858500A563D2 /* borderWhitePixel.jpg in Resources */,
 				8C2491F61B3862E5004EEA65 /* Rhinoceros.mp3 in Resources */,
