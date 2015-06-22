@@ -346,7 +346,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     //Function that increases score and level through progress
     func addScore(){
         //TODO: ajustar dificuldade para dispositivo
-        self.score++
+        self.score++;
         if(score % 15 == 0){
             level++
             if(level >= 5){
@@ -385,7 +385,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var newY : CGFloat
         var randomActions : [SKAction] = []
         var i = 0
-        
+        self.arrowParent.position = CGPoint(x: 0, y: 0)
         randomActions.append(SKAction.playSoundFileNamed("swipe2.wav", waitForCompletion: false) )
         
         for i in 0..<10 {
@@ -393,7 +393,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let newY = initialY + CGFloat(arc4random_uniform(UInt32(amplitudeY))) - CGFloat(amplitudeY / 2)
             randomActions.append(SKAction.moveTo(CGPointMake(newX, newY), duration: 0.015))
         }
-        
+        randomActions.append(SKAction.moveTo(CGPoint(x: initialX, y: initialY), duration: 0.015))
         var rep = SKAction.sequence(randomActions)
         
         self.arrowParent.runAction(rep)
