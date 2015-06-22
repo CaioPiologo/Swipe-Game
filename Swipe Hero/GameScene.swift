@@ -24,7 +24,6 @@ struct PhysicsCategory {
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //variables
-    
     var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
     var arrowSpeed:NSTimeInterval = 1.0
     var leftView: UIView!
@@ -51,6 +50,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var difficulty:Float = 0;
     var highScore = 0;
     var userDefaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
+    var bgMusicPlayer:AVAudioPlayer?
     
     var scoreAction : SKAction!
     var dangerActionLeft : SKAction!
@@ -183,8 +183,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.dangerActionLeft = SKAction.repeatActionForever(SKAction.rotateByAngle(4.34, duration: 1.0))
         self.dangerActionRight = SKAction.repeatActionForever(SKAction.rotateByAngle(-4.34, duration: 1.0))
-        //start the game
-//        self.restart(1)
+        
+        //start danger zone animations
+        self.startDangerZoneAnimation()
+        
+        //begin background music
+        self.playBackgroundMusic()
     }
     
     //Restart with initial level
@@ -195,6 +199,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.difficulty = Float(level)
         updateLabels()
         self.arrowSpeed = 1.0
+        self.arrowInDangerZone = 0;
+        self.removeAllActions()
+        //begin background music
+        self.playBackgroundMusic()
     }
     
     func updateLabels()
@@ -265,8 +273,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // Check if the location of the touch is within the button's bounds
             if node.name == "playButton" {
                 self.startButton?.removeFromParent()
+                self.restart(1);
                 self.startLevel()
-                restart(1);
                 self.scoreLabel?.hidden = false
                 self.highScoreLabel?.hidden = false
                 self.levelLabel?.hidden = false
@@ -567,16 +575,52 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func endGame(){
+        self.startButton?.removeFromParent()
         self.addChild(self.startButton!)
         self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
-        self.scoreLabel?.hidden = true
+        //self.scoreLabel?.hidden = true
         self.levelLabel?.hidden = true
         self.leftView.hidden = true
         self.rightView.hidden = true
-        self.scoreText?.hidden = true
+        //self.scoreText?.hidden = true
         self.levelText?.hidden = true
         self.highScoreText?.hidden = false
         self.swipeLabel?.hidden = false
         self.heroLabel?.hidden = false
     }
+    
+    func startDangerZoneAnimation()
+    {
+        leftBulb?.texture = SKTexture(imageNamed: "bulb_on")
+        leftBulb?.runAction(dangerActionLeft, withKey: "dangerAction")
+        leftLight?.texture = SKTexture(imageNamed: "lights")
+        leftLight?.runAction(dangerActionLeft, withKey: "dangerAction")
+        rightBulb?.texture = SKTexture(imageNamed: "bulb_on")
+        rightBulb?.runAction(dangerActionRight, withKey: "dangerAction")
+        rightLight?.texture = SKTexture(imageNamed: "lights")
+        rightLight?.runAction(dangerActionRight, withKey: "dangerAction")
+    }
+    
+    
+    func playBackgroundMusic()
+    {
+        if(self.bgMusicPlayer == nil)
+        {
+            var url:NSURL = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("Rhinoceros", ofType: "mp3")!)!
+            var erro:NSError? = nil
+            bgMusicPlayer = AVAudioPlayer(contentsOfURL: url, error: &erro)
+            bgMusicPlayer?.numberOfLoops = -1;
+            bgMusicPlayer?.prepareToPlay()
+        }
+        bgMusicPlayer?.pause()
+        bgMusicPlayer?.currentTime = 0;
+        bgMusicPlayer?.play()
+    }
+    
+    func stopBackgroundMusic()
+    {
+        bgMusicPlayer?.pause()
+    }
+    
+
 }
