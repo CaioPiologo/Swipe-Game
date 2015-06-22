@@ -51,6 +51,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var highScore = 0;
     var userDefaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
     var bgMusicPlayer:AVAudioPlayer?
+    var menuMusicPlayer:AVAudioPlayer?
     
     var scoreAction : SKAction!
     var dangerActionLeft : SKAction!
@@ -188,7 +189,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.startDangerZoneAnimation()
         
         //begin background music
-        self.playBackgroundMusic()
+        self.playMenuMusic()
     }
     
     //Restart with initial level
@@ -202,6 +203,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.arrowInDangerZone = 0;
         self.removeAllActions()
         //begin background music
+        self.stopMenuMusic()
         self.playBackgroundMusic()
     }
     
@@ -285,7 +287,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.highScoreText?.hidden = false
                 self.swipeLabel?.hidden = true
                 self.heroLabel?.hidden = true
-                
+                self.stopMenuMusic()
+                self.playBackgroundMusic()
                 self.leftLight?.texture = nil
                 self.leftLight?.removeActionForKey("dangerAction")
                 self.rightLight?.texture = nil
@@ -587,6 +590,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.highScoreText?.hidden = false
         self.swipeLabel?.hidden = false
         self.heroLabel?.hidden = false
+        self.stopBackgroundMusic()
+        self.playMenuMusic()
     }
     
     func startDangerZoneAnimation()
@@ -620,6 +625,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func stopBackgroundMusic()
     {
         bgMusicPlayer?.pause()
+    }
+    
+    func playMenuMusic()
+    {
+        if(self.menuMusicPlayer == nil)
+        {
+            var url:NSURL = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("menumusic", ofType: "mp3")!)!
+            var erro:NSError? = nil
+            menuMusicPlayer = AVAudioPlayer(contentsOfURL: url, error: &erro)
+            menuMusicPlayer?.numberOfLoops = -1;
+            menuMusicPlayer?.prepareToPlay()
+        }
+        menuMusicPlayer?.pause()
+        menuMusicPlayer?.currentTime = 0;
+        menuMusicPlayer?.play()
+    }
+    
+    func stopMenuMusic()
+    {
+        menuMusicPlayer?.pause()
     }
     
 
