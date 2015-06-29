@@ -225,7 +225,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.playBackgroundMusic()
                 }),
                 SKAction.group([
-                    
+                    SKAction.playSoundFileNamed("doorsfx.mp3", waitForCompletion: false),
                     SKAction.runBlock({
                         self.leftDoor?.runAction(openDoorLeft)
                     }),
@@ -243,7 +243,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             ])
         self.closeDoorAction = SKAction.sequence([
             SKAction.group([
-                
                 SKAction.runBlock({
                     self.leftDoor?.runAction(openDoorLeft.reversedAction())
                 }),
@@ -259,6 +258,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 ]),
             SKAction.waitForDuration(1.0),
+            SKAction.playSoundFileNamed("doorsfx.mp3", waitForCompletion: false),
             rotateMiddle,
             SKAction.runBlock({ () -> Void in
                 self.stopBackgroundMusic()
