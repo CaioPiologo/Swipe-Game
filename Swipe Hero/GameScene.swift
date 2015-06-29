@@ -352,16 +352,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
             }
             if node.name == "pauseButton" && inGame && !animatingMenu{
-                
                 animatingMenu = true
                 if(!self.pause)
                 {
                     self.pauseGame()
+                    self.pauseBackGroundMusic()
                     self.showMenu(){}
                 }else
                 {
                     self.hideMenu(){
                         self.unpauseGame()
+                        self.unpauseBackGroundMusic()
                     }
                 }
                 
@@ -551,6 +552,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 if(arrow!.direction.rawValue == comparingDir.rawValue){
                     if(CGRectIntersectsRect(arrow!.frame, dangerZone!.frame)){
                         arrowInDangerZone--
+                        addScore()
                         if(arrowInDangerZone == 0){
                             leftBulb?.texture = SKTexture(imageNamed: "bulb_off")
                             leftBulb?.removeActionForKey("dangerAction")
@@ -742,14 +744,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             bgMusicPlayer?.numberOfLoops = -1;
             bgMusicPlayer?.prepareToPlay()
         }
+        bgMusicPlayer?.play()
+    }
+    
+    func pauseBackGroundMusic()
+    {
         bgMusicPlayer?.pause()
-        bgMusicPlayer?.currentTime = 0;
+    }
+    
+    func unpauseBackGroundMusic()
+    {
         bgMusicPlayer?.play()
     }
     
     func stopBackgroundMusic()
     {
         bgMusicPlayer?.pause()
+        bgMusicPlayer?.currentTime = 0;
+        bgMusicPlayer?.play()
     }
     
     func playMenuMusic()
