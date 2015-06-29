@@ -552,6 +552,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 if(arrow!.direction.rawValue == comparingDir.rawValue){
                     if(CGRectIntersectsRect(arrow!.frame, dangerZone!.frame)){
                         arrowInDangerZone--
+                        addScore()
                         if(arrowInDangerZone == 0){
                             leftBulb?.texture = SKTexture(imageNamed: "bulb_off")
                             leftBulb?.removeActionForKey("dangerAction")
