@@ -12,7 +12,6 @@
 		1CFF0BBD1B34949700A2F941 /* explosion.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CFF0BBC1B34949700A2F941 /* explosion.wav */; };
 		1CFF0BBF1B3496C500A2F941 /* dangerZone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CFF0BBE1B3496C500A2F941 /* dangerZone.wav */; };
 		25C2364C1B3894EB00E02FE4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1011B31901400467AD7 /* Main.storyboard */; };
-		25C236911B41ACB000E02FE4 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25C236901B41ACB000E02FE4 /* GameKit.framework */; };
 		25EC12CD1B347CA500A563D2 /* ExplosionParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */; };
 		25EC12D81B34858500A563D2 /* borderWhitePixel.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 25EC12D71B34858500A563D2 /* borderWhitePixel.jpg */; };
 		25EFA0FA1B31901400467AD7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA0F91B31901400467AD7 /* AppDelegate.swift */; };
@@ -46,7 +45,6 @@
 		1CBCF11F1B348CF900C8A41A /* swipe2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = swipe2.wav; sourceTree = "<group>"; };
 		1CFF0BBC1B34949700A2F941 /* explosion.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = explosion.wav; sourceTree = "<group>"; };
 		1CFF0BBE1B3496C500A2F941 /* dangerZone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = dangerZone.wav; sourceTree = "<group>"; };
-		25C236901B41ACB000E02FE4 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ExplosionParticle.sks; sourceTree = "<group>"; };
 		25EC12D71B34858500A563D2 /* borderWhitePixel.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = borderWhitePixel.jpg; sourceTree = "<group>"; };
 		25EFA0F41B31901400467AD7 /* Swipe Hero.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swipe Hero.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,7 +73,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				25C236911B41ACB000E02FE4 /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -106,7 +103,6 @@
 		25EFA0EB1B31901400467AD7 = {
 			isa = PBXGroup;
 			children = (
-				25C236901B41ACB000E02FE4 /* GameKit.framework */,
 				25EFA0F61B31901400467AD7 /* Swipe Hero */,
 				25EFA1101B31901500467AD7 /* Swipe HeroTests */,
 				25EFA0F51B31901400467AD7 /* Products */,
@@ -230,7 +226,7 @@
 						DevelopmentTeam = 7A42Z7C5S3;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
