@@ -197,7 +197,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     {
         self.score = 0
         self.level = level
-        self.difficulty = Float(level)
+        self.difficulty = Float(self.level)
         updateLabels()
         self.arrowSpeed = 1.0
         self.arrowInDangerZone = 0;
@@ -222,36 +222,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //Swipe Functions
     func swipeRightLeftView(swipe:UISwipeGestureRecognizer) {
-        println("Swipe Right Left View")
         validateSwipe(LEFT, direction: Direction.RIGHT)
     }
     func swipeLeftLeftView(swipe:UISwipeGestureRecognizer) {
-        println("Swipe Left Left View")
         validateSwipe(LEFT, direction: Direction.LEFT)
     }
     func swipeUpLeftView(swipe:UISwipeGestureRecognizer) {
-        println("Swipe Up Left View")
         validateSwipe(LEFT, direction: Direction.UP)
     }
     func swipeDownLeftView(swipe:UISwipeGestureRecognizer) {
-        println("Swipe Down Left View")
         validateSwipe(LEFT, direction: Direction.DOWN)
     }
     
     func swipeRightRightView(swipe:UISwipeGestureRecognizer) {
-        println("Swipe Right Right View")
         validateSwipe(RIGHT, direction: Direction.RIGHT)
     }
     func swipeLeftRightView(swipe:UISwipeGestureRecognizer) {
-        println("Swipe Left Right View")
         validateSwipe(RIGHT, direction: Direction.LEFT)
     }
     func swipeUpRightView(swipe:UISwipeGestureRecognizer) {
-        println("Swipe Up Right View")
         validateSwipe(RIGHT, direction: Direction.UP)
     }
     func swipeDownRightView(swipe:UISwipeGestureRecognizer) {
-        println("Swipe Down Right View")
         validateSwipe(RIGHT, direction: Direction.DOWN)
     }
     
@@ -350,17 +342,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if(score % 15 == 0){
             level++
             if(level >= 5){
-                difficulty += Float(1/Float(self.level))
-                arrowSpeed -= NSTimeInterval(1/Float(self.level))
+                if(level % 3 == 0){
+                    difficulty += Float(1/Float(self.level))
+                } else if(level % 2 == 0){
+                    arrowSpeed -= NSTimeInterval(1/Float(self.level))
+                }
             } else {
-                difficulty = Float(level)
+                self.difficulty = Float(level)
             }
-            if(difficulty >= 15){
-                difficulty = 15
+            if(difficulty >= 10){
+                difficulty = 10
             }
             if(arrowSpeed <= 0.5){
                 arrowSpeed = 0.5
             }
+            println("new level")
+            println(self.level)
+            println(self.difficulty)
+            println(self.arrowSpeed)
             self.removeAllActions()
             var block = SKAction.runBlock{
                 self.startLevel()
@@ -520,13 +519,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             arrow = contact.bodyB
             secondBody = contact.bodyA
         }
-       // NSLog("paiseh");
         let collision = arrow.categoryBitMask | secondBody.categoryBitMask
         if(collision == (PhysicsCategory.arrow | PhysicsCategory.dangerZone))
         {
             arrowDidCollideWithDangetZone()
             //play danger animation
-           // NSLog("COSTOOOOO");
         }else if(collision == (PhysicsCategory.arrow | PhysicsCategory.endZone))
         {
             //end game

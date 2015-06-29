@@ -11,6 +11,7 @@
 		1CBCF1201B348CF900C8A41A /* swipe2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CBCF11F1B348CF900C8A41A /* swipe2.wav */; };
 		1CFF0BBD1B34949700A2F941 /* explosion.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CFF0BBC1B34949700A2F941 /* explosion.wav */; };
 		1CFF0BBF1B3496C500A2F941 /* dangerZone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CFF0BBE1B3496C500A2F941 /* dangerZone.wav */; };
+		25C2364C1B3894EB00E02FE4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1011B31901400467AD7 /* Main.storyboard */; };
 		25EC12CD1B347CA500A563D2 /* ExplosionParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */; };
 		25EC12D81B34858500A563D2 /* borderWhitePixel.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 25EC12D71B34858500A563D2 /* borderWhitePixel.jpg */; };
 		25EFA0FA1B31901400467AD7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA0F91B31901400467AD7 /* AppDelegate.swift */; };
@@ -253,6 +254,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25C2364C1B3894EB00E02FE4 /* Main.storyboard in Resources */,
 				1CFF0BBD1B34949700A2F941 /* explosion.wav in Resources */,
 				25EFA1081B31901400467AD7 /* LaunchScreen.xib in Resources */,
 				1CFF0BBF1B3496C500A2F941 /* dangerZone.wav in Resources */,
