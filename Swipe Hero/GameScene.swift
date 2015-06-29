@@ -67,6 +67,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var inMenu = false
     var inGame = false
     var pause = false
+    var animatingMenu = false;
     
     //    var missAction : SKAction!
     
@@ -477,7 +478,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             println(self.level)
             println(self.difficulty)
             println(self.arrowSpeed)
-            self.removeAllActions()
+            self.arrowParent.removeAllActions()
             var block = SKAction.runBlock{
                 self.startLevel()
             }
@@ -520,12 +521,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //Function checks the swipe and the first arrow from the side queue direction
     func validateSwipe(side: Int, direction: Direction){
-        
-        var arrow : Arrow?
-        var currentQueue : Int
-        var comparingDir = direction
-        /*Get first arrow from queue*/
-        if(pause == false){
+        if(!pause)
+        {
+            var arrow : Arrow?
+            var currentQueue : Int
+            var comparingDir = direction
+            /*Get first arrow from queue*/
             if(side == LEFT){
                 arrow = arrowQueue[LEFT].getPosition(0)
                 currentQueue = LEFT
@@ -576,7 +577,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
-        if(pause == false){
+        if(!pause)
+        {
             for i in 0 ... self.arrowQueue[LEFT].length {
                 self.arrowQueue[LEFT].getPosition(i)?.update(CGFloat(self.difficulty/100) + CGFloat(0.05), queue:arrowQueue[LEFT])
             }
