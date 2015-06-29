@@ -705,6 +705,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func endGame(){
         animateDoorReverse { () -> () in
+            self.stopBackgroundMusic()
             self.startButton?.removeFromParent()
             self.addChild(self.startButton!)
             self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
@@ -761,7 +762,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     {
         bgMusicPlayer?.pause()
         bgMusicPlayer?.currentTime = 0;
-        bgMusicPlayer?.play()
     }
     
     func playMenuMusic()
@@ -817,6 +817,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         act2.timingMode = SKActionTimingMode.EaseInEaseOut
         act3.timingMode = SKActionTimingMode.EaseInEaseOut
         self.menu?.runAction(SKAction.sequence([
+            SKAction.playSoundFileNamed("chainDrop.mp3", waitForCompletion: false),
             act1,
             act2,
             act3,
@@ -830,7 +831,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         inMenu = false
         var action = SKAction.moveBy(CGVector(dx: 0, dy: 1054), duration: 0.5)
         action.timingMode = SKActionTimingMode.EaseIn
-        self.menu?.runAction(SKAction.sequence([action,SKAction.runBlock({self.animatingMenu = false})]), completion: callback)
+        self.menu?.runAction(SKAction.sequence([SKAction.playSoundFileNamed("chainDrop.mp3", waitForCompletion: false),action,SKAction.runBlock({self.animatingMenu = false})]), completion: callback)
         
     }
     
