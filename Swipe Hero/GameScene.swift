@@ -57,12 +57,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var middleDoor:SKNode?
     var middleLeftDoor:SKSpriteNode?
     var middleRightDoor:SKSpriteNode?
+    var menu:SKSpriteNode?
     
     var scoreAction : SKAction!
     var dangerActionLeft : SKAction!
     var dangerActionRight : SKAction!
     var openDoorAction : SKAction!
     var closeDoorAction : SKAction!
+    var inMenu = false
+    var inGame = false
+    
     //    var missAction : SKAction!
     
     override func didMoveToView(view: SKView) {
@@ -116,7 +120,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.middleDoor = self.childNodeWithName("portaMeio")
         self.middleRightDoor = self.middleDoor?.childNodeWithName("portaMeioDireita") as? SKSpriteNode
         self.middleLeftDoor = self.middleDoor?.childNodeWithName("portaMeioEsquerda") as? SKSpriteNode
-        NSLog("\(self.middleDoor)");
+        self.menu = self.childNodeWithName("menu") as? SKSpriteNode
         
         //erase this //TODO
         
@@ -340,6 +344,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if node.name == "playButton" {
                 self.startButton?.texture = SKTexture(imageNamed: "button_play_pressed_pixelated")
             }
+            //settings button
+            if node.name == "settings" && !inGame{
+                NSLog("1");
+                if(!inMenu)
+                {
+                    NSLog("2");
+                    self.showMenu(){}
+                }else
+                {
+                    NSLog("3");
+                    self.hideMenu(){}
+                }
+            }
         }
     }
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
@@ -348,7 +365,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let location = touch.locationInNode(self)
             let node = self.nodeAtPoint(location)
             // Check if the location of the touch is within the button's bounds
-            if node.name == "playButton" {
+            if node.name == "playButton" && inMenu == false{
+                self.inGame = true
                 self.startButton?.removeFromParent()
                 self.scoreLabel?.hidden = false
                 self.highScoreLabel?.hidden = false
@@ -370,15 +388,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.leftBulb?.removeActionForKey("dangerAction")
                 self.rightBulb?.texture = SKTexture(imageNamed: "bulb_off")
                 self.rightBulb?.removeActionForKey("dangerAction")
+                self.restart(1);
+                
                 self.animateDoor()
-                    {
+                {
                         
-                        self.restart(1);
-                        self.startLevel()
+                    self.startLevel()
                 }
             } else {
                 self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
             }
+            
         }
     }
     
@@ -673,6 +693,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.highScoreText?.hidden = false
             self.swipeLabel?.hidden = false
             self.heroLabel?.hidden = false
+            self.inGame = false;
         }
     }
     
@@ -750,6 +771,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     {
         var action = SKAction.sequence([self.closeDoorAction,SKAction.waitForDuration(0.3),SKAction.runBlock(callback)])
         self.middleDoor?.runAction(action)
+    }
+    
+    func showMenu(callback:()->())
+    {
+        self.inMenu = true
+        var act1 = SKAction.moveBy(CGVector(dx: 0, dy: -1054), duration: 0.5)
+        var act2 = SKAction.moveBy(CGVector(dx: 0, dy: 20), duration: 0.1)
+        var act3 = SKAction.moveBy(CGVector(dx: 0, dy: -20), duration: 0.1)
+        act1.timingMode = SKActionTimingMode.EaseInEaseOut
+        act2.timingMode = SKActionTimingMode.EaseInEaseOut
+        act3.timingMode = SKActionTimingMode.EaseInEaseOut
+        self.menu?.runAction(SKAction.sequence([
+            act1,
+            act2,
+            act3
+            ]))
+    }
+    
+    func hideMenu(callback:()->())
+    {
+        self.inMenu = false
+        inMenu = false
+        var action = SKAction.moveBy(CGVector(dx: 0, dy: 1054), duration: 0.5)
+        action.timingMode = SKActionTimingMode.EaseIn
+        self.menu?.runAction(action)
+        
     }
     
 }
