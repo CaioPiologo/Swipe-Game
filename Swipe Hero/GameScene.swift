@@ -354,6 +354,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.hideMenu(){}
                 }
             }
+            NSLog("\(inGame)");
+            if node.name == "pauseButton" && inGame{
+                NSLog("hu3");
+                if(!self.inMenu)
+                {
+                    NSLog("aaaaaaa");
+                    //pause game here
+                    self.showMenu(){}
+                }else
+                {
+                    NSLog("bbbb");
+                    self.hideMenu(){
+                        //unpause game here
+                    }
+                }
+            }
         }
     }
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
@@ -783,7 +799,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             act1,
             act2,
             act3
-            ]))
+            ]), completion: callback)
     }
     
     func hideMenu(callback:()->())
@@ -792,7 +808,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         inMenu = false
         var action = SKAction.moveBy(CGVector(dx: 0, dy: 1054), duration: 0.5)
         action.timingMode = SKActionTimingMode.EaseIn
-        self.menu?.runAction(action)
+        self.menu?.runAction(action, completion: callback)
         
     }
     
