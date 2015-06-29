@@ -74,6 +74,17 @@ class Queue<T>
         self.length = 0;
     }
     
+    func executeFunction(function:(T)->())
+    {
+        var node:Node<T>?
+        node = self.head;
+        while(node != nil)
+        {
+            function(node!.value)
+            node = node?.next
+        }
+    }
+    
 }
 
 class Node<T>

@@ -66,6 +66,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var closeDoorAction : SKAction!
     var inMenu = false
     var inGame = false
+    var pause = false
+    var animatingMenu = false;
     
     //    var missAction : SKAction!
     
@@ -90,6 +92,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.arrowParent.anchorPoint.x = -self.size.width/2
         self.arrowParent.anchorPoint.y = -self.size.height/2
         self.arrowParent.position = self.position
+        self.arrowParent.size = CGSize(width: 1, height: 1)
         self.addChild(arrowParent)
         
         //get high score from user defaults
@@ -269,6 +272,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         //begin background music
         self.playMenuMusic()
+        
     }
     
     //Restart with initial level
@@ -345,7 +349,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.startButton?.texture = SKTexture(imageNamed: "button_play_pressed_pixelated")
             }
             //settings button
-            if node.name == "settings" && !inGame{
+            if node.name == "settings" && !inGame && !animatingMenu{
+                animatingMenu = true
                 if(!inMenu)
                 {
                     self.showMenu(){}
@@ -354,21 +359,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.hideMenu(){}
                 }
             }
-            NSLog("\(inGame)");
-            if node.name == "pauseButton" && inGame{
-                NSLog("hu3");
-                if(!self.inMenu)
+            if node.name == "pauseButton" && inGame && !animatingMenu{
+                
+                animatingMenu = true
+                if(!self.pause)
                 {
-                    NSLog("aaaaaaa");
-                    //pause game here
+                    self.pauseGame()
                     self.showMenu(){}
                 }else
                 {
-                    NSLog("bbbb");
                     self.hideMenu(){
-                        //unpause game here
+                        self.unpauseGame()
                     }
                 }
+                
             }
         }
     }
@@ -417,43 +421,46 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //Function that creates and adds arrows to the scene
     func addArrow(side:Int){
-        let arrowType = arc4random_uniform(5)
-        let randomDir = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue + 1))!
-        let newArrow:Arrow
-        //defines arrow type
-        if(arrowType == 0){
-            newArrow = Arrow(direction: randomDir, type:LEFT, imageNamed: "arrow_wrong_pixelated")
-            newArrow.color = UIColor.redColor()
-        } else {
-            newArrow = Arrow(direction: randomDir, type:RIGHT, imageNamed: "arrow_pixelated")
-            newArrow.color = UIColor.blueColor()
+        if(!pause)
+        {
+            let arrowType = arc4random_uniform(5)
+            let randomDir = Direction(rawValue: arc4random_uniform(Direction.LEFT.rawValue + 1))!
+            let newArrow:Arrow
+            //defines arrow type
+            if(arrowType == 0){
+                newArrow = Arrow(direction: randomDir, type:LEFT, imageNamed: "arrow_wrong_pixelated")
+                newArrow.color = UIColor.redColor()
+            } else {
+                newArrow = Arrow(direction: randomDir, type:RIGHT, imageNamed: "arrow_pixelated")
+                newArrow.color = UIColor.blueColor()
+            }
+            newArrow.colorBlendFactor = 1
+            //rotates arrow depending on its direction
+            if(randomDir == Direction.UP){
+                newArrow.zRotation += CGFloat(3*M_PI/2)
+            } else if(randomDir == Direction.LEFT){
+                newArrow.zRotation += 0
+            } else if(randomDir == Direction.DOWN){
+                newArrow.zRotation += CGFloat(M_PI/2)
+            } else {
+                newArrow.zRotation += CGFloat(M_PI)
+            }
+            //chooses which side to generate the arrow
+            if(side == 0){
+                newArrow.position = CGPointMake(size.width/4, size.height+newArrow.size.height)
+                arrowQueue[LEFT].push(newArrow)
+            } else {
+                newArrow.position = CGPointMake(3*size.width/4, size.height+newArrow.size.height)
+                arrowQueue[RIGHT].push(newArrow)
+            }
+            //sets its collision properties
+            newArrow.physicsBody = SKPhysicsBody(rectangleOfSize: newArrow.size)
+            newArrow.physicsBody?.dynamic = true
+            newArrow.physicsBody?.categoryBitMask = PhysicsCategory.arrow
+            newArrow.physicsBody?.contactTestBitMask = PhysicsCategory.dangerZone | PhysicsCategory.endZone
+            newArrow.physicsBody?.collisionBitMask = 0
+            self.arrowParent.addChild(newArrow)
         }
-        newArrow.colorBlendFactor = 1
-        //rotates arrow depending on its direction
-        if(randomDir == Direction.UP){
-            newArrow.zRotation += CGFloat(3*M_PI/2)
-        } else if(randomDir == Direction.LEFT){
-            newArrow.zRotation += 0
-        } else if(randomDir == Direction.DOWN){
-            newArrow.zRotation += CGFloat(M_PI/2)
-        } else {
-            newArrow.zRotation += CGFloat(M_PI)
-        }
-        //chooses which side to generate the arrow
-        if(side == 0){
-            newArrow.position = CGPointMake(size.width/4, size.height+newArrow.size.height)
-            arrowQueue[LEFT].push(newArrow)
-        } else {
-            newArrow.position = CGPointMake(3*size.width/4, size.height+newArrow.size.height)
-            arrowQueue[RIGHT].push(newArrow)
-        }
-        //sets its collision properties
-        newArrow.physicsBody = SKPhysicsBody(rectangleOfSize: newArrow.size)
-        newArrow.physicsBody?.dynamic = true
-        newArrow.physicsBody?.categoryBitMask = PhysicsCategory.arrow
-        newArrow.physicsBody?.contactTestBitMask = PhysicsCategory.dangerZone | PhysicsCategory.endZone
-        newArrow.physicsBody?.collisionBitMask = 0
-        self.arrowParent.addChild(newArrow)
     }
     //Function that increases score and level through progress
     func addScore(){
@@ -516,70 +523,76 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //Function checks the swipe and the first arrow from the side queue direction
     func validateSwipe(side: Int, direction: Direction){
-        
-        var arrow : Arrow?
-        var currentQueue : Int
-        var comparingDir = direction
-        /*Get first arrow from queue*/
-        if(side == LEFT){
-            arrow = arrowQueue[LEFT].getPosition(0)
-            currentQueue = LEFT
-        }else{
-            arrow = arrowQueue[RIGHT].getPosition(0)
-            currentQueue = RIGHT
-        }
-        /*Check swipe's direction*/
-        if(arrow != nil){
-            /*Checks arrow type and convert the direction to match*/
-            if(arrow!.type == LEFT){
-                if(direction == .UP){
-                    comparingDir = Direction.DOWN
-                } else if(direction == .RIGHT){
-                    comparingDir = Direction.LEFT
-                } else if(direction == Direction.DOWN){
-                    comparingDir = Direction.UP
-                } else if(direction == Direction.LEFT){
-                    comparingDir = Direction.RIGHT
-                }
+        if(!pause)
+        {
+            var arrow : Arrow?
+            var currentQueue : Int
+            var comparingDir = direction
+            /*Get first arrow from queue*/
+            if(side == LEFT){
+                arrow = arrowQueue[LEFT].getPosition(0)
+                currentQueue = LEFT
+            }else{
+                arrow = arrowQueue[RIGHT].getPosition(0)
+                currentQueue = RIGHT
             }
-            if(arrow!.direction.rawValue == comparingDir.rawValue){
-                if(CGRectIntersectsRect(arrow!.frame, dangerZone!.frame)){
-                    arrowInDangerZone--
-                    if(arrowInDangerZone == 0){
-                        leftBulb?.texture = SKTexture(imageNamed: "bulb_off")
-                        leftBulb?.removeActionForKey("dangerAction")
-                        leftLight?.texture = nil
-                        leftLight?.removeActionForKey("dangerAction")
-                        rightBulb?.texture = SKTexture(imageNamed: "bulb_off")
-                        rightBulb?.removeActionForKey("dangerAction")
-                        rightLight?.texture = nil
-                        rightLight?.removeActionForKey("dangerAction")
+            /*Check swipe's direction*/
+            if(arrow != nil){
+                /*Checks arrow type and convert the direction to match*/
+                if(arrow!.type == LEFT){
+                    if(direction == .UP){
+                        comparingDir = Direction.DOWN
+                    } else if(direction == .RIGHT){
+                        comparingDir = Direction.LEFT
+                    } else if(direction == Direction.DOWN){
+                        comparingDir = Direction.UP
+                    } else if(direction == Direction.LEFT){
+                        comparingDir = Direction.RIGHT
                     }
                 }
-                arrow = arrowQueue[currentQueue].pop()
-                arrow!.runAction(SKAction.removeFromParent())
-                addScore()
+                if(arrow!.direction.rawValue == comparingDir.rawValue){
+                    if(CGRectIntersectsRect(arrow!.frame, dangerZone!.frame)){
+                        arrowInDangerZone--
+                        if(arrowInDangerZone == 0){
+                            leftBulb?.texture = SKTexture(imageNamed: "bulb_off")
+                            leftBulb?.removeActionForKey("dangerAction")
+                            leftLight?.texture = nil
+                            leftLight?.removeActionForKey("dangerAction")
+                            rightBulb?.texture = SKTexture(imageNamed: "bulb_off")
+                            rightBulb?.removeActionForKey("dangerAction")
+                            rightLight?.texture = nil
+                            rightLight?.removeActionForKey("dangerAction")
+                        }
+                    }
+                    arrow = arrowQueue[currentQueue].pop()
+                    arrow!.runAction(SKAction.removeFromParent())
+                    addScore()
+                }else{
+                    self.missAction()
+                    //TODO: Wrong direction alert
+                }
             }else{
                 self.missAction()
-                //TODO: Wrong direction alert
             }
-        }else{
-            self.missAction()
         }
     }
     
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
-        for i in 0 ... self.arrowQueue[LEFT].length {
-            self.arrowQueue[LEFT].getPosition(i)?.update(CGFloat(self.difficulty/100) + CGFloat(0.05), queue:arrowQueue[LEFT])
+        if(!pause)
+        {
+            for i in 0 ... self.arrowQueue[LEFT].length {
+                self.arrowQueue[LEFT].getPosition(i)?.update(CGFloat(self.difficulty/100) + CGFloat(0.05), queue:arrowQueue[LEFT])
+            }
+            for i in 0 ... self.arrowQueue[RIGHT].length {
+                self.arrowQueue[RIGHT].getPosition(i)?.update(CGFloat(self.difficulty/100) + CGFloat(0.05), queue:arrowQueue[RIGHT])
+            }
         }
-        for i in 0 ... self.arrowQueue[RIGHT].length {
-            self.arrowQueue[RIGHT].getPosition(i)?.update(CGFloat(self.difficulty/100) + CGFloat(0.05), queue:arrowQueue[RIGHT])
-        }
+        
     }
     
     func arrowDidCollideWithEndZone(){
-        self.removeAllActions()
+        self.arrowParent.removeAllActions()
         for i in 0 ... self.arrowQueue[LEFT].length {
             var arrow = self.arrowQueue[LEFT].pop()
             if(arrow != nil){
@@ -674,7 +687,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 break
             }
         }
-        self.runAction(SKAction.repeatActionForever(SKAction.sequence([wait, run])))
+        self.arrowParent.runAction(SKAction.repeatActionForever(SKAction.sequence([wait, run])))
     }
     //Function that explodes the arrows
     func explosion(pos: CGPoint, color:Int) {
@@ -798,7 +811,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.menu?.runAction(SKAction.sequence([
             act1,
             act2,
-            act3
+            act3,
+            SKAction.runBlock({self.animatingMenu = false})
             ]), completion: callback)
     }
     
@@ -808,8 +822,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         inMenu = false
         var action = SKAction.moveBy(CGVector(dx: 0, dy: 1054), duration: 0.5)
         action.timingMode = SKActionTimingMode.EaseIn
-        self.menu?.runAction(action, completion: callback)
+        self.menu?.runAction(SKAction.sequence([action,SKAction.runBlock({self.animatingMenu = false})]), completion: callback)
         
+    }
+    
+    func pauseGame()
+    {
+        self.pause = true;
+        self.arrowParent.paused = true
+        
+    }
+    
+    func unpauseGame()
+    {
+        self.pause = false;
+        self.arrowParent.paused = false
     }
     
 }
