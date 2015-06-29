@@ -66,6 +66,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var closeDoorAction : SKAction!
     var inMenu = false
     var inGame = false
+    var pause = false
     
     //    var missAction : SKAction!
     
@@ -441,11 +442,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if(score % 15 == 0){
             level++
             if(level >= 5){
-                if(level % 3 == 0){
+                if(level % 2 == 0){
                     difficulty += Float(1/Float(self.level))
-                } else if(level % 2 == 0){
-                    arrowSpeed -= NSTimeInterval(1/Float(self.level))
                 }
+                arrowSpeed -= NSTimeInterval(1/Float(self.level))
             } else {
                 self.difficulty = Float(level)
             }
@@ -507,60 +507,64 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var currentQueue : Int
         var comparingDir = direction
         /*Get first arrow from queue*/
-        if(side == LEFT){
-            arrow = arrowQueue[LEFT].getPosition(0)
-            currentQueue = LEFT
-        }else{
-            arrow = arrowQueue[RIGHT].getPosition(0)
-            currentQueue = RIGHT
-        }
-        /*Check swipe's direction*/
-        if(arrow != nil){
-            /*Checks arrow type and convert the direction to match*/
-            if(arrow!.type == LEFT){
-                if(direction == .UP){
-                    comparingDir = Direction.DOWN
-                } else if(direction == .RIGHT){
-                    comparingDir = Direction.LEFT
-                } else if(direction == Direction.DOWN){
-                    comparingDir = Direction.UP
-                } else if(direction == Direction.LEFT){
-                    comparingDir = Direction.RIGHT
-                }
+        if(pause == false){
+            if(side == LEFT){
+                arrow = arrowQueue[LEFT].getPosition(0)
+                currentQueue = LEFT
+            }else{
+                arrow = arrowQueue[RIGHT].getPosition(0)
+                currentQueue = RIGHT
             }
-            if(arrow!.direction.rawValue == comparingDir.rawValue){
-                if(CGRectIntersectsRect(arrow!.frame, dangerZone!.frame)){
-                    arrowInDangerZone--
-                    if(arrowInDangerZone == 0){
-                        leftBulb?.texture = SKTexture(imageNamed: "bulb_off")
-                        leftBulb?.removeActionForKey("dangerAction")
-                        leftLight?.texture = nil
-                        leftLight?.removeActionForKey("dangerAction")
-                        rightBulb?.texture = SKTexture(imageNamed: "bulb_off")
-                        rightBulb?.removeActionForKey("dangerAction")
-                        rightLight?.texture = nil
-                        rightLight?.removeActionForKey("dangerAction")
+            /*Check swipe's direction*/
+            if(arrow != nil){
+                /*Checks arrow type and convert the direction to match*/
+                if(arrow!.type == LEFT){
+                    if(direction == .UP){
+                        comparingDir = Direction.DOWN
+                    } else if(direction == .RIGHT){
+                        comparingDir = Direction.LEFT
+                    } else if(direction == Direction.DOWN){
+                        comparingDir = Direction.UP
+                    } else if(direction == Direction.LEFT){
+                        comparingDir = Direction.RIGHT
                     }
                 }
-                arrow = arrowQueue[currentQueue].pop()
-                arrow!.runAction(SKAction.removeFromParent())
-                addScore()
+                if(arrow!.direction.rawValue == comparingDir.rawValue){
+                    if(CGRectIntersectsRect(arrow!.frame, dangerZone!.frame)){
+                        arrowInDangerZone--
+                        if(arrowInDangerZone == 0){
+                            leftBulb?.texture = SKTexture(imageNamed: "bulb_off")
+                            leftBulb?.removeActionForKey("dangerAction")
+                            leftLight?.texture = nil
+                            leftLight?.removeActionForKey("dangerAction")
+                            rightBulb?.texture = SKTexture(imageNamed: "bulb_off")
+                            rightBulb?.removeActionForKey("dangerAction")
+                            rightLight?.texture = nil
+                            rightLight?.removeActionForKey("dangerAction")
+                        }
+                    }
+                    arrow = arrowQueue[currentQueue].pop()
+                    arrow!.runAction(SKAction.removeFromParent())
+                    addScore()
+                }else{
+                    self.missAction()
+                    //TODO: Wrong direction alert
+                }
             }else{
                 self.missAction()
-                //TODO: Wrong direction alert
             }
-        }else{
-            self.missAction()
         }
     }
     
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
-        for i in 0 ... self.arrowQueue[LEFT].length {
-            self.arrowQueue[LEFT].getPosition(i)?.update(CGFloat(self.difficulty/100) + CGFloat(0.05), queue:arrowQueue[LEFT])
-        }
-        for i in 0 ... self.arrowQueue[RIGHT].length {
-            self.arrowQueue[RIGHT].getPosition(i)?.update(CGFloat(self.difficulty/100) + CGFloat(0.05), queue:arrowQueue[RIGHT])
+        if(pause == false){
+            for i in 0 ... self.arrowQueue[LEFT].length {
+                self.arrowQueue[LEFT].getPosition(i)?.update(CGFloat(self.difficulty/100) + CGFloat(0.05), queue:arrowQueue[LEFT])
+            }
+            for i in 0 ... self.arrowQueue[RIGHT].length {
+                self.arrowQueue[RIGHT].getPosition(i)?.update(CGFloat(self.difficulty/100) + CGFloat(0.05), queue:arrowQueue[RIGHT])
+            }
         }
     }
     
