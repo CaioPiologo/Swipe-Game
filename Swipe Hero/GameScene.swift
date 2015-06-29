@@ -52,14 +52,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var userDefaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
     var bgMusicPlayer:AVAudioPlayer?
     var menuMusicPlayer:AVAudioPlayer?
+    var leftDoor:SKSpriteNode?
+    var rightDoor:SKSpriteNode?
+    var middleDoor:SKNode?
+    var middleLeftDoor:SKSpriteNode?
+    var middleRightDoor:SKSpriteNode?
+    var menu:SKSpriteNode?
     
     var scoreAction : SKAction!
     var dangerActionLeft : SKAction!
     var dangerActionRight : SKAction!
-//    var missAction : SKAction!
+    var openDoorAction : SKAction!
+    var closeDoorAction : SKAction!
+    var inMenu = false
+    var inGame = false
+    
+    //    var missAction : SKAction!
     
     override func didMoveToView(view: SKView) {
-            
+        
         /* Setup your scene here */
         
         self.leftBulb = self.childNodeWithName("leftBulb") as? SKSpriteNode
@@ -80,7 +91,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.arrowParent.anchorPoint.y = -self.size.height/2
         self.arrowParent.position = self.position
         self.addChild(arrowParent)
-
+        
         //get high score from user defaults
         self.highScore = userDefaults.integerForKey(HIGHSCOREKEY)
         
@@ -104,6 +115,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.dangerZone = self.childNodeWithName("dangerZone") as? SKSpriteNode
         self.endZone = self.childNodeWithName("endZone") as? SKSpriteNode
         self.startButton = self.childNodeWithName("playButton") as? SKSpriteNode
+        self.leftDoor = self.childNodeWithName("portaEsquerda") as? SKSpriteNode
+        self.rightDoor = self.childNodeWithName("portaDireita") as? SKSpriteNode
+        self.middleDoor = self.childNodeWithName("portaMeio")
+        self.middleRightDoor = self.middleDoor?.childNodeWithName("portaMeioDireita") as? SKSpriteNode
+        self.middleLeftDoor = self.middleDoor?.childNodeWithName("portaMeioEsquerda") as? SKSpriteNode
+        self.menu = self.childNodeWithName("menu") as? SKSpriteNode
+        
+        //erase this //TODO
+        
         
         //define collision bitmasks
         self.dangerZone!.physicsBody = SKPhysicsBody(rectangleOfSize: dangerZone!.size)
@@ -167,8 +187,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             SKAction.sequence([
                 SKAction.scaleTo(2.0, duration: 0.2),
                 SKAction.scaleTo(1.0, duration: 0.2)
-            
-            ]),
+                
+                ]),
             
             SKAction.sequence([
                 
@@ -178,12 +198,71 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.scoreLabel?.color = SKColor.blackColor()
                 }
                 
-            ])
+                ])
             
-        ])
+            ])
         
         self.dangerActionLeft = SKAction.repeatActionForever(SKAction.rotateByAngle(4.34, duration: 1.0))
         self.dangerActionRight = SKAction.repeatActionForever(SKAction.rotateByAngle(-4.34, duration: 1.0))
+        
+        //define openDoorAction
+        let rotateMiddle = SKAction.rotateByAngle(CGFloat(M_PI_2), duration: 0.7)
+        rotateMiddle.timingMode = SKActionTimingMode.EaseInEaseOut
+        let openDoorLeft = SKAction.moveBy(CGVector(dx: -475, dy: 0), duration: 1.0)
+        openDoorLeft.timingMode = SKActionTimingMode.EaseInEaseOut
+        let openDoorRight = SKAction.moveBy(CGVector(dx: 475, dy: 0), duration: 1.0)
+        openDoorRight.timingMode = SKActionTimingMode.EaseInEaseOut
+        let openMiddleLeft = SKAction.moveBy(CGVector(dx: -475, dy: 0), duration: 1.0)
+        openMiddleLeft.timingMode = SKActionTimingMode.EaseInEaseOut
+        let openMiddleRight = SKAction.moveBy(CGVector(dx: 475, dy: 0), duration: 1.0)
+        openMiddleRight.timingMode = SKActionTimingMode.EaseInEaseOut
+        let openingDoorGroup = SKAction.group([openDoorLeft,openDoorRight,openMiddleLeft,openMiddleRight])
+        self.openDoorAction = SKAction.sequence([
+                rotateMiddle,SKAction.waitForDuration(0.7),SKAction.runBlock({ () -> Void in
+                    self.playBackgroundMusic()
+                }),
+                SKAction.group([
+                    
+                    SKAction.runBlock({
+                        self.leftDoor?.runAction(openDoorLeft)
+                    }),
+                    SKAction.runBlock({
+                        self.rightDoor?.runAction(openDoorRight)
+                    }),
+                    SKAction.runBlock({
+                        self.middleLeftDoor?.runAction(openMiddleLeft)
+                    }),
+                    SKAction.runBlock({
+                        self.middleRightDoor?.runAction(openMiddleRight)
+                    })
+                    
+                    ])
+            ])
+        self.closeDoorAction = SKAction.sequence([
+            SKAction.group([
+                
+                SKAction.runBlock({
+                    self.leftDoor?.runAction(openDoorLeft.reversedAction())
+                }),
+                SKAction.runBlock({
+                    self.rightDoor?.runAction(openDoorRight.reversedAction())
+                }),
+                SKAction.runBlock({
+                    self.middleLeftDoor?.runAction(openMiddleLeft.reversedAction())
+                }),
+                SKAction.runBlock({
+                    self.middleRightDoor?.runAction(openMiddleRight.reversedAction())
+                })
+                
+                ]),
+            SKAction.waitForDuration(1.0),
+            rotateMiddle,
+            SKAction.runBlock({ () -> Void in
+                self.stopBackgroundMusic()
+                self.playMenuMusic()
+            })
+            ])
+        
         
         //start danger zone animations
         self.startDangerZoneAnimation()
@@ -204,7 +283,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.removeAllActions()
         //begin background music
         self.stopMenuMusic()
-        self.playBackgroundMusic()
+        
     }
     
     func updateLabels()
@@ -257,6 +336,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if node.name == "playButton" {
                 self.startButton?.texture = SKTexture(imageNamed: "button_play_pressed_pixelated")
             }
+            //settings button
+            if node.name == "settings" && !inGame{
+                NSLog("1");
+                if(!inMenu)
+                {
+                    NSLog("2");
+                    self.showMenu(){}
+                }else
+                {
+                    NSLog("3");
+                    self.hideMenu(){}
+                }
+            }
         }
     }
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
@@ -265,10 +357,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let location = touch.locationInNode(self)
             let node = self.nodeAtPoint(location)
             // Check if the location of the touch is within the button's bounds
-            if node.name == "playButton" {
+            if node.name == "playButton" && inMenu == false{
+                self.inGame = true
                 self.startButton?.removeFromParent()
-                self.restart(1);
-                self.startLevel()
                 self.scoreLabel?.hidden = false
                 self.highScoreLabel?.hidden = false
                 self.levelLabel?.hidden = false
@@ -279,8 +370,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.highScoreText?.hidden = false
                 self.swipeLabel?.hidden = true
                 self.heroLabel?.hidden = true
+                self.levelLabel?.hidden = false
                 self.stopMenuMusic()
-                self.playBackgroundMusic()
                 self.leftLight?.texture = nil
                 self.leftLight?.removeActionForKey("dangerAction")
                 self.rightLight?.texture = nil
@@ -289,9 +380,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.leftBulb?.removeActionForKey("dangerAction")
                 self.rightBulb?.texture = SKTexture(imageNamed: "bulb_off")
                 self.rightBulb?.removeActionForKey("dangerAction")
+                self.restart(1);
+                
+                self.animateDoor()
+                {
+                        
+                    self.startLevel()
+                }
             } else {
                 self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
             }
+            
         }
     }
     
@@ -332,7 +431,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         newArrow.physicsBody?.dynamic = true
         newArrow.physicsBody?.categoryBitMask = PhysicsCategory.arrow
         newArrow.physicsBody?.contactTestBitMask = PhysicsCategory.dangerZone | PhysicsCategory.endZone
-        newArrow.physicsBody?.collisionBitMask = 0        
+        newArrow.physicsBody?.collisionBitMask = 0
         self.arrowParent.addChild(newArrow)
     }
     //Function that increases score and level through progress
@@ -578,20 +677,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func endGame(){
-        self.startButton?.removeFromParent()
-        self.addChild(self.startButton!)
-        self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
-        //self.scoreLabel?.hidden = true
-        self.levelLabel?.hidden = true
-        self.leftView.hidden = true
-        self.rightView.hidden = true
-        //self.scoreText?.hidden = true
-        self.levelText?.hidden = true
-        self.highScoreText?.hidden = false
-        self.swipeLabel?.hidden = false
-        self.heroLabel?.hidden = false
-        self.stopBackgroundMusic()
-        self.playMenuMusic()
+        animateDoorReverse { () -> () in
+            self.startButton?.removeFromParent()
+            self.addChild(self.startButton!)
+            self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
+            //self.scoreLabel?.hidden = true
+            self.levelLabel?.hidden = true
+            self.leftView.hidden = true
+            self.rightView.hidden = true
+            //self.scoreText?.hidden = true
+            self.levelText?.hidden = true
+            self.highScoreText?.hidden = false
+            self.swipeLabel?.hidden = false
+            self.heroLabel?.hidden = false
+            self.inGame = false;
+        }
     }
     
     func startDangerZoneAnimation()
@@ -657,5 +757,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         arrowParent.addChild(emitterNode)
         self.runAction(SKAction.waitForDuration(1.5), completion: { emitterNode.removeFromParent() })
     }
-
+    
+    func animateDoor(callback:()->())
+    {
+        var action = SKAction.sequence([self.openDoorAction,SKAction.waitForDuration(2.0),SKAction.runBlock(callback)])
+        self.middleDoor?.runAction(action)
+    }
+    
+    func animateDoorReverse(callback:()->())
+    {
+        var action = SKAction.sequence([self.closeDoorAction,SKAction.waitForDuration(0.3),SKAction.runBlock(callback)])
+        self.middleDoor?.runAction(action)
+    }
+    
+    func showMenu(callback:()->())
+    {
+        self.inMenu = true
+        var act1 = SKAction.moveBy(CGVector(dx: 0, dy: -1054), duration: 0.5)
+        var act2 = SKAction.moveBy(CGVector(dx: 0, dy: 20), duration: 0.1)
+        var act3 = SKAction.moveBy(CGVector(dx: 0, dy: -20), duration: 0.1)
+        act1.timingMode = SKActionTimingMode.EaseInEaseOut
+        act2.timingMode = SKActionTimingMode.EaseInEaseOut
+        act3.timingMode = SKActionTimingMode.EaseInEaseOut
+        self.menu?.runAction(SKAction.sequence([
+            act1,
+            act2,
+            act3
+            ]))
+    }
+    
+    func hideMenu(callback:()->())
+    {
+        self.inMenu = false
+        inMenu = false
+        var action = SKAction.moveBy(CGVector(dx: 0, dy: 1054), duration: 0.5)
+        action.timingMode = SKActionTimingMode.EaseIn
+        self.menu?.runAction(action)
+        
+    }
+    
 }
