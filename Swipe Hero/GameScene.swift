@@ -848,4 +848,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.arrowParent.paused = false
     }
     
+    func tutorial(){
+        var newArrow = Arrow(direction: Direction.LEFT, type:RIGHT, imageNamed: "arrow_pixelated")
+        newArrow.color = UIColor.blueColor()
+        newArrow.colorBlendFactor = 1.0
+        newArrow.position = CGPointMake(size.width/4, size.height+newArrow.size.height)
+        self.arrowParent.addChild(newArrow)
+        var move = SKAction.moveToY(size.height/2, duration: 1)
+        
+        
+    }
 }
