@@ -346,14 +346,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             //settings button
             if node.name == "settings" && !inGame{
-                NSLog("1");
                 if(!inMenu)
                 {
-                    NSLog("2");
                     self.showMenu(){}
                 }else
                 {
-                    NSLog("3");
                     self.hideMenu(){}
                 }
             }
