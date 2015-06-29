@@ -27,6 +27,7 @@
 		8C3874F11B38721200342F78 /* sparkParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8C3874EF1B38721200342F78 /* sparkParticle.sks */; };
 		8C3874F21B38721200342F78 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C3874F01B38721200342F78 /* spark.png */; };
 		8C9EDC661B386FE8008AA852 /* menumusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8C9EDC651B386FE8008AA852 /* menumusic.mp3 */; };
+		8CAA8A6B1B41C97000F8C42E /* chainDrop.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8CAA8A6A1B41C97000F8C42E /* chainDrop.mp3 */; };
 		8CEE01F21B31B25400D98C14 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEE01F11B31B25400D98C14 /* Queue.swift */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +66,7 @@
 		8C3874EF1B38721200342F78 /* sparkParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = sparkParticle.sks; sourceTree = "<group>"; };
 		8C3874F01B38721200342F78 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		8C9EDC651B386FE8008AA852 /* menumusic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = menumusic.mp3; sourceTree = "<group>"; };
+		8CAA8A6A1B41C97000F8C42E /* chainDrop.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = chainDrop.mp3; sourceTree = "<group>"; };
 		8CEE01F11B31B25400D98C14 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -89,6 +91,7 @@
 		1CBCF11A1B348CB200C8A41A /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				8CAA8A6A1B41C97000F8C42E /* chainDrop.mp3 */,
 				8C9EDC651B386FE8008AA852 /* menumusic.mp3 */,
 				8C2491F51B3862E5004EEA65 /* Rhinoceros.mp3 */,
 				1CFF0BBE1B3496C500A2F941 /* dangerZone.wav */,
@@ -263,6 +266,7 @@
 				25C2364C1B3894EB00E02FE4 /* Main.storyboard in Resources */,
 				1CFF0BBD1B34949700A2F941 /* explosion.wav in Resources */,
 				25EFA1081B31901400467AD7 /* LaunchScreen.xib in Resources */,
+				8CAA8A6B1B41C97000F8C42E /* chainDrop.mp3 in Resources */,
 				1CFF0BBF1B3496C500A2F941 /* dangerZone.wav in Resources */,
 				8C3874F21B38721200342F78 /* spark.png in Resources */,
 				1CBCF11E1B348CF200C8A41A /* swipe.wav in Resources */,
