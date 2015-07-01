@@ -131,6 +131,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         
         
+        
         //define collision bitmasks
         self.dangerZone!.physicsBody = SKPhysicsBody(rectangleOfSize: dangerZone!.size)
         self.endZone!.physicsBody = SKPhysicsBody(rectangleOfSize: endZone!.size)
@@ -290,6 +291,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.removeAllActions()
         //begin background music
         self.stopMenuMusic()
+        
         
     }
     

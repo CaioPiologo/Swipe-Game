@@ -12,7 +12,7 @@ import SpriteKit
 class Credits: SKSpriteNode {
     
     init(x : CGFloat, y : CGFloat, width : CGFloat, height : CGFloat){
-        let fontName = "I-pixel-u"
+        let fontName = "DisposableDroidBB_bld"
         let fontSize : CGFloat = 32
         
         let label1 : SKLabelNode = SKLabelNode(text: "Frobenius Team")
