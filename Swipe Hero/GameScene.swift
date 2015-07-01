@@ -480,7 +480,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             level++
             if(level >= 5){
                 if(level % 2 == 0){
-                    difficulty += Float(1/Float(self.level))
+                    difficulty += (Float(1/Float(self.level)) + (0.001 * Float(self.level)))
                 }
                 arrowSpeed -= NSTimeInterval(1/Float(self.level))
             } else {
@@ -489,8 +489,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if(difficulty >= 10){
                 difficulty = 10
             }
-            if(arrowSpeed <= 0.5){
+            if(arrowSpeed <= 0.5 && level < 50){
                 arrowSpeed = 0.5
+            } else if(level >= 50 && level < 100){
+                arrowSpeed = 0.4
+            } else if(level >= 100){
+                arrowSpeed = 0.3
+            }
+            if(level % 50 == 0){
+                difficulty += 1.0
             }
             println("new level")
             println(self.level)
@@ -608,7 +615,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.missAction()
                     self.comboLabel?.hidden = true
                     self.comboCounter = 0
-                    //TODO: Wrong direction alert
                 }
             }else{
                 self.missAction()
@@ -948,14 +954,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             highlight!.zPosition = -2
             self.addChild(self.highlight!)
             //sets the labels with instructions
-            tutorialLabel1 = SKLabelNode(fontNamed: "DisposableDroidBB_bld")
+            tutorialLabel1 = SKLabelNode(fontNamed: "DisposableDroidBB-Bold")
             tutorialLabel1!.text = "Swipe inside the arrow area"
             tutorialLabel1!.fontColor = SKColor.blueColor()
             tutorialLabel1!.fontSize = 50
             tutorialLabel1!.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame))
             tutorialLabel1!.hidden = true
             self.addChild(self.tutorialLabel1!)
-            tutorialLabel2 = SKLabelNode(fontNamed: "DisposableDroidBB_bld")
+            tutorialLabel2 = SKLabelNode(fontNamed: "DisposableDroidBB-Bold")
             tutorialLabel2!.text = "in its direction to destroy it."
             tutorialLabel2!.fontColor = SKColor.blueColor()
             tutorialLabel2!.fontSize = 50
@@ -1022,7 +1028,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             tutorialArrow!.texture = SKTexture(imageNamed: "arrow_wrong_pixelated")
             
-            var move = SKAction.moveToY((size.height/2)+2*tutorialLabel1!.frame.height, duration: 2)
+            var move = SKAction.moveToY((size.height/2)+3*tutorialLabel1!.frame.height, duration: 2)
             var newBlock = SKAction.runBlock({ () -> Void in
                 self.leftView.hidden = false
                 self.tutorialLabel1!.hidden = false
