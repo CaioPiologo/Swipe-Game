@@ -12,12 +12,12 @@ import SpriteKit
 class Credits: SKSpriteNode {
     
     init(x : CGFloat, y : CGFloat, width : CGFloat, height : CGFloat){
-        let fontName = "DisposableDroidBB_bld"
+        let fontName = "DisposableDroidBB-Bold"
         let fontSize : CGFloat = 32
         
         let label1 : SKLabelNode = SKLabelNode(text: "Frobenius Team")
         label1.fontName = fontName
-        label1.fontSize = 48
+        label1.fontSize = fontSize + 16
         label1.position = CGPoint(x: 0, y: height/2-140)
         
         let label2 : SKLabelNode = SKLabelNode(text: "Name1")
@@ -35,7 +35,7 @@ class Credits: SKSpriteNode {
         label4.fontSize = fontSize
         label4.position = CGPoint(x: 0, y: height/2-260)
         
-        let label5 : SKLabelNode = SKLabelNode(text: "Sonds Effects from")
+        let label5 : SKLabelNode = SKLabelNode(text: "Sounds Effects from")
         label5.fontName = fontName
         label5.fontSize = fontSize
         label5.position = CGPoint(x: 0, y: height/2-340)

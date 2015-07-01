@@ -277,6 +277,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //begin background music
         self.playMenuMusic()
         
+//        let c = Credits(x: 0, y: 0, width: 626, height: 606)
+//        c.zPosition = 20
+//        self.menu?.addChild(c)
+        
     }
     
     //Restart with initial level
