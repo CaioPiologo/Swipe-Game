@@ -25,6 +25,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //variables
     var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
+    var tutorialArrow:Arrow?
     var arrowSpeed:NSTimeInterval = 1.0
     var leftView: UIView!
     var rightView: UIView!
@@ -37,6 +38,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var scoreLabel:SKLabelNode?
     var highScoreLabel:SKLabelNode?
     var levelLabel:SKLabelNode?
+    var tutorialLabel1:SKLabelNode?
+    var tutorialLabel2:SKLabelNode?
+    var highlight:SKSpriteNode?
     var endZone:SKSpriteNode?
     var dangerZone:SKSpriteNode?
     var arrowInDangerZone:Int = 0
@@ -64,6 +68,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var dangerActionRight : SKAction!
     var openDoorAction : SKAction!
     var closeDoorAction : SKAction!
+    var inTutorial = 0
     var inMenu = false
     var inGame = false
     var pause = false
@@ -76,9 +81,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /* Setup your scene here */
         
         self.leftBulb = self.childNodeWithName("leftBulb") as? SKSpriteNode
-        self.leftBulb?.zPosition = -1
+        self.leftBulb?.zPosition = -3
         self.rightBulb = self.childNodeWithName("rightBulb") as? SKSpriteNode
-        self.rightBulb?.zPosition = -1
+        self.rightBulb?.zPosition = -3
         
         self.leftLight = self.childNodeWithName("leftLight") as? SKSpriteNode
         self.leftLight?.texture = nil
@@ -116,6 +121,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.levelLabel = self.childNodeWithName("levelLabel") as? SKLabelNode
         self.levelLabel?.hidden = true
         self.dangerZone = self.childNodeWithName("dangerZone") as? SKSpriteNode
+        self.dangerZone?.zPosition = -3
         self.endZone = self.childNodeWithName("endZone") as? SKSpriteNode
         self.startButton = self.childNodeWithName("playButton") as? SKSpriteNode
         self.leftDoor = self.childNodeWithName("portaEsquerda") as? SKSpriteNode
@@ -124,9 +130,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.middleRightDoor = self.middleDoor?.childNodeWithName("portaMeioDireita") as? SKSpriteNode
         self.middleLeftDoor = self.middleDoor?.childNodeWithName("portaMeioEsquerda") as? SKSpriteNode
         self.menu = self.childNodeWithName("menu") as? SKSpriteNode
-        
-        //erase this //TODO
-        
         
         //define collision bitmasks
         self.dangerZone!.physicsBody = SKPhysicsBody(rectangleOfSize: dangerZone!.size)
@@ -398,8 +401,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.leftBulb?.removeActionForKey("dangerAction")
                 self.rightBulb?.texture = SKTexture(imageNamed: "bulb_off")
                 self.rightBulb?.removeActionForKey("dangerAction")
-                self.restart(1);
-                
+                //self.restart(1);
+                self.tutorial()
                 self.animateDoor()
                 {
                         
@@ -573,6 +576,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
             }else{
                 self.missAction()
+            }
+        } else if(inTutorial == 1) {
+            if(side == LEFT && direction == Direction.LEFT){
+                inTutorial = 2
+                self.addScore()
+                tutorial()
+            }
+        } else if(inTutorial == 3) {
+            if(side == RIGHT && direction == Direction.UP){
+                inTutorial = 4
+                self.addScore()
+                self.addScore()
+                tutorial()
+            }
+        } else if(inTutorial == 5) {
+            if(side == LEFT && direction == Direction.DOWN){
+                inTutorial = 6
+                self.addScore()
+                tutorial()
             }
         }
     }
@@ -849,13 +871,126 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func tutorial(){
-        var newArrow = Arrow(direction: Direction.LEFT, type:RIGHT, imageNamed: "arrow_pixelated")
-        newArrow.color = UIColor.blueColor()
-        newArrow.colorBlendFactor = 1.0
-        newArrow.position = CGPointMake(size.width/4, size.height+newArrow.size.height)
-        self.arrowParent.addChild(newArrow)
-        var move = SKAction.moveToY(size.height/2, duration: 1)
-        
-        
+        //sets basic tutorial actions
+        var wait = SKAction.waitForDuration(2)
+        var setAlpha = SKAction.fadeAlphaTo(0.9, duration: 0.5)
+        var block = SKAction.runBlock{
+            self.highlight!.runAction(setAlpha)
+            self.tutorialLabel1!.hidden = false
+            self.tutorialLabel2!.hidden = false
+            self.leftView.hidden = false
+            self.rightView.hidden = false
+        }
+
+        pause = true
+
+        if(inTutorial == 0){
+            //sets game level and score
+            self.restart(1)
+            //sets the tutorial arrow
+            tutorialArrow = Arrow(direction: Direction.LEFT, type:RIGHT, imageNamed: "arrow_pixelated")
+            tutorialArrow!.color = UIColor.blueColor()
+            tutorialArrow!.colorBlendFactor = 1.0
+            tutorialArrow!.position = CGPointMake(size.width/4, size.height+tutorialArrow!.size.height)
+            //initializes the highlight
+            highlight = SKSpriteNode(color: SKColor.grayColor(), size: CGSizeMake(self.frame.width, self.frame.height))
+            highlight!.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame))
+            highlight!.alpha = 0
+            highlight!.zPosition = -2
+            self.addChild(self.highlight!)
+            //sets the labels with instructions
+            tutorialLabel1 = SKLabelNode(fontNamed: "I-pixel-u")
+            tutorialLabel1!.text = "Swipe inside the arrow area"
+            tutorialLabel1!.fontColor = SKColor.blueColor()
+            tutorialLabel1!.fontSize = 50
+            tutorialLabel1!.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame))
+            tutorialLabel1!.hidden = true
+            self.addChild(self.tutorialLabel1!)
+            tutorialLabel2 = SKLabelNode(fontNamed: "I-pixel-u")
+            tutorialLabel2!.text = "in its direction to destroy it."
+            tutorialLabel2!.fontColor = SKColor.blueColor()
+            tutorialLabel2!.fontSize = 50
+            tutorialLabel2!.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) - tutorialLabel1!.frame.height)
+            tutorialLabel2!.hidden = true
+            self.addChild(self.tutorialLabel2!)
+            
+            self.leftView.hidden = true
+            var move = SKAction.moveToY((size.height/2)+2*tutorialLabel1!.frame.height, duration: 2)
+
+            self.arrowParent.addChild(self.tutorialArrow!)
+            self.tutorialArrow!.runAction(SKAction.sequence([wait, move]))
+            self.highlight!.position.x = self.size.width
+            self.runAction(SKAction.sequence([wait, wait, block]))
+            inTutorial = 1
+            
+        } else if(inTutorial == 2){
+            tutorialLabel1!.hidden = true
+            tutorialLabel2!.hidden = true
+            rightView.hidden = true
+            highlight!.alpha = 0.0
+            
+            tutorialArrow!.position.y = size.height+tutorialArrow!.size.height
+            tutorialArrow!.position.x = 3*size.width/4
+            tutorialArrow!.direction = Direction.UP
+            tutorialArrow!.zRotation += CGFloat(3*M_PI/2)
+            
+            tutorialLabel1!.text = "If you destroy the arrow in the"
+            tutorialLabel1!.fontSize = 45
+            tutorialLabel2!.text = "danger zone you get double points"
+            tutorialLabel2!.fontSize = 45
+            highlight!.position.x = CGRectGetMidX(self.frame)
+            highlight!.position.y += self.dangerZone!.size.height
+            
+            var move = SKAction.moveToY(tutorialArrow!.size.height, duration: 2)
+            
+            tutorialArrow!.runAction(move)
+            self.runAction(SKAction.sequence([wait, block]))
+            inTutorial = 3
+        } else if(inTutorial == 4){
+            tutorialLabel1!.hidden = true
+            tutorialLabel2!.hidden = true
+            leftView.hidden = true
+            highlight!.alpha = 0.0
+            
+            tutorialArrow!.position.y = size.height+tutorialArrow!.size.height
+            tutorialArrow!.position.x = size.width/4
+            tutorialArrow!.color = SKColor.redColor()
+            
+            tutorialLabel1!.text = "Swipe in the opposite direction"
+            tutorialLabel1!.fontSize = 50
+            tutorialLabel2!.text = "to destroy the red arrows!"
+            tutorialLabel2!.fontSize = 50
+
+            leftBulb?.texture = SKTexture(imageNamed: "bulb_off")
+            leftBulb?.removeActionForKey("dangerAction")
+            leftLight?.texture = nil
+            leftLight?.removeActionForKey("dangerAction")
+            rightBulb?.texture = SKTexture(imageNamed: "bulb_off")
+            rightBulb?.removeActionForKey("dangerAction")
+            rightLight?.texture = nil
+            rightLight?.removeActionForKey("dangerAction")
+            self.arrowInDangerZone--
+            
+            tutorialArrow!.texture = SKTexture(imageNamed: "arrow_wrong_pixelated")
+            
+            var move = SKAction.moveToY((size.height/2)+2*tutorialLabel1!.frame.height, duration: 2)
+            var newBlock = SKAction.runBlock({ () -> Void in
+                self.leftView.hidden = false
+                self.tutorialLabel1!.hidden = false
+                self.tutorialLabel2!.hidden = false
+            })
+            
+            tutorialArrow!.runAction(move)
+            self.runAction(SKAction.sequence([wait, newBlock]))
+            inTutorial = 5
+        } else if(inTutorial == 6){
+            tutorialArrow!.removeFromParent()
+            tutorialLabel1!.removeFromParent()
+            tutorialLabel2!.removeFromParent()
+            var unpause = SKAction.runBlock({ () -> Void in
+                self.pause = false
+            })
+            self.runAction(SKAction.sequence([wait, unpause]))
+        }
     }
 }
