@@ -731,23 +731,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func endGame(){
-        animateDoorReverse { () -> () in
-            self.stopBackgroundMusic()
-            self.startButton?.removeFromParent()
-            self.addChild(self.startButton!)
-            self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
-            //self.scoreLabel?.hidden = true
-            self.levelLabel?.hidden = true
-            self.leftView.hidden = true
-            self.rightView.hidden = true
-            //self.scoreText?.hidden = true
-            self.levelText?.hidden = true
-            self.highScoreText?.hidden = false
-            self.swipeLabel?.hidden = false
-            self.heroLabel?.hidden = false
-            self.comboLabel?.hidden = true
-            self.comboCounter = 0
-            self.inGame = false;
+        if(!self.inMenu)
+        {
+            self.inMenu = true
+            animateDoorReverse { () -> () in
+                self.stopBackgroundMusic()
+                self.startButton?.removeFromParent()
+                self.addChild(self.startButton!)
+                self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
+                //self.scoreLabel?.hidden = true
+                self.levelLabel?.hidden = true
+                self.leftView.hidden = true
+                self.rightView.hidden = true
+                //self.scoreText?.hidden = true
+                self.levelText?.hidden = true
+                self.highScoreText?.hidden = false
+                self.swipeLabel?.hidden = false
+                self.heroLabel?.hidden = false
+                self.comboLabel?.hidden = true
+                self.comboCounter = 0
+                self.inGame = false
+                self.inMenu = false
+            }
         }
     }
     
