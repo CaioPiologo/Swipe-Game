@@ -50,10 +50,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var leftLight : SKSpriteNode?
     var rightLight : SKSpriteNode?
     var startButton: SKSpriteNode?
-    var score:Int = 0;
-    var level:Int = 0;
-    var difficulty:Float = 0;
-    var highScore = 0;
+    var score:Int = 0
+    var level:Int = 0
+    var difficulty:Float = 0
+    var highScore = 0
+    var firstTime:Int = 0
     var userDefaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
     var bgMusicPlayer:AVAudioPlayer?
     var menuMusicPlayer:AVAudioPlayer?
@@ -103,6 +104,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         //get high score from user defaults
         self.highScore = userDefaults.integerForKey(HIGHSCOREKEY)
+        self.firstTime = userDefaults.integerForKey("firstTime")
         
         //initialize labels
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
@@ -133,6 +135,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.middleRightDoor = self.middleDoor?.childNodeWithName("portaMeioDireita") as? SKSpriteNode
         self.middleLeftDoor = self.middleDoor?.childNodeWithName("portaMeioEsquerda") as? SKSpriteNode
         self.menu = self.childNodeWithName("menu") as? SKSpriteNode
+        
+        
+        
         
         //define collision bitmasks
         self.dangerZone!.physicsBody = SKPhysicsBody(rectangleOfSize: dangerZone!.size)
@@ -404,8 +409,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.leftBulb?.removeActionForKey("dangerAction")
                 self.rightBulb?.texture = SKTexture(imageNamed: "bulb_off")
                 self.rightBulb?.removeActionForKey("dangerAction")
-                //self.restart(1);
-                self.tutorial()
+                if(self.firstTime == 1){
+                    self.restart(1);
+                } else {
+                    self.tutorial()
+                    self.firstTime = 1
+                    userDefaults.setInteger(1, forKey: "firstTime")
+                }
                 self.animateDoor()
                 {
                         
@@ -463,7 +473,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     //Function that increases score and level through progress
     func addScore(){
-        //TODO: ajustar dificuldade para dispositivo
         self.score++;
         if(score % 15 == 0){
             level++
@@ -899,6 +908,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.arrowParent.paused = false
     }
     
+    func repeat(num:Int,function:()->())
+    {
+        var i=0;
+        for(i=0;i<num;i++)
+        {
+            function()
+        }
+    }
+    
     func tutorial(){
         //sets basic tutorial actions
         var wait = SKAction.waitForDuration(2)
@@ -928,14 +946,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             highlight!.zPosition = -2
             self.addChild(self.highlight!)
             //sets the labels with instructions
-            tutorialLabel1 = SKLabelNode(fontNamed: "I-pixel-u")
+            tutorialLabel1 = SKLabelNode(fontNamed: "DisposableDroidBB_bld")
             tutorialLabel1!.text = "Swipe inside the arrow area"
             tutorialLabel1!.fontColor = SKColor.blueColor()
             tutorialLabel1!.fontSize = 50
             tutorialLabel1!.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame))
             tutorialLabel1!.hidden = true
             self.addChild(self.tutorialLabel1!)
-            tutorialLabel2 = SKLabelNode(fontNamed: "I-pixel-u")
+            tutorialLabel2 = SKLabelNode(fontNamed: "DisposableDroidBB_bld")
             tutorialLabel2!.text = "in its direction to destroy it."
             tutorialLabel2!.fontColor = SKColor.blueColor()
             tutorialLabel2!.fontSize = 50
@@ -1022,4 +1040,5 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.runAction(SKAction.sequence([wait, unpause]))
         }
     }
+    
 }
