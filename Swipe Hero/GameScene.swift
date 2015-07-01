@@ -75,6 +75,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         /* Setup your scene here */
         
+        
         self.leftBulb = self.childNodeWithName("leftBulb") as? SKSpriteNode
         self.leftBulb?.zPosition = -1
         self.rightBulb = self.childNodeWithName("rightBulb") as? SKSpriteNode
@@ -126,7 +127,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.menu = self.childNodeWithName("menu") as? SKSpriteNode
         
         //erase this //TODO
-        
         
         //define collision bitmasks
         self.dangerZone!.physicsBody = SKPhysicsBody(rectangleOfSize: dangerZone!.size)
