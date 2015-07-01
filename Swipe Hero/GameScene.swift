@@ -768,7 +768,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     {
         if(self.bgMusicPlayer == nil)
         {
-            var url:NSURL = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("Rhinoceros", ofType: "mp3")!)!
+            var url:NSURL = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("Rhinocerosseamless", ofType: "mp3")!)!
             var erro:NSError? = nil
             bgMusicPlayer = AVAudioPlayer(contentsOfURL: url, error: &erro)
             bgMusicPlayer?.numberOfLoops = -1;

@@ -22,10 +22,11 @@
 		25EFA1141B31901500467AD7 /* Swipe_HeroTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA1131B31901500467AD7 /* Swipe_HeroTests.swift */; };
 		25EFA11E1B31966500467AD7 /* Arrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA11D1B31966500467AD7 /* Arrow.swift */; };
 		25EFA1241B31C09800467AD7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1231B31C09800467AD7 /* Images.xcassets */; };
+		8C0B8A981B443C6300654BAD /* Rhinocerosseamless.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8C0B8A971B443C6300654BAD /* Rhinocerosseamless.mp3 */; };
 		8C2491F81B38631A004EEA65 /* I-pixel-u.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C2491F71B38631A004EEA65 /* I-pixel-u.ttf */; };
 		8C3874F11B38721200342F78 /* sparkParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8C3874EF1B38721200342F78 /* sparkParticle.sks */; };
 		8C3874F21B38721200342F78 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C3874F01B38721200342F78 /* spark.png */; };
-		8C99717D1B42C1E2006F523C /* Rhinoceros.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8C99717C1B42C1E2006F523C /* Rhinoceros.mp3 */; };
+		8C5B40FB1B4433A4006DC3F5 /* DisposableDroidBB_bld.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C5B40FA1B4433A4006DC3F5 /* DisposableDroidBB_bld.ttf */; };
 		8C9EDC661B386FE8008AA852 /* menumusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8C9EDC651B386FE8008AA852 /* menumusic.mp3 */; };
 		8CAA8A6B1B41C97000F8C42E /* chainDrop.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8CAA8A6A1B41C97000F8C42E /* chainDrop.mp3 */; };
 		8CAA8A6D1B41CE8800F8C42E /* doorsfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8CAA8A6C1B41CE8800F8C42E /* doorsfx.mp3 */; };
@@ -62,10 +63,11 @@
 		25EFA1131B31901500467AD7 /* Swipe_HeroTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Swipe_HeroTests.swift; sourceTree = "<group>"; };
 		25EFA11D1B31966500467AD7 /* Arrow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Arrow.swift; sourceTree = "<group>"; };
 		25EFA1231B31C09800467AD7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		8C0B8A971B443C6300654BAD /* Rhinocerosseamless.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Rhinocerosseamless.mp3; path = "Swipe Hero/Rhinocerosseamless.mp3"; sourceTree = "<group>"; };
 		8C2491F71B38631A004EEA65 /* I-pixel-u.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "I-pixel-u.ttf"; sourceTree = SOURCE_ROOT; };
 		8C3874EF1B38721200342F78 /* sparkParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = sparkParticle.sks; sourceTree = "<group>"; };
 		8C3874F01B38721200342F78 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
-		8C99717C1B42C1E2006F523C /* Rhinoceros.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Rhinoceros.mp3; path = "Swipe Hero/Rhinoceros.mp3"; sourceTree = "<group>"; };
+		8C5B40FA1B4433A4006DC3F5 /* DisposableDroidBB_bld.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DisposableDroidBB_bld.ttf; sourceTree = "<group>"; };
 		8C9EDC651B386FE8008AA852 /* menumusic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = menumusic.mp3; sourceTree = "<group>"; };
 		8CAA8A6A1B41C97000F8C42E /* chainDrop.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = chainDrop.mp3; sourceTree = "<group>"; };
 		8CAA8A6C1B41CE8800F8C42E /* doorsfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = doorsfx.mp3; sourceTree = "<group>"; };
@@ -93,7 +95,7 @@
 		1CBCF11A1B348CB200C8A41A /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
-				8C99717C1B42C1E2006F523C /* Rhinoceros.mp3 */,
+				8C0B8A971B443C6300654BAD /* Rhinocerosseamless.mp3 */,
 				8CAA8A6C1B41CE8800F8C42E /* doorsfx.mp3 */,
 				8CAA8A6A1B41C97000F8C42E /* chainDrop.mp3 */,
 				8C9EDC651B386FE8008AA852 /* menumusic.mp3 */,
@@ -175,6 +177,7 @@
 		8C2491F01B372A97004EEA65 /* Font */ = {
 			isa = PBXGroup;
 			children = (
+				8C5B40FA1B4433A4006DC3F5 /* DisposableDroidBB_bld.ttf */,
 				8C2491F71B38631A004EEA65 /* I-pixel-u.ttf */,
 			);
 			path = Font;
@@ -266,6 +269,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C0B8A981B443C6300654BAD /* Rhinocerosseamless.mp3 in Resources */,
 				25C2364C1B3894EB00E02FE4 /* Main.storyboard in Resources */,
 				1CFF0BBD1B34949700A2F941 /* explosion.wav in Resources */,
 				25EFA1081B31901400467AD7 /* LaunchScreen.xib in Resources */,
@@ -280,9 +284,9 @@
 				25EFA0FC1B31901400467AD7 /* GameScene.sks in Resources */,
 				25EC12D81B34858500A563D2 /* borderWhitePixel.jpg in Resources */,
 				8CAA8A6D1B41CE8800F8C42E /* doorsfx.mp3 in Resources */,
+				8C5B40FB1B4433A4006DC3F5 /* DisposableDroidBB_bld.ttf in Resources */,
 				25EC12CD1B347CA500A563D2 /* ExplosionParticle.sks in Resources */,
 				1CBCF1201B348CF900C8A41A /* swipe2.wav in Resources */,
-				8C99717D1B42C1E2006F523C /* Rhinoceros.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
