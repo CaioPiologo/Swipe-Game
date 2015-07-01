@@ -82,6 +82,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         /* Setup your scene here */
         
+        
         self.leftBulb = self.childNodeWithName("leftBulb") as? SKSpriteNode
         self.leftBulb?.zPosition = -3
         self.rightBulb = self.childNodeWithName("rightBulb") as? SKSpriteNode
@@ -298,6 +299,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.removeAllActions()
         //begin background music
         self.stopMenuMusic()
+        
         
     }
     

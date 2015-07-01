@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>C76213E8-6FD9-4BEA-9046-80F15B201775</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>Swipe Hero</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>56B2801B520315A95964B64B0D4997F62D24823F</key>
 		<string>https://github.com/TyphonXD/Swipe-Game.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Swipe Hero.xcodeproj/project.xcworkspace</string>
+	<string>Swipe Hero.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>56B2801B520315A95964B64B0D4997F62D24823F</key>
