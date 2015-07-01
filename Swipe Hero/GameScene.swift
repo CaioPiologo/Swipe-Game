@@ -36,6 +36,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var highScoreText: SKLabelNode?
     var levelText: SKLabelNode?
     var scoreLabel:SKLabelNode?
+    var comboLabel:SKLabelNode?
     var highScoreLabel:SKLabelNode?
     var levelLabel:SKLabelNode?
     var tutorialLabel1:SKLabelNode?
@@ -62,7 +63,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var middleLeftDoor:SKSpriteNode?
     var middleRightDoor:SKSpriteNode?
     var menu:SKSpriteNode?
-    
+    var comboCounter:Int = 0;
     var scoreAction : SKAction!
     var dangerActionLeft : SKAction!
     var dangerActionRight : SKAction!
@@ -72,7 +73,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var inMenu = false
     var inGame = false
     var pause = false
-    var animatingMenu = false;
+    var animatingMenu = false
     
     //    var missAction : SKAction!
     
@@ -114,6 +115,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.levelText?.hidden = true
         self.highScoreText = self.childNodeWithName("highScoreText") as? SKLabelNode
         self.highScoreText?.hidden = true
+        self.comboLabel = self.childNodeWithName("comboLabel") as? SKLabelNode
+        self.comboLabel?.hidden = true
         self.scoreLabel = self.childNodeWithName("scorelabel") as? SKLabelNode
         self.scoreLabel?.hidden = true
         self.highScoreLabel = self.childNodeWithName("highScoreLabel") as? SKLabelNode
@@ -569,13 +572,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     }
                     arrow = arrowQueue[currentQueue].pop()
                     arrow!.runAction(SKAction.removeFromParent())
-                    addScore()
+                    self.comboCounter++
+                    if(self.comboCounter > 32)
+                    {
+                        self.comboCounter = 32
+                    }
+                    var repeatTimes = (self.comboCounter/16) * (self.comboCounter/16)
+                    if(repeatTimes == 0)
+                    {
+                        repeatTimes = 1
+                    }else if(repeatTimes==1)
+                    {
+                        repeatTimes = 2
+                    }
+                    repeat(repeatTimes, function: { () -> () in
+                        self.addScore()
+                    })
+                    if(self.comboCounter>16)
+                    {
+                        self.comboLabel?.text = "Combo \(repeatTimes)X"
+                        self.comboLabel?.hidden = false
+                    }
                 }else{
                     self.missAction()
+                    self.comboLabel?.hidden = true
+                    self.comboCounter = 0
                     //TODO: Wrong direction alert
                 }
             }else{
                 self.missAction()
+                self.comboLabel?.hidden = true
+                self.comboCounter = 0
             }
         } else if(inTutorial == 1) {
             if(side == LEFT && direction == Direction.LEFT){
@@ -740,6 +767,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.highScoreText?.hidden = false
             self.swipeLabel?.hidden = false
             self.heroLabel?.hidden = false
+            self.comboLabel?.hidden = true
+            self.comboCounter = 0
             self.inGame = false;
         }
     }
@@ -761,7 +790,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     {
         if(self.bgMusicPlayer == nil)
         {
-            var url:NSURL = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("Rhinoceros", ofType: "mp3")!)!
+            var url:NSURL = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("Rhinocerosseamless", ofType: "mp3")!)!
             var erro:NSError? = nil
             bgMusicPlayer = AVAudioPlayer(contentsOfURL: url, error: &erro)
             bgMusicPlayer?.numberOfLoops = -1;
