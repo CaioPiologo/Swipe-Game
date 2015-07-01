@@ -933,7 +933,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func tutorial(){
         //sets basic tutorial actions
         var wait = SKAction.waitForDuration(2)
-        var setAlpha = SKAction.fadeAlphaTo(0.9, duration: 0.5)
+        var setAlpha = SKAction.fadeAlphaTo(0.65, duration: 0.5)
         var block = SKAction.runBlock{
             self.highlight!.runAction(setAlpha)
             self.tutorialLabel1!.hidden = false
@@ -953,22 +953,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             tutorialArrow!.colorBlendFactor = 1.0
             tutorialArrow!.position = CGPointMake(size.width/4, size.height+tutorialArrow!.size.height)
             //initializes the highlight
-            highlight = SKSpriteNode(color: SKColor.grayColor(), size: CGSizeMake(self.frame.width, self.frame.height))
+            highlight = SKSpriteNode(color: SKColor.blackColor(), size: CGSizeMake(self.frame.width, self.frame.height))
             highlight!.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame))
             highlight!.alpha = 0
             highlight!.zPosition = -2
             self.addChild(self.highlight!)
             //sets the labels with instructions
             tutorialLabel1 = SKLabelNode(fontNamed: "DisposableDroidBB-Bold")
-            tutorialLabel1!.text = "Swipe inside the arrow area"
-            tutorialLabel1!.fontColor = SKColor.blueColor()
+            tutorialLabel1!.text = "Swipe in the arrow direction"
+            tutorialLabel1!.fontColor = SKColor(red: 36/255, green: 141/255, blue: 1, alpha: 1.0)
             tutorialLabel1!.fontSize = 50
             tutorialLabel1!.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame))
             tutorialLabel1!.hidden = true
             self.addChild(self.tutorialLabel1!)
             tutorialLabel2 = SKLabelNode(fontNamed: "DisposableDroidBB-Bold")
-            tutorialLabel2!.text = "in its direction to destroy it."
-            tutorialLabel2!.fontColor = SKColor.blueColor()
+            tutorialLabel2!.text = "inside its area to destroy it."
+            tutorialLabel2!.fontColor = SKColor(red: 36/255, green: 141/255, blue: 1, alpha: 1.0)
             tutorialLabel2!.fontSize = 50
             tutorialLabel2!.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) - tutorialLabel1!.frame.height)
             tutorialLabel2!.hidden = true
