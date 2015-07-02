@@ -614,7 +614,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     {
                         self.comboLabel?.text = "Combo \(repeatTimes)X"
                         self.comboLabel?.hidden = false
-                        if(self.comboTop?.parent == nil){
+                        if(repeatTimes==4 && self.comboTop?.parent == nil)
+                        {
                             self.combo()
                         }
                     }
@@ -622,23 +623,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.missAction()
                     self.comboLabel?.hidden = true
                     self.comboCounter = 0
-                    if(self.comboTop?.parent != nil){
-                        self.comboTop!.removeFromParent()
-                        self.comboBot!.removeFromParent()
-                        self.comboLeft!.removeFromParent()
-                        self.comboRight!.removeFromParent()
-                    }
+                    self.comboFinalize()
                 }
             }else{
                 self.missAction()
                 self.comboLabel?.hidden = true
                 self.comboCounter = 0
-                if(self.comboTop?.parent != nil){
-                    self.comboTop!.removeFromParent()
-                    self.comboBot!.removeFromParent()
-                    self.comboLeft!.removeFromParent()
-                    self.comboRight!.removeFromParent()
-                }
+                self.comboFinalize()
             }
         } else if(inTutorial == 1) {
             if(side == LEFT && direction == Direction.LEFT){
@@ -792,6 +783,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if(!self.inMenu)
         {
             self.inMenu = true
+            self.comboFinalize()
             animateDoorReverse { () -> () in
                 self.stopBackgroundMusic()
                 self.startButton?.removeFromParent()
@@ -895,13 +887,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         comboTop!.particlePosition = CGPointMake(size.width/2, size.height)
         comboBot!.particlePosition = CGPointMake(size.width/2, 0)
+        comboBot!.yAcceleration = CGFloat(400.0)
         
         comboLeft!.particlePosition = CGPointMake(0, size.height/2)
         comboLeft!.particlePositionRange = CGVector(dx: 1, dy: 1500)
+        comboLeft!.xAcceleration = CGFloat(400.0)
         
         comboRight!.particlePosition = CGPointMake(size.width, size.height/2)
         comboRight!.particlePositionRange = CGVector(dx: 1, dy: 1500)
-
+        comboRight!.xAcceleration = CGFloat(-400.0)
+        
+        comboRight!.zPosition = -1
+        comboLeft?.zPosition = -1
+        comboTop?.zPosition = -1
+        comboBot?.zPosition = -1
+        
         self.addChild(comboTop!)
         self.addChild(comboBot!)
         self.addChild(comboLeft!)
@@ -1092,6 +1092,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             })
             self.runAction(SKAction.sequence([wait, unpause]))
         }
+    }
+    
+    func comboFinalize()
+    {
+        if(self.comboTop?.parent != nil){
+            self.comboTop!.removeFromParent()
+            self.comboBot!.removeFromParent()
+            self.comboLeft!.removeFromParent()
+            self.comboRight!.removeFromParent()
+            changeComboColor(UIColor(red: 0, green: 44, blue: 246, alpha: 1))
+        }
+        
+    }
+    
+    func changeComboColor(color:UIColor)
+    {
+        self.comboTop!.particleColor = color
+        self.comboBot!.particleColor = color
+        self.comboLeft!.particleColor = color
+        self.comboRight!.particleColor = color
+        self.comboTop?.particleColorSequence = nil
+        self.comboBot?.particleColorSequence = nil
+        self.comboLeft?.particleColorSequence = nil
+        self.comboRight?.particleColorSequence = nil
     }
     
 }
