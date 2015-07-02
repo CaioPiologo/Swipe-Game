@@ -228,11 +228,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         //define openDoorAction
         let rotateMiddle = SKAction.rotateByAngle(CGFloat(M_PI_2), duration: 0.7)
         rotateMiddle.timingMode = SKActionTimingMode.EaseInEaseOut
-        let openDoorLeft = SKAction.moveBy(CGVector(dx: -475, dy: 0), duration: 1.0)
+        let openDoorLeft = SKAction.moveBy(CGVector(dx: -485, dy: 0), duration: 1.0)
         openDoorLeft.timingMode = SKActionTimingMode.EaseInEaseOut
         let openDoorRight = SKAction.moveBy(CGVector(dx: 475, dy: 0), duration: 1.0)
         openDoorRight.timingMode = SKActionTimingMode.EaseInEaseOut
-        let openMiddleLeft = SKAction.moveBy(CGVector(dx: -475, dy: 0), duration: 1.0)
+        let openMiddleLeft = SKAction.moveBy(CGVector(dx: -485, dy: 0), duration: 1.0)
         openMiddleLeft.timingMode = SKActionTimingMode.EaseInEaseOut
         let openMiddleRight = SKAction.moveBy(CGVector(dx: 475, dy: 0), duration: 1.0)
         openMiddleRight.timingMode = SKActionTimingMode.EaseInEaseOut
@@ -608,11 +608,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     repeat(repeatTimes, function: { () -> () in
                         self.addScore()
                     })
-                    if(self.comboCounter>16)
+                    if(self.comboCounter>=16)
                     {
                         self.comboLabel?.text = "Combo \(repeatTimes)X"
                         self.comboLabel?.hidden = false
-                        if(self.comboTop?.parent == nil){
+                        if(repeatTimes==4 && self.comboTop?.parent == nil)
+                        {
                             self.combo()
                         }
                     }
@@ -620,23 +621,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     self.missAction()
                     self.comboLabel?.hidden = true
                     self.comboCounter = 0
-                    if(self.comboTop?.parent != nil){
-                        self.comboTop!.removeFromParent()
-                        self.comboBot!.removeFromParent()
-                        self.comboLeft!.removeFromParent()
-                        self.comboRight!.removeFromParent()
-                    }
+                    self.comboFinalize()
                 }
             }else{
                 self.missAction()
                 self.comboLabel?.hidden = true
                 self.comboCounter = 0
-                if(self.comboTop?.parent != nil){
-                    self.comboTop!.removeFromParent()
-                    self.comboBot!.removeFromParent()
-                    self.comboLeft!.removeFromParent()
-                    self.comboRight!.removeFromParent()
-                }
+                self.comboFinalize()
             }
         } else if(inTutorial == 1) {
             if(side == LEFT && direction == Direction.LEFT){
@@ -790,6 +781,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         if(!self.inMenu)
         {
             self.inMenu = true
+            self.comboFinalize()
             animateDoorReverse { () -> () in
                 self.stopBackgroundMusic()
                 self.startButton?.removeFromParent()
@@ -899,13 +891,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         
         comboTop!.particlePosition = CGPointMake(size.width/2, size.height)
         comboBot!.particlePosition = CGPointMake(size.width/2, 0)
+        comboBot!.yAcceleration = CGFloat(400.0)
         
         comboLeft!.particlePosition = CGPointMake(0, size.height/2)
         comboLeft!.particlePositionRange = CGVector(dx: 1, dy: 1500)
+        comboLeft!.xAcceleration = CGFloat(400.0)
         
         comboRight!.particlePosition = CGPointMake(size.width, size.height/2)
         comboRight!.particlePositionRange = CGVector(dx: 1, dy: 1500)
-
+        comboRight!.xAcceleration = CGFloat(-400.0)
+        
+        comboRight!.zPosition = -1
+        comboLeft?.zPosition = -1
+        comboTop?.zPosition = -1
+        comboBot?.zPosition = -1
+        
         self.addChild(comboTop!)
         self.addChild(comboBot!)
         self.addChild(comboLeft!)
