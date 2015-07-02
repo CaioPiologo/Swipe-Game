@@ -223,11 +223,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //define openDoorAction
         let rotateMiddle = SKAction.rotateByAngle(CGFloat(M_PI_2), duration: 0.7)
         rotateMiddle.timingMode = SKActionTimingMode.EaseInEaseOut
-        let openDoorLeft = SKAction.moveBy(CGVector(dx: -475, dy: 0), duration: 1.0)
+        let openDoorLeft = SKAction.moveBy(CGVector(dx: -485, dy: 0), duration: 1.0)
         openDoorLeft.timingMode = SKActionTimingMode.EaseInEaseOut
         let openDoorRight = SKAction.moveBy(CGVector(dx: 475, dy: 0), duration: 1.0)
         openDoorRight.timingMode = SKActionTimingMode.EaseInEaseOut
-        let openMiddleLeft = SKAction.moveBy(CGVector(dx: -475, dy: 0), duration: 1.0)
+        let openMiddleLeft = SKAction.moveBy(CGVector(dx: -485, dy: 0), duration: 1.0)
         openMiddleLeft.timingMode = SKActionTimingMode.EaseInEaseOut
         let openMiddleRight = SKAction.moveBy(CGVector(dx: 475, dy: 0), duration: 1.0)
         openMiddleRight.timingMode = SKActionTimingMode.EaseInEaseOut
@@ -606,7 +606,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     repeat(repeatTimes, function: { () -> () in
                         self.addScore()
                     })
-                    if(self.comboCounter>16)
+                    if(self.comboCounter>=16)
                     {
                         self.comboLabel?.text = "Combo \(repeatTimes)X"
                         self.comboLabel?.hidden = false
