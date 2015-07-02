@@ -1052,6 +1052,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             tutorialLabel2!.hidden = true
             leftView.hidden = true
             highlight!.alpha = 0.0
+            highlight!.removeFromParent()
             
             tutorialArrow!.position.y = size.height+tutorialArrow!.size.height
             tutorialArrow!.position.x = size.width/4
