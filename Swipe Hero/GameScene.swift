@@ -9,6 +9,7 @@
 import SpriteKit
 import CoreGraphics
 import AVFoundation
+import GameKit
 
 let LEFT = 0
 let RIGHT = 1
@@ -21,7 +22,7 @@ struct PhysicsCategory {
     static let world:UInt32 = 0b1000 //8
 }
 
-class GameScene: SKScene, SKPhysicsContactDelegate {
+class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelegate {
     
     //variables
     var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
@@ -503,10 +504,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if(level % 50 == 0){
                 difficulty += 1.0
             }
-            println("new level")
-            println(self.level)
-            println(self.difficulty)
-            println(self.arrowSpeed)
             self.arrowParent.removeAllActions()
             var block = SKAction.runBlock{
                 self.startLevel()
@@ -516,6 +513,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if(score > highScore){
             changeHighScore(score)
+            saveHighscore()
         }
         
         updateLabels()
@@ -811,14 +809,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.inGame = false
                 self.inMenu = false
                 if(self.comboTop?.parent != nil){
-                    var fadeOut = SKAction.fadeOutWithDuration(0.5)
-                    var block = SKAction.runBlock({ () -> Void in
-                        self.comboTop!.removeFromParent()
-                        self.comboBot!.removeFromParent()
-                        self.comboLeft!.removeFromParent()
-                        self.comboRight!.removeFromParent()
-                    })
-                    self.comboTop!.runAction(SKAction.sequence([fadeOut, block]))
+                    self.comboTop!.removeFromParent()
+                    self.comboBot!.removeFromParent()
+                    self.comboLeft!.removeFromParent()
+                    self.comboRight!.removeFromParent()
                 }
             }
         }
@@ -1104,4 +1098,40 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    //send high score to leaderboard
+    func saveHighscore() {
+        
+        //check if user is signed in
+        if GKLocalPlayer.localPlayer().authenticated {
+            
+            var scoreReporter = GKScore(leaderboardIdentifier: "swipe_hero_leaderboard")
+            
+            scoreReporter.value = Int64(self.highScore)
+            
+            var scoreArray: [GKScore] = [scoreReporter]
+            
+            GKScore.reportScores(scoreArray, withCompletionHandler: {(error : NSError!) -> Void in
+                if error != nil {
+                    println("error")
+                }
+            })
+            
+        }
+        
+    }
+    
+    //shows leaderboard screen
+    func showLeaderboard() {
+        var vc = self.view?.window?.rootViewController
+        var gc = GKGameCenterViewController()
+        gc.gameCenterDelegate = self
+        vc?.presentViewController(gc, animated: true, completion: nil)
+    }
+    
+    //hides leaderboard screen
+    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!)
+    {
+        gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
+        
+    }
 }

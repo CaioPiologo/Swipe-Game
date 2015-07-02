@@ -15,6 +15,7 @@
 		252D4CA51B4448CA00F57447 /* DisposableDroidBB_bld.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 252D4CA41B4448CA00F57447 /* DisposableDroidBB_bld.ttf */; };
 		252D4CA61B44496100F57447 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1011B31901400467AD7 /* Main.storyboard */; };
 		252D4CA81B44499D00F57447 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1061B31901400467AD7 /* LaunchScreen.xib */; };
+		2540DD821B45718E00233F77 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2540DD811B45718E00233F77 /* GameKit.framework */; };
 		257978D81B4555B000E61D61 /* comboParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 257978D71B4555B000E61D61 /* comboParticle.sks */; };
 		25EC12CD1B347CA500A563D2 /* ExplosionParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */; };
 		25EC12D81B34858500A563D2 /* borderWhitePixel.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 25EC12D71B34858500A563D2 /* borderWhitePixel.jpg */; };
@@ -52,6 +53,7 @@
 		1CFF0BBC1B34949700A2F941 /* explosion.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = explosion.wav; sourceTree = "<group>"; };
 		1CFF0BBE1B3496C500A2F941 /* dangerZone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = dangerZone.wav; sourceTree = "<group>"; };
 		252D4CA41B4448CA00F57447 /* DisposableDroidBB_bld.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DisposableDroidBB_bld.ttf; sourceTree = "<group>"; };
+		2540DD811B45718E00233F77 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		257978D71B4555B000E61D61 /* comboParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = comboParticle.sks; sourceTree = "<group>"; };
 		25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ExplosionParticle.sks; sourceTree = "<group>"; };
 		25EC12D71B34858500A563D2 /* borderWhitePixel.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = borderWhitePixel.jpg; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2540DD821B45718E00233F77 /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +130,7 @@
 		25EFA0EB1B31901400467AD7 = {
 			isa = PBXGroup;
 			children = (
+				2540DD811B45718E00233F77 /* GameKit.framework */,
 				25EFA0F61B31901400467AD7 /* Swipe Hero */,
 				25EFA1101B31901500467AD7 /* Swipe HeroTests */,
 				25EFA0F51B31901400467AD7 /* Products */,
@@ -249,7 +253,7 @@
 						DevelopmentTeam = 7A42Z7C5S3;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
