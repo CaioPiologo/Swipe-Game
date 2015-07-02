@@ -65,6 +65,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var middleRightDoor:SKSpriteNode?
     var menu:SKSpriteNode?
     var comboCounter:Int = 0;
+    var comboTop:SKEmitterNode?
+    var comboLeft:SKEmitterNode?
+    var comboBot:SKEmitterNode?
+    var comboRight:SKEmitterNode?
     var scoreAction : SKAction!
     var dangerActionLeft : SKAction!
     var dangerActionRight : SKAction!
@@ -610,16 +614,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     {
                         self.comboLabel?.text = "Combo \(repeatTimes)X"
                         self.comboLabel?.hidden = false
+                        if(self.comboTop?.parent == nil){
+                            self.combo()
+                        }
                     }
                 }else{
                     self.missAction()
                     self.comboLabel?.hidden = true
                     self.comboCounter = 0
+                    if(self.comboTop?.parent != nil){
+                        self.comboTop!.removeFromParent()
+                        self.comboBot!.removeFromParent()
+                        self.comboLeft!.removeFromParent()
+                        self.comboRight!.removeFromParent()
+                    }
                 }
             }else{
                 self.missAction()
                 self.comboLabel?.hidden = true
                 self.comboCounter = 0
+                if(self.comboTop?.parent != nil){
+                    self.comboTop!.removeFromParent()
+                    self.comboBot!.removeFromParent()
+                    self.comboLeft!.removeFromParent()
+                    self.comboRight!.removeFromParent()
+                }
             }
         } else if(inTutorial == 1) {
             if(side == LEFT && direction == Direction.LEFT){
@@ -770,23 +789,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func endGame(){
-        animateDoorReverse { () -> () in
-            self.stopBackgroundMusic()
-            self.startButton?.removeFromParent()
-            self.addChild(self.startButton!)
-            self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
-            //self.scoreLabel?.hidden = true
-            self.levelLabel?.hidden = true
-            self.leftView.hidden = true
-            self.rightView.hidden = true
-            //self.scoreText?.hidden = true
-            self.levelText?.hidden = true
-            self.highScoreText?.hidden = false
-            self.swipeLabel?.hidden = false
-            self.heroLabel?.hidden = false
-            self.comboLabel?.hidden = true
-            self.comboCounter = 0
-            self.inGame = false;
+        if(!self.inMenu)
+        {
+            self.inMenu = true
+            animateDoorReverse { () -> () in
+                self.stopBackgroundMusic()
+                self.startButton?.removeFromParent()
+                self.addChild(self.startButton!)
+                self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
+                //self.scoreLabel?.hidden = true
+                self.levelLabel?.hidden = true
+                self.leftView.hidden = true
+                self.rightView.hidden = true
+                //self.scoreText?.hidden = true
+                self.levelText?.hidden = true
+                self.highScoreText?.hidden = false
+                self.swipeLabel?.hidden = false
+                self.heroLabel?.hidden = false
+                self.comboLabel?.hidden = true
+                self.comboCounter = 0
+                self.inGame = false
+                self.inMenu = false
+                if(self.comboTop?.parent != nil){
+                    var fadeOut = SKAction.fadeOutWithDuration(0.5)
+                    var block = SKAction.runBlock({ () -> Void in
+                        self.comboTop!.removeFromParent()
+                        self.comboBot!.removeFromParent()
+                        self.comboLeft!.removeFromParent()
+                        self.comboRight!.removeFromParent()
+                    })
+                    self.comboTop!.runAction(SKAction.sequence([fadeOut, block]))
+                }
+            }
         }
     }
     
@@ -852,7 +886,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         menuMusicPlayer?.pause()
     }
     
-    //Function that explodes the arrows
     func sparkAt(pos: CGPoint, angle:Float) {
         var emitterNode = SKEmitterNode(fileNamed: "sparkParticle.sks")
         emitterNode.particlePosition = pos
@@ -861,6 +894,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         emitterNode.emissionAngle = CGFloat(angle)
         arrowParent.addChild(emitterNode)
         self.runAction(SKAction.waitForDuration(1.5), completion: { emitterNode.removeFromParent() })
+    }
+    
+    //Combo Particle
+    func combo() {
+        comboTop = SKEmitterNode(fileNamed: "comboParticle.sks")
+        comboBot = SKEmitterNode(fileNamed: "comboParticle.sks")
+        comboLeft = SKEmitterNode(fileNamed: "comboParticle.sks")
+        comboRight = SKEmitterNode(fileNamed: "comboParticle.sks")
+        
+        comboTop!.particlePosition = CGPointMake(size.width/2, size.height)
+        comboBot!.particlePosition = CGPointMake(size.width/2, 0)
+        
+        comboLeft!.particlePosition = CGPointMake(0, size.height/2)
+        comboLeft!.particlePositionRange = CGVector(dx: 1, dy: 1500)
+        
+        comboRight!.particlePosition = CGPointMake(size.width, size.height/2)
+        comboRight!.particlePositionRange = CGVector(dx: 1, dy: 1500)
+
+        self.addChild(comboTop!)
+        self.addChild(comboBot!)
+        self.addChild(comboLeft!)
+        self.addChild(comboRight!)
     }
     
     func animateDoor(callback:()->())
