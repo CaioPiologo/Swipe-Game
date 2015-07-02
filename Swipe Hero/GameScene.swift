@@ -228,35 +228,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         //define openDoorAction
         let rotateMiddle = SKAction.rotateByAngle(CGFloat(M_PI_2), duration: 0.7)
         rotateMiddle.timingMode = SKActionTimingMode.EaseInEaseOut
-        let openDoorLeft = SKAction.moveBy(CGVector(dx: -475, dy: 0), duration: 1.0)
+        let openDoorLeft = SKAction.moveBy(CGVector(dx: -485, dy: 0), duration: 1.0)
         openDoorLeft.timingMode = SKActionTimingMode.EaseInEaseOut
         let openDoorRight = SKAction.moveBy(CGVector(dx: 475, dy: 0), duration: 1.0)
         openDoorRight.timingMode = SKActionTimingMode.EaseInEaseOut
-        let openMiddleLeft = SKAction.moveBy(CGVector(dx: -475, dy: 0), duration: 1.0)
+        let openMiddleLeft = SKAction.moveBy(CGVector(dx: -485, dy: 0), duration: 1.0)
         openMiddleLeft.timingMode = SKActionTimingMode.EaseInEaseOut
         let openMiddleRight = SKAction.moveBy(CGVector(dx: 475, dy: 0), duration: 1.0)
         openMiddleRight.timingMode = SKActionTimingMode.EaseInEaseOut
         let openingDoorGroup = SKAction.group([openDoorLeft,openDoorRight,openMiddleLeft,openMiddleRight])
         self.openDoorAction = SKAction.sequence([
-                rotateMiddle,SKAction.waitForDuration(0.7),SKAction.runBlock({ () -> Void in
-                    self.playBackgroundMusic()
+            rotateMiddle,SKAction.waitForDuration(0.7),SKAction.runBlock({ () -> Void in
+                self.playBackgroundMusic()
+            }),
+            SKAction.group([
+                SKAction.playSoundFileNamed("doorsfx.mp3", waitForCompletion: false),
+                SKAction.runBlock({
+                    self.leftDoor?.runAction(openDoorLeft)
                 }),
-                SKAction.group([
-                    SKAction.playSoundFileNamed("doorsfx.mp3", waitForCompletion: false),
-                    SKAction.runBlock({
-                        self.leftDoor?.runAction(openDoorLeft)
-                    }),
-                    SKAction.runBlock({
-                        self.rightDoor?.runAction(openDoorRight)
-                    }),
-                    SKAction.runBlock({
-                        self.middleLeftDoor?.runAction(openMiddleLeft)
-                    }),
-                    SKAction.runBlock({
-                        self.middleRightDoor?.runAction(openMiddleRight)
-                    })
-                    
-                    ])
+                SKAction.runBlock({
+                    self.rightDoor?.runAction(openDoorRight)
+                }),
+                SKAction.runBlock({
+                    self.middleLeftDoor?.runAction(openMiddleLeft)
+                }),
+                SKAction.runBlock({
+                    self.middleRightDoor?.runAction(openMiddleRight)
+                })
+                
+                ])
             ])
         self.closeDoorAction = SKAction.sequence([
             SKAction.group([
@@ -424,9 +424,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     userDefaults.setInteger(1, forKey: "firstTime")
                 }
                 self.animateDoor()
-                {
+                    {
                         
-                    self.startLevel()
+                        self.startLevel()
                 }
             } else {
                 self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
@@ -504,6 +504,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             if(level % 50 == 0){
                 difficulty += 1.0
             }
+            println("new level")
+            println(self.level)
+            println(self.difficulty)
+            println(self.arrowSpeed)
             self.arrowParent.removeAllActions()
             var block = SKAction.runBlock{
                 self.startLevel()
@@ -513,7 +517,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         
         if(score > highScore){
             changeHighScore(score)
-            
         }
         
         updateLabels()
@@ -608,11 +611,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     repeat(repeatTimes, function: { () -> () in
                         self.addScore()
                     })
-                    if(self.comboCounter>16)
+                    if(self.comboCounter>=16)
                     {
                         self.comboLabel?.text = "Combo \(repeatTimes)X"
                         self.comboLabel?.hidden = false
-                        if(self.comboTop?.parent == nil){
+                        if(repeatTimes==4 && self.comboTop?.parent == nil)
+                        {
                             self.combo()
                         }
                     }
@@ -620,23 +624,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     self.missAction()
                     self.comboLabel?.hidden = true
                     self.comboCounter = 0
-                    if(self.comboTop?.parent != nil){
-                        self.comboTop!.removeFromParent()
-                        self.comboBot!.removeFromParent()
-                        self.comboLeft!.removeFromParent()
-                        self.comboRight!.removeFromParent()
-                    }
+                    self.comboFinalize()
                 }
             }else{
                 self.missAction()
                 self.comboLabel?.hidden = true
                 self.comboCounter = 0
-                if(self.comboTop?.parent != nil){
-                    self.comboTop!.removeFromParent()
-                    self.comboBot!.removeFromParent()
-                    self.comboLeft!.removeFromParent()
-                    self.comboRight!.removeFromParent()
-                }
+                self.comboFinalize()
             }
         } else if(inTutorial == 1) {
             if(side == LEFT && direction == Direction.LEFT){
@@ -790,6 +784,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         if(!self.inMenu)
         {
             self.inMenu = true
+            self.comboFinalize()
             animateDoorReverse { () -> () in
                 self.stopBackgroundMusic()
                 self.startButton?.removeFromParent()
@@ -808,12 +803,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 self.comboCounter = 0
                 self.inGame = false
                 self.inMenu = false
-                if(self.comboTop?.parent != nil){
-                    self.comboTop!.removeFromParent()
-                    self.comboBot!.removeFromParent()
-                    self.comboLeft!.removeFromParent()
-                    self.comboRight!.removeFromParent()
-                }
             }
         }
     }
@@ -899,13 +888,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         
         comboTop!.particlePosition = CGPointMake(size.width/2, size.height)
         comboBot!.particlePosition = CGPointMake(size.width/2, 0)
+        comboBot!.yAcceleration = CGFloat(400.0)
         
         comboLeft!.particlePosition = CGPointMake(0, size.height/2)
         comboLeft!.particlePositionRange = CGVector(dx: 1, dy: 1500)
+        comboLeft!.xAcceleration = CGFloat(400.0)
         
         comboRight!.particlePosition = CGPointMake(size.width, size.height/2)
         comboRight!.particlePositionRange = CGVector(dx: 1, dy: 1500)
-
+        comboRight!.xAcceleration = CGFloat(-400.0)
+        
+        comboRight!.zPosition = -1
+        comboLeft?.zPosition = -1
+        comboTop?.zPosition = -1
+        comboBot?.zPosition = -1
+        
         self.addChild(comboTop!)
         self.addChild(comboBot!)
         self.addChild(comboLeft!)
@@ -985,9 +982,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             self.leftView.hidden = false
             self.rightView.hidden = false
         }
-
+        
         pause = true
-
+        
         if(inTutorial == 0){
             //sets game level and score
             self.restart(1)
@@ -1020,7 +1017,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             
             self.leftView.hidden = true
             var move = SKAction.moveToY((size.height/2)+2*tutorialLabel1!.frame.height, duration: 2)
-
+            
             self.arrowParent.addChild(self.tutorialArrow!)
             self.tutorialArrow!.runAction(SKAction.sequence([wait, move]))
             self.highlight!.position.x = self.size.width
@@ -1064,7 +1061,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             tutorialLabel1!.fontSize = 50
             tutorialLabel2!.text = "to destroy the red arrows!"
             tutorialLabel2!.fontSize = 50
-
+            
             leftBulb?.texture = SKTexture(imageNamed: "bulb_off")
             leftBulb?.removeActionForKey("dangerAction")
             leftLight?.texture = nil
@@ -1096,6 +1093,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             })
             self.runAction(SKAction.sequence([wait, unpause]))
         }
+    }
+    
+    func comboFinalize()
+    {
+        if(self.comboTop?.parent != nil){
+            self.comboTop!.removeFromParent()
+            self.comboBot!.removeFromParent()
+            self.comboLeft!.removeFromParent()
+            self.comboRight!.removeFromParent()
+            changeComboColor(UIColor(red: 0, green: 44, blue: 246, alpha: 1))
+        }
+        
+    }
+    
+    func changeComboColor(color:UIColor)
+    {
+        self.comboTop!.particleColor = color
+        self.comboBot!.particleColor = color
+        self.comboLeft!.particleColor = color
+        self.comboRight!.particleColor = color
+        self.comboTop?.particleColorSequence = nil
+        self.comboBot?.particleColorSequence = nil
+        self.comboLeft?.particleColorSequence = nil
+        self.comboRight?.particleColorSequence = nil
     }
     
     //send high score to leaderboard
