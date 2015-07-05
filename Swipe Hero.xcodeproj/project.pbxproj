@@ -10,6 +10,10 @@
 		1C89B6CB1B42BB5300F14DFF /* Credits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C89B6CA1B42BB5300F14DFF /* Credits.swift */; };
 		1CBCF11E1B348CF200C8A41A /* swipe.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CBCF11D1B348CF200C8A41A /* swipe.wav */; };
 		1CBCF1201B348CF900C8A41A /* swipe2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CBCF11F1B348CF900C8A41A /* swipe2.wav */; };
+		1CCB81011B45626200EFEB2F /* MyScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 1CCB81001B45626200EFEB2F /* MyScene.sks */; };
+		1CCB81031B45649800EFEB2F /* EndGameMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB81021B45649800EFEB2F /* EndGameMenu.swift */; };
+		1CCB81051B4564E500EFEB2F /* PauseMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB81041B4564E500EFEB2F /* PauseMenu.swift */; };
+		1CCB81071B45651200EFEB2F /* SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB81061B45651200EFEB2F /* SettingsMenu.swift */; };
 		1CFF0BBD1B34949700A2F941 /* explosion.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CFF0BBC1B34949700A2F941 /* explosion.wav */; };
 		1CFF0BBF1B3496C500A2F941 /* dangerZone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1CFF0BBE1B3496C500A2F941 /* dangerZone.wav */; };
 		252D4CA51B4448CA00F57447 /* DisposableDroidBB_bld.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 252D4CA41B4448CA00F57447 /* DisposableDroidBB_bld.ttf */; };
@@ -48,6 +52,10 @@
 		1C89B6CA1B42BB5300F14DFF /* Credits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Credits.swift; sourceTree = "<group>"; };
 		1CBCF11D1B348CF200C8A41A /* swipe.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = swipe.wav; sourceTree = "<group>"; };
 		1CBCF11F1B348CF900C8A41A /* swipe2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = swipe2.wav; sourceTree = "<group>"; };
+		1CCB81001B45626200EFEB2F /* MyScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MyScene.sks; sourceTree = "<group>"; };
+		1CCB81021B45649800EFEB2F /* EndGameMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndGameMenu.swift; sourceTree = "<group>"; };
+		1CCB81041B4564E500EFEB2F /* PauseMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PauseMenu.swift; sourceTree = "<group>"; };
+		1CCB81061B45651200EFEB2F /* SettingsMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsMenu.swift; sourceTree = "<group>"; };
 		1CFF0BBC1B34949700A2F941 /* explosion.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = explosion.wav; sourceTree = "<group>"; };
 		1CFF0BBE1B3496C500A2F941 /* dangerZone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = dangerZone.wav; sourceTree = "<group>"; };
 		252D4CA41B4448CA00F57447 /* DisposableDroidBB_bld.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DisposableDroidBB_bld.ttf; sourceTree = "<group>"; };
@@ -140,6 +148,10 @@
 				25EFA11D1B31966500467AD7 /* Arrow.swift */,
 				1C89B6CA1B42BB5300F14DFF /* Credits.swift */,
 				25EFA0FD1B31901400467AD7 /* GameScene.swift */,
+				1CCB81021B45649800EFEB2F /* EndGameMenu.swift */,
+				1CCB81041B4564E500EFEB2F /* PauseMenu.swift */,
+				1CCB81061B45651200EFEB2F /* SettingsMenu.swift */,
+				1CCB81001B45626200EFEB2F /* MyScene.sks */,
 				25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */,
 				25EC12D71B34858500A563D2 /* borderWhitePixel.jpg */,
 				8CEE01F11B31B25400D98C14 /* Queue.swift */,
@@ -288,6 +300,7 @@
 				25EC12D81B34858500A563D2 /* borderWhitePixel.jpg in Resources */,
 				252D4CA51B4448CA00F57447 /* DisposableDroidBB_bld.ttf in Resources */,
 				8CAA8A6D1B41CE8800F8C42E /* doorsfx.mp3 in Resources */,
+				1CCB81011B45626200EFEB2F /* MyScene.sks in Resources */,
 				25EC12CD1B347CA500A563D2 /* ExplosionParticle.sks in Resources */,
 				1CBCF1201B348CF900C8A41A /* swipe2.wav in Resources */,
 			);
@@ -307,10 +320,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1CCB81071B45651200EFEB2F /* SettingsMenu.swift in Sources */,
 				8CEE01F21B31B25400D98C14 /* Queue.swift in Sources */,
 				25EFA0FE1B31901400467AD7 /* GameScene.swift in Sources */,
 				25EFA11E1B31966500467AD7 /* Arrow.swift in Sources */,
+				1CCB81031B45649800EFEB2F /* EndGameMenu.swift in Sources */,
 				25EFA1001B31901400467AD7 /* GameViewController.swift in Sources */,
+				1CCB81051B4564E500EFEB2F /* PauseMenu.swift in Sources */,
 				1C89B6CB1B42BB5300F14DFF /* Credits.swift in Sources */,
 				25EFA0FA1B31901400467AD7 /* AppDelegate.swift in Sources */,
 			);

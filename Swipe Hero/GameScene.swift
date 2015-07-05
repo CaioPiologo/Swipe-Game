@@ -75,8 +75,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var inGame = false
     var pause = false
     var animatingMenu = false
+    var pauseButton : SKSpriteNode!
+    var soundOn = true
     
     //    var missAction : SKAction!
+    var endGameMenu : EndGameMenu!
+    var pauseMenu : PauseMenu!
+    var settingsMenu : SettingsMenu!
+    var credits : Credits!
     
     override func didMoveToView(view: SKView) {
         
@@ -285,10 +291,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //begin background music
         self.playMenuMusic()
         
-//        let c = Credits(x: 0, y: 0, width: 626, height: 606)
-//        c.zPosition = 20
-//        self.menu?.addChild(c)
+        self.pauseButton = self.childNodeWithName("pauseButton") as? SKSpriteNode
         
+        let cancelButton : SKSpriteNode = SKSpriteNode(texture: SKTexture(imageNamed: "cancel_button_pixelated"), size: CGSize(width: 60, height: 60))
+        cancelButton.position = CGPoint(x: 626/2 - 80, y: 606/2 - 110)
+        cancelButton.name = "cancelButton"
+        cancelButton.zPosition = 20
+        self.menu?.addChild(cancelButton)
+        
+        credits = Credits(x: 0, y: 0, width: 626, height: 606)
+        credits.zPosition = 18
+        
+        endGameMenu = EndGameMenu(x: 0, y: 0, width: 626, height: 606, score: 100, highScore: 9999)
+        endGameMenu.zPosition = 18
+        
+        pauseMenu = PauseMenu(x: 0, y: 0, width: 626, height: 606, soundOn: soundOn)
+        pauseMenu.zPosition = 18
+        
+        settingsMenu = SettingsMenu(x: 0, y: 0, width: 626, height: 606, soundOn: soundOn)
+        settingsMenu.zPosition = 18
+        
+        //self.menu?.addChild(settingsMenu)
     }
     
     //Restart with initial level
@@ -357,15 +380,57 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if node.name == "playButton" {
                 self.startButton?.texture = SKTexture(imageNamed: "button_play_pressed_pixelated")
             }
+            
+            if(node.name == "endGamePlayButton"){
+                self.endGameMenu.playButton.texture = SKTexture(imageNamed: "button_play_pressed_pixelated")
+            }
+            
+            if(node.name == "mainMenuButton" || node.name == "mainMenuLabel"){
+                self.pauseMenu.mainMenuButton.texture = SKTexture(imageNamed: "button_generic_pressed")
+                self.pauseMenu.mainMenuLabel.position = CGPoint(x: 0, y: -10)
+            }
+            
+            if(node.name == "pauseSoundButton" || node.name == "pauseSoundLabel"){
+                self.pauseMenu.soundButton.texture = SKTexture(imageNamed: "button_generic_pressed")
+                self.pauseMenu.soundLabel.position = CGPoint(x: 0, y: -10)
+
+            }
+            
+            if(node.name == "settingsTutorialButton" || node.name == "tutorialLabel"){
+                self.settingsMenu.tutorialButton.texture = SKTexture(imageNamed: "button_generic_pressed")
+                self.settingsMenu.tutorialLabel.position = CGPoint(x: 0, y: -10)
+            }
+            
+            if(node.name == "settingsSoundButton" || node.name == "settingsSoundLabel"){
+                self.settingsMenu.soundButton.texture = SKTexture(imageNamed: "button_generic_pressed")
+                self.settingsMenu.soundLabel.position = CGPoint(x: 0, y: -10)
+            }
+            
+            if(node.name == "cancelButton" && !animatingMenu){
+                self.hideMenu(){
+                    self.settingsMenu.removeFromParent()
+                    self.pauseMenu.removeFromParent()
+                    self.endGameMenu.removeFromParent()
+                    self.credits.removeFromParent()
+                    self.unpauseGame()
+                    if(self.inGame){
+                        self.unpauseBackGroundMusic()
+                    }
+                }
+            }
+            
             //settings button
             if node.name == "settings" && !inGame && !animatingMenu{
                 animatingMenu = true
                 if(!inMenu)
                 {
+                    self.menu?.addChild(self.settingsMenu)
                     self.showMenu(){}
                 }else
                 {
-                    self.hideMenu(){}
+                    self.hideMenu(){
+                    self.settingsMenu.removeFromParent()
+                    }
                 }
             }
             if node.name == "pauseButton" && inGame && !animatingMenu{
@@ -374,18 +439,46 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 {
                     self.pauseGame()
                     self.pauseBackGroundMusic()
+                    self.menu?.addChild(self.pauseMenu)
                     self.showMenu(){}
                 }else
                 {
                     self.hideMenu(){
                         self.unpauseGame()
                         self.unpauseBackGroundMusic()
+                        self.pauseMenu.removeFromParent()
                     }
                 }
                 
             }
         }
     }
+    
+    func setGame(){
+        self.inGame = true
+        self.startButton?.removeFromParent()
+        self.scoreLabel?.hidden = false
+        self.highScoreLabel?.hidden = false
+        self.levelLabel?.hidden = false
+        self.leftView.hidden = false
+        self.rightView.hidden = false
+        self.scoreText?.hidden = false
+        self.levelText?.hidden = false
+        self.highScoreText?.hidden = false
+        self.swipeLabel?.hidden = true
+        self.heroLabel?.hidden = true
+        self.levelLabel?.hidden = false
+        self.stopMenuMusic()
+        self.leftLight?.texture = nil
+        self.leftLight?.removeActionForKey("dangerAction")
+        self.rightLight?.texture = nil
+        self.rightLight?.removeActionForKey("dangerAction")
+        self.leftBulb?.texture = SKTexture(imageNamed: "bulb_off")
+        self.leftBulb?.removeActionForKey("dangerAction")
+        self.rightBulb?.texture = SKTexture(imageNamed: "bulb_off")
+        self.rightBulb?.removeActionForKey("dangerAction")
+    }
+    
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         for touch: AnyObject in touches {
             // Get the location of the touch in this scene
@@ -393,28 +486,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let node = self.nodeAtPoint(location)
             // Check if the location of the touch is within the button's bounds
             if node.name == "playButton" && inMenu == false{
-                self.inGame = true
-                self.startButton?.removeFromParent()
-                self.scoreLabel?.hidden = false
-                self.highScoreLabel?.hidden = false
-                self.levelLabel?.hidden = false
-                self.leftView.hidden = false
-                self.rightView.hidden = false
-                self.scoreText?.hidden = false
-                self.levelText?.hidden = false
-                self.highScoreText?.hidden = false
-                self.swipeLabel?.hidden = true
-                self.heroLabel?.hidden = true
-                self.levelLabel?.hidden = false
-                self.stopMenuMusic()
-                self.leftLight?.texture = nil
-                self.leftLight?.removeActionForKey("dangerAction")
-                self.rightLight?.texture = nil
-                self.rightLight?.removeActionForKey("dangerAction")
-                self.leftBulb?.texture = SKTexture(imageNamed: "bulb_off")
-                self.leftBulb?.removeActionForKey("dangerAction")
-                self.rightBulb?.texture = SKTexture(imageNamed: "bulb_off")
-                self.rightBulb?.removeActionForKey("dangerAction")
+                self.setGame()
                 if(self.firstTime == 1){
                     self.restart(1);
                 } else {
@@ -424,11 +496,82 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
                 self.animateDoor()
                 {
-                        
                     self.startLevel()
                 }
-            } else {
+            } else if node.name == "endGamePlayButton" {
+            
+                self.endGameMenu.playButton.texture = SKTexture(imageNamed: "button_play_pixelated")
+                self.hideMenu(){
+                    self.setGame()
+                    if(self.firstTime == 1){
+                        self.restart(1);
+                    } else {
+                        self.tutorial()
+                        self.firstTime = 1
+                        self.userDefaults.setInteger(1, forKey: "firstTime")
+                    }
+                    self.animateDoor()
+                        {
+                            
+                            self.startLevel()
+                    }
+                }
+                
+            } else if node.name == "mainMenuButton" || node.name == "mainMenuLabel"{
+                self.pauseMenu.mainMenuButton.texture = SKTexture(imageNamed: "button_generic")
+                self.pauseMenu.mainMenuLabel.position = CGPoint(x: 0, y: 0)
+                
+                self.unpauseGame()
+                self.hideMenu(){
+                    self.pauseMenu.removeFromParent()
+                    self.finishGame()
+                }
+            }else if (node.name == "pauseSoundButton" || node.name == "pauseSoundLabel"){
+                if(self.soundOn){
+                    self.pauseMenu.soundLabel.text = "Sound Off"
+                    self.soundOn = false
+                }else{
+                    self.pauseMenu.soundLabel.text = "Sound On"
+                    self.soundOn = true
+                }
+                self.pauseMenu.soundButton.texture = SKTexture(imageNamed: "button_generic")
+                self.pauseMenu.soundLabel.position = CGPoint(x: 0, y: 0)
+            
+            }else if (node.name == "settingsTutorialButton" || node.name == "tutorialLabel"){
+                self.settingsMenu.tutorialButton.texture = SKTexture(imageNamed: "button_generic")
+                self.settingsMenu.tutorialLabel.position = CGPoint(x: 0, y: 0)
+                
+                self.setGame()
+                self.hideMenu(){
+                    self.settingsMenu.removeFromParent()
+                    self.tutorial()
+                    self.animateDoor(){
+                        self.startLevel()
+                    }
+                }
+                
+            }else if (node.name == "settingsSoundButton" || node.name == "settingsSoundLabel"){
+                if(self.soundOn){
+                    self.settingsMenu.soundLabel.text = "Sound Off"
+                    self.soundOn = false
+                }else{
+                    self.settingsMenu.soundLabel.text = "Sound On"
+                    self.soundOn = true
+                }
+                self.settingsMenu.soundButton.texture = SKTexture(imageNamed: "button_generic")
+                self.settingsMenu.soundLabel.position = CGPoint(x: 0, y: 0)
+            }else{
                 self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
+                self.endGameMenu.playButton.texture = SKTexture(imageNamed: "button_play_pixelated")
+                self.pauseMenu.mainMenuButton.texture = SKTexture(imageNamed: "button_generic")
+                self.pauseMenu.mainMenuLabel.position = CGPoint(x: 0, y: 0)
+                self.pauseMenu.soundButton.texture = SKTexture(imageNamed: "button_generic")
+                self.pauseMenu.soundLabel.position = CGPoint(x: 0, y: 0)
+                self.settingsMenu.tutorialButton.texture = SKTexture(imageNamed: "button_generic")
+                self.settingsMenu.tutorialLabel.position = CGPoint(x: 0, y: 0)
+                self.settingsMenu.soundButton.texture = SKTexture(imageNamed: "button_generic")
+                self.settingsMenu.soundLabel.position = CGPoint(x: 0, y: 0)
+                
             }
             
         }
@@ -662,24 +805,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func arrowDidCollideWithEndZone(){
-        self.arrowParent.removeAllActions()
-        for i in 0 ... self.arrowQueue[LEFT].length {
-            var arrow = self.arrowQueue[LEFT].pop()
-            if(arrow != nil){
-                explosion(arrow!.position, color: arrow!.type)
-                arrow!.removeFromParent()
-            }
-        }
-        for i in 0 ... self.arrowQueue[RIGHT].length {
-            var arrow = self.arrowQueue[RIGHT].pop()
-            if(arrow != nil){
-                explosion(arrow!.position, color: arrow!.type)
-                arrow!.removeFromParent()
-            }
-        }
-        arrowQueue[LEFT].emptyQueue()
-        arrowQueue[RIGHT].emptyQueue()
-        endGame()
+        finishGame()
     }
     
     func arrowDidCollideWithDangetZone(){
@@ -1051,6 +1177,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             })
             self.runAction(SKAction.sequence([wait, unpause]))
         }
+    }
+    
+    func finishGame()
+    {
+        self.arrowParent.removeAllActions()
+        for i in 0 ... self.arrowQueue[LEFT].length {
+            var arrow = self.arrowQueue[LEFT].pop()
+            if(arrow != nil){
+                explosion(arrow!.position, color: arrow!.type)
+                arrow!.removeFromParent()
+            }
+        }
+        for i in 0 ... self.arrowQueue[RIGHT].length {
+            var arrow = self.arrowQueue[RIGHT].pop()
+            if(arrow != nil){
+                explosion(arrow!.position, color: arrow!.type)
+                arrow!.removeFromParent()
+            }
+        }
+        arrowQueue[LEFT].emptyQueue()
+        arrowQueue[RIGHT].emptyQueue()
+        endGame()
     }
     
 }
