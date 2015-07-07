@@ -352,7 +352,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         self.removeAllActions()
         //begin background music
         self.stopMenuMusic()
-        
+        self.pauseEnable = true
         
     }
     
@@ -879,7 +879,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     func arrowDidCollideWithEndZone(){
         self.pauseEnable = false
         finishGame()
-        self.pauseEnable = true
     }
     
     func arrowDidCollideWithDangetZone(){
@@ -979,6 +978,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         if(!self.inMenu)
         {
             self.inMenu = true
+            self.pauseEnable = false
             self.comboFinalize()
             animateDoorReverse { () -> () in
                 self.stopBackgroundMusic()
