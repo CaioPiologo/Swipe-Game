@@ -21,8 +21,8 @@ class PauseMenu: SKSpriteNode {
         
         let fontName = "DisposableDroidBB-Bold"
         let fontColor = UIColor.blackColor()
-        let fontSize : CGFloat = 36
-        let buttonSize = CGSize(width: 250, height: 90)
+        let fontSize : CGFloat = 46
+        let buttonSize = CGSize(width: 300, height: 120)
         
         mainMenuLabel = SKLabelNode(text: "Main Menu")
         mainMenuLabel.fontName = fontName
@@ -32,9 +32,9 @@ class PauseMenu: SKSpriteNode {
         mainMenuLabel.zPosition = 20
         
         if(soundOn){
-            soundLabel = SKLabelNode(text: "Sound On")
+            soundLabel = SKLabelNode(text: "Mute Sound")
         }else{
-            soundLabel = SKLabelNode(text: "Sound Off")
+            soundLabel = SKLabelNode(text: "Unmute Sound")
         }
         soundLabel.fontName = fontName
         soundLabel.fontColor = fontColor
@@ -43,13 +43,13 @@ class PauseMenu: SKSpriteNode {
         soundLabel.zPosition = 20
         
         mainMenuButton = SKSpriteNode(texture: SKTexture(imageNamed: "button_generic"), size: buttonSize)
-        mainMenuButton.position = CGPoint(x: 0, y: height/2 - 240)
+        mainMenuButton.position = CGPoint(x: 0, y: height/2 - 230)
         mainMenuButton.name = "mainMenuButton"
         mainMenuButton.zPosition = 19
         mainMenuButton.addChild(mainMenuLabel)
         
         soundButton = SKSpriteNode(texture: SKTexture(imageNamed: "button_generic"), size: buttonSize)
-        soundButton.position = CGPoint(x: 0, y: height/2 - 380)
+        soundButton.position = CGPoint(x: 0, y: height/2 - 400)
         soundButton.name = "pauseSoundButton"
         soundButton.zPosition = 19
         soundButton.addChild(soundLabel)

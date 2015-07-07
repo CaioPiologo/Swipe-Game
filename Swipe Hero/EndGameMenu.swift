@@ -12,12 +12,14 @@ import SpriteKit
 class EndGameMenu: SKSpriteNode {
     
     var playButton : SKSpriteNode!
+    var label2 : SKLabelNode!
+    var label4 : SKLabelNode!
     
     init(x : CGFloat, y : CGFloat, width : CGFloat, height : CGFloat, score : Int, highScore : Int){
         let fontName = "DisposableDroidBB-Bold"
         let fontSize : CGFloat = 40
         let fontColor : UIColor = UIColor.blackColor()
-        let buttonSize = CGSize(width: 250, height: 90)
+        let buttonSize = CGSize(width: 300, height: 120)
         
         let label1 : SKLabelNode = SKLabelNode(text: "Score:")
         label1.fontName = fontName
@@ -25,7 +27,7 @@ class EndGameMenu: SKSpriteNode {
         label1.fontColor = fontColor
         label1.position = CGPoint(x: 0, y: height/2-140)
         
-        let label2 : SKLabelNode = SKLabelNode(text: String(score))
+        label2 = SKLabelNode(text: String(score))
         label2.fontName = fontName
         label2.fontSize = fontSize + 200
         label2.fontColor = fontColor
@@ -37,7 +39,7 @@ class EndGameMenu: SKSpriteNode {
         label3.fontColor = fontColor
         label3.position = CGPoint(x: -40, y: height/2-330)
         
-        let label4 : SKLabelNode = SKLabelNode(text: String(highScore))
+        label4 = SKLabelNode(text: String(highScore))
         label4.horizontalAlignmentMode = .Left
         label4.fontName = fontName
         label4.fontSize = fontSize

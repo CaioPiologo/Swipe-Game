@@ -13,16 +13,18 @@ class SettingsMenu: SKSpriteNode {
     
     var tutorialButton : SKSpriteNode!
     var soundButton : SKSpriteNode!
+    var creditisButton : SKSpriteNode!
     
     var tutorialLabel : SKLabelNode!
     var soundLabel : SKLabelNode!
+    var creditsLabel : SKLabelNode!
     
     init(x : CGFloat, y : CGFloat, width : CGFloat, height : CGFloat, soundOn : Bool){
         
         let fontName = "DisposableDroidBB-Bold"
         let fontColor = UIColor.blackColor()
-        let fontSize : CGFloat = 36
-        let buttonSize = CGSize(width: 250, height: 90)
+        let fontSize : CGFloat = 46
+        let buttonSize = CGSize(width: 300, height: 110)
         
         tutorialLabel = SKLabelNode(text: "Tutorial")
         tutorialLabel.fontName = fontName
@@ -32,9 +34,9 @@ class SettingsMenu: SKSpriteNode {
         tutorialLabel.zPosition = 20
         
         if(soundOn){
-            soundLabel = SKLabelNode(text: "Sound On")
+            soundLabel = SKLabelNode(text: "Mute Sound")
         }else{
-            soundLabel = SKLabelNode(text: "Sound Off")
+            soundLabel = SKLabelNode(text: "Unmute Sound")
         }
         soundLabel.fontName = fontName
         soundLabel.fontColor = fontColor
@@ -42,17 +44,30 @@ class SettingsMenu: SKSpriteNode {
         soundLabel.name = "settingsSoundLabel"
         soundLabel.zPosition = 20
         
+        creditsLabel = SKLabelNode(text: "Credits")
+        creditsLabel.fontName = fontName
+        creditsLabel.fontColor = fontColor
+        creditsLabel.fontSize = fontSize
+        creditsLabel.name = "creditsLabel"
+        creditsLabel.zPosition = 20
+        
         tutorialButton = SKSpriteNode(texture: SKTexture(imageNamed: "button_generic"), size: buttonSize)
-        tutorialButton.position = CGPoint(x: 0, y: height/2 - 240)
+        tutorialButton.position = CGPoint(x: 0, y: height/2 - 200)
         tutorialButton.name = "settingsTutorialButton"
         tutorialButton.zPosition = 19
         tutorialButton.addChild(tutorialLabel)
         
         soundButton = SKSpriteNode(texture: SKTexture(imageNamed: "button_generic"), size: buttonSize)
-        soundButton.position = CGPoint(x: 0, y: height/2 - 380)
+        soundButton.position = CGPoint(x: 0, y: height/2 - 320)
         soundButton.name = "settingsSoundButton"
         soundButton.zPosition = 19
         soundButton.addChild(soundLabel)
+        
+        creditisButton = SKSpriteNode(texture: SKTexture(imageNamed: "button_generic"), size: buttonSize)
+        creditisButton.position = CGPoint(x: 0, y: height/2 - 440)
+        creditisButton.name = "creditsButton"
+        creditisButton.zPosition = 19
+        creditisButton.addChild(creditsLabel)
         
         super.init(texture: nil, color: UIColor.clearColor(), size: CGSize(width: width, height: height))
         super.anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -60,6 +75,7 @@ class SettingsMenu: SKSpriteNode {
         
         self.addChild(tutorialButton)
         self.addChild(soundButton)
+        self.addChild(creditisButton)
     }
     
     required init?(coder aDecoder: NSCoder) {

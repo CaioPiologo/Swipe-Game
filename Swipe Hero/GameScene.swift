@@ -81,9 +81,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     var pause = false
     var animatingMenu = false
     var pauseButton : SKSpriteNode!
+    var bgImage : SKSpriteNode!
     var soundOn = true
     
-    //    var missAction : SKAction!
+    var pauseEnable = true
     var endGameMenu : EndGameMenu!
     var pauseMenu : PauseMenu!
     var settingsMenu : SettingsMenu!
@@ -117,6 +118,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         //get high score from user defaults
         self.highScore = userDefaults.integerForKey(HIGHSCOREKEY)
         self.firstTime = userDefaults.integerForKey("firstTime")
+        if(self.firstTime==0)
+        {
+            self.userDefaults.setBool(true, forKey: "soundOn")
+        }
+        self.soundOn = userDefaults.boolForKey("soundOn")
         
         //initialize labels
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
@@ -208,8 +214,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         rightView.addGestureRecognizer(swipeDownRightViewRecognizer)
         
         self.scoreAction = SKAction.group([
-            SKAction.playSoundFileNamed("swipe.wav", waitForCompletion: false),
-            
             SKAction.sequence([
                 SKAction.scaleTo(2.0, duration: 0.2),
                 SKAction.scaleTo(1.0, duration: 0.2)
@@ -245,10 +249,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         let openingDoorGroup = SKAction.group([openDoorLeft,openDoorRight,openMiddleLeft,openMiddleRight])
         self.openDoorAction = SKAction.sequence([
             rotateMiddle,SKAction.waitForDuration(0.7),SKAction.runBlock({ () -> Void in
-                self.playBackgroundMusic()
+                if(self.soundOn){
+                    self.playBackgroundMusic()
+                }
             }),
             SKAction.group([
-                SKAction.playSoundFileNamed("doorsfx.mp3", waitForCompletion: false),
+                SKAction.runBlock({ () -> Void in
+                    if(self.soundOn){
+                        self.runAction(SKAction.playSoundFileNamed("doorsfx.mp3", waitForCompletion: false))
+                    }
+                }),
+                //SKAction.playSoundFileNamed("doorsfx.mp3", waitForCompletion: false),
                 SKAction.runBlock({
                     self.leftDoor?.runAction(openDoorLeft)
                 }),
@@ -281,11 +292,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 
                 ]),
             SKAction.waitForDuration(1.0),
-            SKAction.playSoundFileNamed("doorsfx.mp3", waitForCompletion: false),
+            SKAction.runBlock({ () -> Void in
+                if(self.soundOn){
+                    self.runAction(SKAction.playSoundFileNamed("doorsfx.mp3", waitForCompletion: false))
+                }
+            }),
+            //SKAction.playSoundFileNamed("doorsfx.mp3", waitForCompletion: false),
             rotateMiddle,
             SKAction.runBlock({ () -> Void in
                 self.stopBackgroundMusic()
-                self.playMenuMusic()
+                if(self.soundOn){
+                    self.playMenuMusic()
+                }
+                
             })
             ])
         
@@ -294,12 +313,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         self.startDangerZoneAnimation()
         
         //begin background music
-        self.playMenuMusic()
+        if(soundOn){
+            self.playMenuMusic()
+        }
         
-        self.pauseButton = self.childNodeWithName("pauseButton") as? SKSpriteNode
+        self.bgImage = self.childNodeWithName("bgImage") as? SKSpriteNode
+        self.pauseButton = self.bgImage.childNodeWithName("pauseButton") as? SKSpriteNode
         
-        let cancelButton : SKSpriteNode = SKSpriteNode(texture: SKTexture(imageNamed: "cancel_button_pixelated"), size: CGSize(width: 60, height: 60))
-        cancelButton.position = CGPoint(x: 626/2 - 80, y: 606/2 - 110)
+        let cancelButton : SKSpriteNode = SKSpriteNode(texture: SKTexture(imageNamed: "cancel_button_pixelated"), size: CGSize(width: 85, height: 85))
+        cancelButton.position = CGPoint(x: 626/2 - 90, y: 606/2 - 120)
         cancelButton.name = "cancelButton"
         cancelButton.zPosition = 20
         self.menu?.addChild(cancelButton)
@@ -316,7 +338,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         settingsMenu = SettingsMenu(x: 0, y: 0, width: 626, height: 606, soundOn: soundOn)
         settingsMenu.zPosition = 18
         
-        //self.menu?.addChild(settingsMenu)
     }
     
     //Restart with initial level
@@ -411,6 +432,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 self.settingsMenu.soundLabel.position = CGPoint(x: 0, y: -10)
             }
             
+            if(node.name == "creditsButton" || node.name == "creditsLabel"){
+                self.settingsMenu.creditisButton.texture = SKTexture(imageNamed: "button_generic_pressed")
+                self.settingsMenu.creditsLabel.position = CGPoint(x: 0, y: -10)
+            }
+            
             if(node.name == "cancelButton" && !animatingMenu){
                 self.hideMenu(){
                     self.settingsMenu.removeFromParent()
@@ -418,7 +444,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     self.endGameMenu.removeFromParent()
                     self.credits.removeFromParent()
                     self.unpauseGame()
-                    if(self.inGame){
+                    if(self.inGame && self.soundOn){
                         self.unpauseBackGroundMusic()
                     }
                 }
@@ -434,11 +460,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 }else
                 {
                     self.hideMenu(){
-                    self.settingsMenu.removeFromParent()
+                        self.settingsMenu.removeFromParent()
+                        self.endGameMenu.removeFromParent()
                     }
                 }
             }
-            if node.name == "pauseButton" && inGame && !animatingMenu{
+            if node.name == "pauseButton" && inGame && !animatingMenu && pauseEnable{
                 animatingMenu = true
                 if(!self.pause)
                 {
@@ -450,7 +477,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 {
                     self.hideMenu(){
                         self.unpauseGame()
-                        self.unpauseBackGroundMusic()
+                        if(self.soundOn){
+                            self.unpauseBackGroundMusic()
+                        }
                         self.pauseMenu.removeFromParent()
                     }
                 }
@@ -507,6 +536,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             
                 self.endGameMenu.playButton.texture = SKTexture(imageNamed: "button_play_pixelated")
                 self.hideMenu(){
+                    self.endGameMenu.removeFromParent()
                     self.setGame()
                     if(self.firstTime == 1){
                         self.restart(1);
@@ -533,11 +563,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 }
             }else if (node.name == "pauseSoundButton" || node.name == "pauseSoundLabel"){
                 if(self.soundOn){
-                    self.pauseMenu.soundLabel.text = "Sound Off"
+                    self.pauseMenu.soundLabel.text = "Unmute Sound"
+                    self.settingsMenu.soundLabel.text = "Unmute Sound"
                     self.soundOn = false
+                    self.userDefaults.setBool(false, forKey: "soundOn")
                 }else{
-                    self.pauseMenu.soundLabel.text = "Sound On"
+                    self.pauseMenu.soundLabel.text = "Mute Sound"
+                    self.settingsMenu.soundLabel.text = "Mute Sound"
                     self.soundOn = true
+                    self.userDefaults.setBool(true, forKey: "soundOn")
                 }
                 self.pauseMenu.soundButton.texture = SKTexture(imageNamed: "button_generic")
                 self.pauseMenu.soundLabel.position = CGPoint(x: 0, y: 0)
@@ -549,6 +583,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 self.setGame()
                 self.hideMenu(){
                     self.settingsMenu.removeFromParent()
+                    self.inTutorial = 0
                     self.tutorial()
                     self.animateDoor(){
                         self.startLevel()
@@ -557,14 +592,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 
             }else if (node.name == "settingsSoundButton" || node.name == "settingsSoundLabel"){
                 if(self.soundOn){
-                    self.settingsMenu.soundLabel.text = "Sound Off"
+                    self.stopMenuMusic()
+                    self.settingsMenu.soundLabel.text = "Unmute Sound"
+                    self.pauseMenu.soundLabel.text = "Unmute Sound"
                     self.soundOn = false
+                    self.userDefaults.setBool(false, forKey: "soundOn")
                 }else{
-                    self.settingsMenu.soundLabel.text = "Sound On"
+                    self.playMenuMusic()
+                    self.settingsMenu.soundLabel.text = "Mute Sound"
+                    self.pauseMenu.soundLabel.text = "Mute Sound"
                     self.soundOn = true
+                    self.userDefaults.setBool(false, forKey: "soundOn")
                 }
                 self.settingsMenu.soundButton.texture = SKTexture(imageNamed: "button_generic")
                 self.settingsMenu.soundLabel.position = CGPoint(x: 0, y: 0)
+                
+            }else if(node.name == "creditsButton" || node.name == "creditsLabel"){
+                self.settingsMenu.creditisButton.texture = SKTexture(imageNamed: "button_generic")
+                self.settingsMenu.creditsLabel.position = CGPoint(x: 0, y: 0)
+                self.hideMenu({ () -> () in
+                    self.settingsMenu.removeFromParent()
+                    self.menu?.addChild(self.credits)
+                    self.showMenu(){
+                        
+                    }
+                })
+                
             }else{
                 self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
                 self.endGameMenu.playButton.texture = SKTexture(imageNamed: "button_play_pixelated")
@@ -576,6 +629,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 self.settingsMenu.tutorialLabel.position = CGPoint(x: 0, y: 0)
                 self.settingsMenu.soundButton.texture = SKTexture(imageNamed: "button_generic")
                 self.settingsMenu.soundLabel.position = CGPoint(x: 0, y: 0)
+                self.settingsMenu.creditisButton.texture = SKTexture(imageNamed: "button_generic")
+                self.settingsMenu.creditsLabel.position = CGPoint(x: 0, y: 0)
                 
             }
             
@@ -667,6 +722,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         }
         
         updateLabels()
+        
+        if(soundOn){
+            scoreLabel?.runAction(SKAction.playSoundFileNamed("swipe.wav", waitForCompletion: false))
+        }
         scoreLabel?.runAction(scoreAction)
     }
     
@@ -680,7 +739,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         var randomActions : [SKAction] = []
         var i = 0
         self.arrowParent.position = CGPoint(x: 0, y: 0)
-        randomActions.append(SKAction.playSoundFileNamed("swipe2.wav", waitForCompletion: false) )
+        if(soundOn){
+            randomActions.append(SKAction.playSoundFileNamed("swipe2.wav", waitForCompletion: false) )
+        }
         
         for i in 0..<10 {
             let newX = initialX + CGFloat(arc4random_uniform(UInt32(amplitudeX))) - CGFloat(amplitudeX / 2)
@@ -816,13 +877,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     }
     
     func arrowDidCollideWithEndZone(){
+        self.pauseEnable = false
         finishGame()
+        self.pauseEnable = true
     }
     
     func arrowDidCollideWithDangetZone(){
         arrowInDangerZone++
         
-        if(arrowInDangerZone == 1){
+        if(arrowInDangerZone == 1 && soundOn){
             self.runAction(SKAction.playSoundFileNamed("dangerZone.wav", waitForCompletion: false))
         }
         
@@ -907,7 +970,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         emitterNode.particleColorSequence = nil
         self.addChild(emitterNode)
         self.runAction(SKAction.waitForDuration(2), completion: { emitterNode.removeFromParent() })
-        self.runAction(SKAction.playSoundFileNamed("explosion.wav", waitForCompletion: false))
+        if(soundOn){
+            self.runAction(SKAction.playSoundFileNamed("explosion.wav", waitForCompletion: false))
+        }
     }
     
     func endGame(){
@@ -932,7 +997,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 self.comboLabel?.hidden = true
                 self.comboCounter = 0
                 self.inGame = false
-                self.inMenu = false
+                self.inMenu = true
+                self.endGameMenu.label2.text = String(self.score)
+                self.endGameMenu.label4.text = String(self.highScore)
+                self.menu?.addChild(self.endGameMenu)
+                self.showMenu({ () -> () in
+                    
+                })
             }
         }
     }
@@ -1041,6 +1112,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     
     func animateDoor(callback:()->())
     {
+        
         var action = SKAction.sequence([self.openDoorAction,SKAction.waitForDuration(2.0),SKAction.runBlock(callback)])
         self.middleDoor?.runAction(action)
     }
@@ -1060,8 +1132,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         act1.timingMode = SKActionTimingMode.EaseInEaseOut
         act2.timingMode = SKActionTimingMode.EaseInEaseOut
         act3.timingMode = SKActionTimingMode.EaseInEaseOut
+        
+        if(self.soundOn){
+            self.runAction(SKAction.playSoundFileNamed("chainDrop.mp3", waitForCompletion: false))
+        }
+        
         self.menu?.runAction(SKAction.sequence([
-            SKAction.playSoundFileNamed("chainDrop.mp3", waitForCompletion: false),
             act1,
             act2,
             act3,
@@ -1075,7 +1151,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         inMenu = false
         var action = SKAction.moveBy(CGVector(dx: 0, dy: 1054), duration: 0.5)
         action.timingMode = SKActionTimingMode.EaseIn
-        self.menu?.runAction(SKAction.sequence([SKAction.playSoundFileNamed("chainDrop.mp3", waitForCompletion: false),action,SKAction.runBlock({self.animatingMenu = false})]), completion: callback)
+        if(self.soundOn){
+            self.runAction(SKAction.playSoundFileNamed("chainDrop.mp3", waitForCompletion: false))
+        }
+        self.menu?.runAction(SKAction.sequence([action,SKAction.runBlock({self.animatingMenu = false})]), completion: callback)
         
     }
     
@@ -1102,6 +1181,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     }
     
     func tutorial(){
+        
+        self.pauseButton.hidden = true
+        
         //sets basic tutorial actions
         var wait = SKAction.waitForDuration(2)
         var setAlpha = SKAction.fadeAlphaTo(0.65, duration: 0.5)
@@ -1221,9 +1303,56 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             tutorialLabel2!.removeFromParent()
             var unpause = SKAction.runBlock({ () -> Void in
                 self.pause = false
+                self.pauseButton.hidden = false
             })
             self.runAction(SKAction.sequence([wait, unpause]))
         }
+    }
+    
+    func comboFinalize()
+    {
+        if(self.comboTop?.parent != nil){
+            self.comboTop!.removeFromParent()
+            self.comboBot!.removeFromParent()
+            self.comboLeft!.removeFromParent()
+            self.comboRight!.removeFromParent()
+            changeComboColor(UIColor(red: 0, green: 44, blue: 246, alpha: 1))
+        }
+        
+    }
+    
+    func changeComboColor(color:UIColor)
+    {
+        self.comboTop!.particleColor = color
+        self.comboBot!.particleColor = color
+        self.comboLeft!.particleColor = color
+        self.comboRight!.particleColor = color
+        self.comboTop?.particleColorSequence = nil
+        self.comboBot?.particleColorSequence = nil
+        self.comboLeft?.particleColorSequence = nil
+        self.comboRight?.particleColorSequence = nil
+    }
+    
+    //send high score to leaderboard
+    func saveHighscore() {
+        
+        //check if user is signed in
+        if GKLocalPlayer.localPlayer().authenticated {
+            
+            var scoreReporter = GKScore(leaderboardIdentifier: "swipe_hero_leaderboard")
+            
+            scoreReporter.value = Int64(self.highScore)
+            
+            var scoreArray: [GKScore] = [scoreReporter]
+            
+            GKScore.reportScores(scoreArray, withCompletionHandler: {(error : NSError!) -> Void in
+                if error != nil {
+                    println("error")
+                }
+            })
+            
+        }
+        
     }
     
     func finishGame()
@@ -1248,4 +1377,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         endGame()
     }
     
+    //shows leaderboard screen
+    func showLeaderboard() {
+        var vc = self.view?.window?.rootViewController
+        var gc = GKGameCenterViewController()
+        gc.gameCenterDelegate = self
+        vc?.presentViewController(gc, animated: true, completion: nil)
+    }
+    
+    //hides leaderboard screen
+    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!)
+    {
+        gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
+        
+    }
 }
