@@ -22,7 +22,7 @@ struct PhysicsCategory {
     static let world:UInt32 = 0b1000 //8
 }
 
-class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelegate {
+class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelegate, GameCenterHelperProtocol {
     
     //variables
     var arrowQueue:Array<Queue<Arrow>> = [Queue<Arrow>(),Queue<Arrow>()]
@@ -89,11 +89,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     var pauseMenu : PauseMenu!
     var settingsMenu : SettingsMenu!
     var credits : Credits!
+    var gameCenter: GameCenterHelper!
     
     override func didMoveToView(view: SKView) {
         
         /* Setup your scene here */
-        
+//        GameViewController().authenticateLocalPlayer()
+        gameCenter = GameCenterHelper(VC: GameViewController())
+        gameCenter.delegate = self
+        gameCenter.authenticateLocalPlayer()
         
         self.leftBulb = self.childNodeWithName("leftBulb") as? SKSpriteNode
         self.leftBulb?.zPosition = -3
@@ -116,6 +120,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         self.addChild(arrowParent)
         
         //get high score from user defaults
+        self.firstTime = userDefaults.integerForKey("firstTime")
         self.highScore = userDefaults.integerForKey(HIGHSCOREKEY)
         self.firstTime = userDefaults.integerForKey("firstTime")
         if(self.firstTime==0)
@@ -452,6 +457,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             
             //settings button
             if node.name == "settings" && !inGame && !animatingMenu{
+                self.showLeaderboard()
+
                 animatingMenu = true
                 if(!inMenu)
                 {
@@ -706,10 +713,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             if(level % 50 == 0){
                 difficulty += 1.0
             }
-            println("new level")
-            println(self.level)
-            println(self.difficulty)
-            println(self.arrowSpeed)
             self.arrowParent.removeAllActions()
             var block = SKAction.runBlock{
                 self.startLevel()
@@ -719,6 +722,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         
         if(score > highScore){
             changeHighScore(score)
+            GameViewController().saveHighscore(score)
         }
         
         updateLabels()
@@ -1389,6 +1393,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         endGame()
     }
     
+    
+    
     //shows leaderboard screen
     func showLeaderboard() {
         var vc = self.view?.window?.rootViewController
@@ -1402,5 +1408,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     {
         gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
         
+    }
+    
+    func didStartAuthentication() {
+        self.startButton?.hidden = true
+    }
+    
+    func finishedAuthenticationWithSuccess() {
+        self.startButton?.hidden = false
+        self.highScore = gameCenter.gcScore
+    }
+    
+    func finishedAuthenticationFailed() {
+        println("OHFUCK")
+    }
+    
+    func finishedLoadingScore() {
+        if(self.highScore < gameCenter.gcScore){
+            changeHighScore(gameCenter.gcScore)
+            
+        }
     }
 }
