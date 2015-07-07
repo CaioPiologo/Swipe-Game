@@ -20,6 +20,9 @@
 		252D4CA61B44496100F57447 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1011B31901400467AD7 /* Main.storyboard */; };
 		252D4CA81B44499D00F57447 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1061B31901400467AD7 /* LaunchScreen.xib */; };
 		257978D81B4555B000E61D61 /* comboParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 257978D71B4555B000E61D61 /* comboParticle.sks */; };
+		2581B0E01B4C4E3C000FD49B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2581B0DF1B4C4E3C000FD49B /* GameKit.framework */; };
+		2581B0E21B4C4EEE000FD49B /* GameCenterHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2581B0E11B4C4EEE000FD49B /* GameCenterHelper.swift */; };
+		2581B0E31B4C4F02000FD49B /* GameCenterHelper.swift in Resources */ = {isa = PBXBuildFile; fileRef = 2581B0E11B4C4EEE000FD49B /* GameCenterHelper.swift */; };
 		25EC12CD1B347CA500A563D2 /* ExplosionParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */; };
 		25EC12D81B34858500A563D2 /* borderWhitePixel.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 25EC12D71B34858500A563D2 /* borderWhitePixel.jpg */; };
 		25EFA0FA1B31901400467AD7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA0F91B31901400467AD7 /* AppDelegate.swift */; };
@@ -61,6 +64,8 @@
 		1CFF0BBE1B3496C500A2F941 /* dangerZone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = dangerZone.wav; sourceTree = "<group>"; };
 		252D4CA41B4448CA00F57447 /* DisposableDroidBB_bld.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DisposableDroidBB_bld.ttf; sourceTree = "<group>"; };
 		257978D71B4555B000E61D61 /* comboParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = comboParticle.sks; sourceTree = "<group>"; };
+		2581B0DF1B4C4E3C000FD49B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		2581B0E11B4C4EEE000FD49B /* GameCenterHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterHelper.swift; sourceTree = "<group>"; };
 		25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ExplosionParticle.sks; sourceTree = "<group>"; };
 		25EC12D71B34858500A563D2 /* borderWhitePixel.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = borderWhitePixel.jpg; sourceTree = "<group>"; };
 		25EFA0F41B31901400467AD7 /* Swipe Hero.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swipe Hero.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,6 +96,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2581B0E01B4C4E3C000FD49B /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,6 +139,7 @@
 		25EFA0EB1B31901400467AD7 = {
 			isa = PBXGroup;
 			children = (
+				2581B0DF1B4C4E3C000FD49B /* GameKit.framework */,
 				25EFA0F61B31901400467AD7 /* Swipe Hero */,
 				25EFA1101B31901500467AD7 /* Swipe HeroTests */,
 				25EFA0F51B31901400467AD7 /* Products */,
@@ -155,6 +162,7 @@
 				8C2491F01B372A97004EEA65 /* Font */,
 				1CBCF11A1B348CB200C8A41A /* Sounds */,
 				25EFA0F91B31901400467AD7 /* AppDelegate.swift */,
+				2581B0E11B4C4EEE000FD49B /* GameCenterHelper.swift */,
 				25EFA0FB1B31901400467AD7 /* GameScene.sks */,
 				25EFA11D1B31966500467AD7 /* Arrow.swift */,
 				1C89B6CA1B42BB5300F14DFF /* Credits.swift */,
@@ -258,10 +266,10 @@
 				TargetAttributes = {
 					25EFA0F31B31901400467AD7 = {
 						CreatedOnToolsVersion = 6.3.2;
-						DevelopmentTeam = 8XZWT2WKP8;
+						DevelopmentTeam = 7A42Z7C5S3;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -295,6 +303,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2581B0E31B4C4F02000FD49B /* GameCenterHelper.swift in Resources */,
 				252D4CA81B44499D00F57447 /* LaunchScreen.xib in Resources */,
 				252D4CA61B44496100F57447 /* Main.storyboard in Resources */,
 				8C0B8A981B443C6300654BAD /* Rhinocerosseamless.mp3 in Resources */,
@@ -332,6 +341,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2581B0E21B4C4EEE000FD49B /* GameCenterHelper.swift in Sources */,
 				1CCB81071B45651200EFEB2F /* SettingsMenu.swift in Sources */,
 				8CEE01F21B31B25400D98C14 /* Queue.swift in Sources */,
 				25EFA0FE1B31901400467AD7 /* GameScene.swift in Sources */,

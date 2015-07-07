@@ -27,7 +27,10 @@ extension SKNode {
 }
 
 class GameViewController: UIViewController, GKGameCenterControllerDelegate {
-
+    var gcScore = 0
+    var gcEnabled = Bool()
+    var gcDefaultLeaderBoard = String()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -42,15 +45,14 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate {
             
             /* Set the scale mode to scale to fit the window */
             scene.scaleMode = .AspectFill
+
+           // authenticateLocalPlayer()
             
             skView.presentScene(scene)
+
         }
     }
-
-    override func viewDidAppear(animated: Bool) {
-        authenticateLocalPlayer()
-    }
-    
+  
     override func shouldAutorotate() -> Bool {
         return true
     }
@@ -79,7 +81,20 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate {
         localPlayer.authenticateHandler = {(viewController : UIViewController!, error : NSError!) -> Void in
             if ((viewController) != nil) {
                 self.presentViewController(viewController, animated: true, completion: nil)
-            }else{
+            }else if (GKLocalPlayer.localPlayer().authenticated) {
+                self.gcEnabled = true
+                
+                // Get the default leaderboard ID
+                localPlayer.loadDefaultLeaderboardIdentifierWithCompletionHandler({ (leaderboardIdentifer: String!, error: NSError!) -> Void in
+                    if error != nil {
+                        println(error)
+                    } else {
+                        self.gcDefaultLeaderBoard = leaderboardIdentifer
+                    }
+                })
+                
+                self.getHighScore()
+            } else {
                 
                 println((GKLocalPlayer.localPlayer().authenticated))
             }
@@ -87,6 +102,49 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate {
         
     }
     
+    //send high score to leaderboard
+    func saveHighscore(highScore: Int) {
+        
+        //check if user is signed in
+        if GKLocalPlayer.localPlayer().authenticated {
+            
+            var scoreReporter = GKScore(leaderboardIdentifier: "swipe_hero_leaderboards", player: GKLocalPlayer.localPlayer())
+            
+            scoreReporter.value = Int64(highScore)
+            
+            var scoreArray: [GKScore] = [scoreReporter]
+            
+            GKScore.reportScores(scoreArray, withCompletionHandler: {(error : NSError!) -> Void in
+                if error != nil {
+                    println("error")
+                } else {
+                    println("score submitted")
+                }
+            })
+            
+        }
+        
+    }
+    
+    // gets player highScore
+    func getHighScore(){
+        if (gcEnabled == true) {
+            let leaderBoardRequest = GKLeaderboard()
+            
+            leaderBoardRequest.identifier = "swipe_hero_leaderboards"
+            leaderBoardRequest.loadScoresWithCompletionHandler { (scores, error) -> Void in
+                if (error != nil) {
+                    println("Error: \(error!.description)")
+                } else if (scores != nil) {
+                    let localPlayerScore = leaderBoardRequest.localPlayerScore
+                    self.gcScore = Int(localPlayerScore.value)
+                    println("Local player's score: \(localPlayerScore.value)")
+                }
+            }
+        } else {
+            println("putz")
+        }
+    }
     //hides leaderboard screen
     func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!)
     {
