@@ -1183,6 +1183,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     func tutorial(){
         
         self.pauseButton.hidden = true
+        self.pauseButton.position = CGPoint(x: 100, y: 100)
         
         //sets basic tutorial actions
         var wait = SKAction.waitForDuration(2)
@@ -1304,6 +1305,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             var unpause = SKAction.runBlock({ () -> Void in
                 self.pause = false
                 self.pauseButton.hidden = false
+                self.pauseButton.position = CGPoint(x: 695, y: -80)
             })
             self.runAction(SKAction.sequence([wait, unpause]))
         }
