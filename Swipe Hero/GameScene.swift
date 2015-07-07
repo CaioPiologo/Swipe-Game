@@ -474,7 +474,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     self.menu?.addChild(self.settingsMenu)
                     self.highlight?.position.x = CGRectGetMidX(self.frame)
                     self.highlight?.position.y = CGRectGetMidY(self.frame)
-                    self.highlight?.zPosition = 10
+                    self.highlight?.zPosition = 15
                     self.highlight?.alpha = 0.5
                     self.addChild(self.highlight!)
                     self.showMenu(){}
@@ -496,7 +496,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     self.menu?.addChild(self.pauseMenu)
                     self.highlight?.position.x = CGRectGetMidX(self.frame)
                     self.highlight?.position.y = CGRectGetMidY(self.frame)
-                    self.highlight?.zPosition = 10
+                    self.highlight?.zPosition = 15
                     self.highlight?.alpha = 0.5
                     self.addChild(self.highlight!)
                     self.showMenu(){}
@@ -1057,14 +1057,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 self.menu?.addChild(self.endGameMenu)
                 self.highlight?.position.x = CGRectGetMidX(self.frame)
                 self.highlight?.position.y = CGRectGetMidY(self.frame)
-                self.highlight?.zPosition = 10
+                self.highlight?.zPosition = 15
                 self.highlight?.alpha = 0.0
                 self.addChild(self.highlight!)
                 self.highlight?.runAction(fadeIn)
                 self.gameCenterButton.hidden = false
                 self.gameCenterButton.zPosition = 6
                 self.gameCenterIcon.hidden = false
-                self.gameCenterIcon.zPosition = 0
+                self.gameCenterIcon.zPosition = 7
                 self.showMenu({ () -> () in
                     
                 })
