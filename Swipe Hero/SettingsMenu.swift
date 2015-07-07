@@ -23,8 +23,8 @@ class SettingsMenu: SKSpriteNode {
         
         let fontName = "DisposableDroidBB-Bold"
         let fontColor = UIColor.blackColor()
-        let fontSize : CGFloat = 46
-        let buttonSize = CGSize(width: 300, height: 110)
+        let fontSize : CGFloat = 55
+        let buttonSize = CGSize(width: 310, height: 120)
         
         tutorialLabel = SKLabelNode(text: "Tutorial")
         tutorialLabel.fontName = fontName
@@ -34,9 +34,9 @@ class SettingsMenu: SKSpriteNode {
         tutorialLabel.zPosition = 20
         
         if(soundOn){
-            soundLabel = SKLabelNode(text: "Mute Sound")
+            soundLabel = SKLabelNode(text: "Mute")
         }else{
-            soundLabel = SKLabelNode(text: "Unmute Sound")
+            soundLabel = SKLabelNode(text: "Unmute")
         }
         soundLabel.fontName = fontName
         soundLabel.fontColor = fontColor
@@ -58,13 +58,13 @@ class SettingsMenu: SKSpriteNode {
         tutorialButton.addChild(tutorialLabel)
         
         soundButton = SKSpriteNode(texture: SKTexture(imageNamed: "button_generic"), size: buttonSize)
-        soundButton.position = CGPoint(x: 0, y: height/2 - 320)
+        soundButton.position = CGPoint(x: 0, y: height/2 - 340)
         soundButton.name = "settingsSoundButton"
         soundButton.zPosition = 19
         soundButton.addChild(soundLabel)
         
         creditisButton = SKSpriteNode(texture: SKTexture(imageNamed: "button_generic"), size: buttonSize)
-        creditisButton.position = CGPoint(x: 0, y: height/2 - 440)
+        creditisButton.position = CGPoint(x: 0, y: height/2 - 480)
         creditisButton.name = "creditsButton"
         creditisButton.zPosition = 19
         creditisButton.addChild(creditsLabel)

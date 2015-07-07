@@ -51,6 +51,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     var leftLight : SKSpriteNode?
     var rightLight : SKSpriteNode?
     var startButton: SKSpriteNode?
+    var gameCenterButton : SKSpriteNode!
+    var gameCenterIcon : SKSpriteNode!
     var score:Int = 0
     var level:Int = 0
     var difficulty:Float = 0
@@ -159,8 +161,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         self.middleLeftDoor = self.middleDoor?.childNodeWithName("portaMeioEsquerda") as? SKSpriteNode
         self.menu = self.childNodeWithName("menu") as? SKSpriteNode
         
-        
-        
+        self.gameCenterButton = self.childNodeWithName("gameCenterButton") as? SKSpriteNode
+        self.gameCenterIcon = self.gameCenterButton.childNodeWithName("gameCenterIcon") as? SKSpriteNode
         
         //define collision bitmasks
         self.dangerZone!.physicsBody = SKPhysicsBody(rectangleOfSize: dangerZone!.size)
@@ -322,6 +324,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             self.playMenuMusic()
         }
         
+        highlight = SKSpriteNode(color: SKColor.blackColor(), size: CGSizeMake(self.frame.width, self.frame.height))
+        
         self.bgImage = self.childNodeWithName("bgImage") as? SKSpriteNode
         self.pauseButton = self.bgImage.childNodeWithName("pauseButton") as? SKSpriteNode
         
@@ -442,8 +446,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 self.settingsMenu.creditsLabel.position = CGPoint(x: 0, y: -10)
             }
             
+            if(node.name == "gameCenterButton" || node.name == "gameCenterIcon"){
+                self.gameCenterButton.texture = SKTexture(imageNamed: "small_generic_button_pressed_pixelated")
+                self.gameCenterIcon.position = CGPoint(x: 0, y: -5)
+            }
+            
             if(node.name == "cancelButton" && !animatingMenu){
                 self.hideMenu(){
+                    self.highlight?.removeFromParent()
                     self.settingsMenu.removeFromParent()
                     self.pauseMenu.removeFromParent()
                     self.endGameMenu.removeFromParent()
@@ -457,16 +467,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             
             //settings button
             if node.name == "settings" && !inGame && !animatingMenu{
-                self.showLeaderboard()
 
                 animatingMenu = true
                 if(!inMenu)
                 {
                     self.menu?.addChild(self.settingsMenu)
+                    self.highlight?.position.x = CGRectGetMidX(self.frame)
+                    self.highlight?.position.y = CGRectGetMidY(self.frame)
+                    self.highlight?.zPosition = 10
+                    self.highlight?.alpha = 0.5
+                    self.addChild(self.highlight!)
                     self.showMenu(){}
                 }else
                 {
                     self.hideMenu(){
+                        self.highlight?.removeFromParent()
                         self.settingsMenu.removeFromParent()
                         self.endGameMenu.removeFromParent()
                     }
@@ -479,10 +494,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     self.pauseGame()
                     self.pauseBackGroundMusic()
                     self.menu?.addChild(self.pauseMenu)
+                    self.highlight?.position.x = CGRectGetMidX(self.frame)
+                    self.highlight?.position.y = CGRectGetMidY(self.frame)
+                    self.highlight?.zPosition = 10
+                    self.highlight?.alpha = 0.5
+                    self.addChild(self.highlight!)
                     self.showMenu(){}
                 }else
                 {
                     self.hideMenu(){
+                        self.highlight?.removeFromParent()
                         self.unpauseGame()
                         if(self.soundOn){
                             self.unpauseBackGroundMusic()
@@ -509,7 +530,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         self.swipeLabel?.hidden = true
         self.heroLabel?.hidden = true
         self.levelLabel?.hidden = false
+        self.gameCenterButton.hidden = true
+        self.gameCenterIcon.hidden = true
         self.stopMenuMusic()
+        self.playBackgroundMusic()
+        if(!soundOn){
+            self.pauseBackGroundMusic()
+        }
         self.leftLight?.texture = nil
         self.leftLight?.removeActionForKey("dangerAction")
         self.rightLight?.texture = nil
@@ -543,6 +570,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             
                 self.endGameMenu.playButton.texture = SKTexture(imageNamed: "button_play_pixelated")
                 self.hideMenu(){
+                    self.highlight?.removeFromParent()
                     self.endGameMenu.removeFromParent()
                     self.setGame()
                     if(self.firstTime == 1){
@@ -565,18 +593,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 
                 self.unpauseGame()
                 self.hideMenu(){
+                    self.highlight?.removeFromParent()
                     self.pauseMenu.removeFromParent()
                     self.finishGame()
                 }
             }else if (node.name == "pauseSoundButton" || node.name == "pauseSoundLabel"){
                 if(self.soundOn){
-                    self.pauseMenu.soundLabel.text = "Unmute Sound"
-                    self.settingsMenu.soundLabel.text = "Unmute Sound"
+                    self.pauseMenu.soundLabel.text = "Unmute"
+                    self.settingsMenu.soundLabel.text = "Unmute"
                     self.soundOn = false
                     self.userDefaults.setBool(false, forKey: "soundOn")
                 }else{
-                    self.pauseMenu.soundLabel.text = "Mute Sound"
-                    self.settingsMenu.soundLabel.text = "Mute Sound"
+                    self.pauseMenu.soundLabel.text = "Mute"
+                    self.settingsMenu.soundLabel.text = "Mute"
                     self.soundOn = true
                     self.userDefaults.setBool(true, forKey: "soundOn")
                 }
@@ -586,7 +615,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             }else if (node.name == "settingsTutorialButton" || node.name == "tutorialLabel"){
                 self.settingsMenu.tutorialButton.texture = SKTexture(imageNamed: "button_generic")
                 self.settingsMenu.tutorialLabel.position = CGPoint(x: 0, y: 0)
-                
+                self.highlight?.removeFromParent()
                 self.setGame()
                 self.hideMenu(){
                     self.settingsMenu.removeFromParent()
@@ -600,14 +629,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             }else if (node.name == "settingsSoundButton" || node.name == "settingsSoundLabel"){
                 if(self.soundOn){
                     self.stopMenuMusic()
-                    self.settingsMenu.soundLabel.text = "Unmute Sound"
-                    self.pauseMenu.soundLabel.text = "Unmute Sound"
+                    self.settingsMenu.soundLabel.text = "Unmute"
+                    self.pauseMenu.soundLabel.text = "Unmute"
                     self.soundOn = false
                     self.userDefaults.setBool(false, forKey: "soundOn")
                 }else{
                     self.playMenuMusic()
-                    self.settingsMenu.soundLabel.text = "Mute Sound"
-                    self.pauseMenu.soundLabel.text = "Mute Sound"
+                    self.settingsMenu.soundLabel.text = "Mute"
+                    self.pauseMenu.soundLabel.text = "Mute"
                     self.soundOn = true
                     self.userDefaults.setBool(true, forKey: "soundOn")
                 }
@@ -625,6 +654,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     }
                 })
                 
+            }else if (node.name == "gameCenterButton" || node.name == "gameCenterIcon"){
+                self.gameCenterButton.texture = SKTexture(imageNamed: "small_generic_button")
+                self.gameCenterIcon.position = CGPoint(x: 0, y: 5)
+                self.showLeaderboard()
+
             }else{
                 self.startButton?.texture = SKTexture(imageNamed: "button_play_pixelated")
                 self.endGameMenu.playButton.texture = SKTexture(imageNamed: "button_play_pixelated")
@@ -638,6 +672,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 self.settingsMenu.soundLabel.position = CGPoint(x: 0, y: 0)
                 self.settingsMenu.creditisButton.texture = SKTexture(imageNamed: "button_generic")
                 self.settingsMenu.creditsLabel.position = CGPoint(x: 0, y: 0)
+                self.gameCenterButton.texture = SKTexture(imageNamed: "small_generic_button")
+                self.gameCenterIcon.position = CGPoint(x: 0, y: 5)
                 
             }
             
@@ -988,6 +1024,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     }
     
     func endGame(){
+        
+        var fadeIn = SKAction.fadeAlphaTo(0.5, duration: 0.5)
+        
         if(!self.inMenu)
         {
             self.inMenu = true
@@ -1014,6 +1053,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 self.endGameMenu.label2.text = String(self.score)
                 self.endGameMenu.label4.text = String(self.highScore)
                 self.menu?.addChild(self.endGameMenu)
+                self.highlight?.position.x = CGRectGetMidX(self.frame)
+                self.highlight?.position.y = CGRectGetMidY(self.frame)
+                self.highlight?.zPosition = 10
+                self.highlight?.alpha = 0.0
+                self.addChild(self.highlight!)
+                self.highlight?.runAction(fadeIn)
+                self.gameCenterButton.hidden = false
+                self.gameCenterIcon.hidden = false
                 self.showMenu({ () -> () in
                     
                 })
@@ -1220,7 +1267,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             tutorialArrow!.colorBlendFactor = 1.0
             tutorialArrow!.position = CGPointMake(size.width/4, size.height+tutorialArrow!.size.height)
             //initializes the highlight
-            highlight = SKSpriteNode(color: SKColor.blackColor(), size: CGSizeMake(self.frame.width, self.frame.height))
             highlight!.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame))
             highlight!.alpha = 0
             highlight!.zPosition = -2
