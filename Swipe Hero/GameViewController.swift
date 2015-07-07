@@ -8,6 +8,7 @@
 
 import UIKit
 import SpriteKit
+import GameKit
 
 extension SKNode {
     class func unarchiveFromFile(file : String) -> SKNode? {
@@ -25,7 +26,7 @@ extension SKNode {
     }
 }
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, GKGameCenterControllerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +47,10 @@ class GameViewController: UIViewController {
         }
     }
 
+    override func viewDidAppear(animated: Bool) {
+        authenticateLocalPlayer()
+    }
+    
     override func shouldAutorotate() -> Bool {
         return true
     }
@@ -66,4 +71,28 @@ class GameViewController: UIViewController {
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
+    
+    //initiate gamecenter
+    func authenticateLocalPlayer(){
+        
+        var localPlayer = GKLocalPlayer.localPlayer()
+        localPlayer.authenticateHandler = {(viewController : UIViewController!, error : NSError!) -> Void in
+            if ((viewController) != nil) {
+                self.presentViewController(viewController, animated: true, completion: nil)
+            }else{
+                
+                println((GKLocalPlayer.localPlayer().authenticated))
+            }
+        }
+        
+    }
+    
+    //hides leaderboard screen
+    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!)
+    {
+        gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
+        
+    }
+    
+    
 }
