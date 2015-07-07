@@ -21,8 +21,8 @@ class PauseMenu: SKSpriteNode {
         
         let fontName = "DisposableDroidBB-Bold"
         let fontColor = UIColor.blackColor()
-        let fontSize : CGFloat = 46
-        let buttonSize = CGSize(width: 300, height: 120)
+        let fontSize : CGFloat = 55
+        let buttonSize = CGSize(width: 310, height: 120)
         
         mainMenuLabel = SKLabelNode(text: "Main Menu")
         mainMenuLabel.fontName = fontName
@@ -30,11 +30,11 @@ class PauseMenu: SKSpriteNode {
         mainMenuLabel.fontSize = fontSize
         mainMenuLabel.name = "mainMenuLabel"
         mainMenuLabel.zPosition = 20
-        
+
         if(soundOn){
-            soundLabel = SKLabelNode(text: "Mute Sound")
+            soundLabel = SKLabelNode(text: "Mute")
         }else{
-            soundLabel = SKLabelNode(text: "Unmute Sound")
+            soundLabel = SKLabelNode(text: "Unmute")
         }
         soundLabel.fontName = fontName
         soundLabel.fontColor = fontColor
