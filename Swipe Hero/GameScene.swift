@@ -531,7 +531,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         self.heroLabel?.hidden = true
         self.levelLabel?.hidden = false
         self.gameCenterButton.hidden = true
+        self.gameCenterButton.zPosition = -50
         self.gameCenterIcon.hidden = true
+        self.gameCenterIcon.zPosition = -50
         self.stopMenuMusic()
         self.playBackgroundMusic()
         if(!soundOn){
@@ -1060,7 +1062,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 self.addChild(self.highlight!)
                 self.highlight?.runAction(fadeIn)
                 self.gameCenterButton.hidden = false
+                self.gameCenterButton.zPosition = 6
                 self.gameCenterIcon.hidden = false
+                self.gameCenterIcon.zPosition = 0
                 self.showMenu({ () -> () in
                     
                 })
