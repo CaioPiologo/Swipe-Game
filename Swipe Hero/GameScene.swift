@@ -602,7 +602,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     self.settingsMenu.soundLabel.text = "Mute Sound"
                     self.pauseMenu.soundLabel.text = "Mute Sound"
                     self.soundOn = true
-                    self.userDefaults.setBool(false, forKey: "soundOn")
+                    self.userDefaults.setBool(true, forKey: "soundOn")
                 }
                 self.settingsMenu.soundButton.texture = SKTexture(imageNamed: "button_generic")
                 self.settingsMenu.soundLabel.position = CGPoint(x: 0, y: 0)
@@ -723,9 +723,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         
         updateLabels()
         
-        if(soundOn){
-            scoreLabel?.runAction(SKAction.playSoundFileNamed("swipe.wav", waitForCompletion: false))
-        }
         scoreLabel?.runAction(scoreAction)
     }
     
@@ -787,6 +784,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     }
                 }
                 if(arrow!.direction.rawValue == comparingDir.rawValue){
+                    if(soundOn){
+                        scoreLabel?.runAction(SKAction.playSoundFileNamed("swipe.wav", waitForCompletion: false))
+                    }
                     if(CGRectIntersectsRect(arrow!.frame, dangerZone!.frame)){
                         arrowInDangerZone--
                         addScore()
