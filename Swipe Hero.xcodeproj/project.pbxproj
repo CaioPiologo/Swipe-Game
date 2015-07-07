@@ -22,6 +22,7 @@
 		2581B0E21B4C4EEE000FD49B /* GameCenterHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2581B0E11B4C4EEE000FD49B /* GameCenterHelper.swift */; };
 		2581B0E31B4C4F02000FD49B /* GameCenterHelper.swift in Resources */ = {isa = PBXBuildFile; fileRef = 2581B0E11B4C4EEE000FD49B /* GameCenterHelper.swift */; };
 		2581B0E61B4C53E5000FD49B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2581B0E41B4C53DA000FD49B /* LaunchScreen.xib */; };
+		2581B0E81B4C61B4000FD49B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2581B0E71B4C61B4000FD49B /* GameKit.framework */; };
 		25EC12CD1B347CA500A563D2 /* ExplosionParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */; };
 		25EC12D81B34858500A563D2 /* borderWhitePixel.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 25EC12D71B34858500A563D2 /* borderWhitePixel.jpg */; };
 		25EFA0FA1B31901400467AD7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EFA0F91B31901400467AD7 /* AppDelegate.swift */; };
@@ -65,6 +66,7 @@
 		257978D71B4555B000E61D61 /* comboParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = comboParticle.sks; sourceTree = "<group>"; };
 		2581B0E11B4C4EEE000FD49B /* GameCenterHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterHelper.swift; sourceTree = "<group>"; };
 		2581B0E51B4C53DA000FD49B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = "Swipe Hero/Base.lproj/LaunchScreen.xib"; sourceTree = "<group>"; };
+		2581B0E71B4C61B4000FD49B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ExplosionParticle.sks; sourceTree = "<group>"; };
 		25EC12D71B34858500A563D2 /* borderWhitePixel.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = borderWhitePixel.jpg; sourceTree = "<group>"; };
 		25EFA0F41B31901400467AD7 /* Swipe Hero.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swipe Hero.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,6 +96,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2581B0E81B4C61B4000FD49B /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,6 +139,7 @@
 		25EFA0EB1B31901400467AD7 = {
 			isa = PBXGroup;
 			children = (
+				2581B0E71B4C61B4000FD49B /* GameKit.framework */,
 				25EFA0F61B31901400467AD7 /* Swipe Hero */,
 				25EFA1101B31901500467AD7 /* Swipe HeroTests */,
 				25EFA0F51B31901400467AD7 /* Products */,
@@ -262,10 +266,10 @@
 				TargetAttributes = {
 					25EFA0F31B31901400467AD7 = {
 						CreatedOnToolsVersion = 6.3.2;
-						DevelopmentTeam = 8XZWT2WKP8;
+						DevelopmentTeam = 7A42Z7C5S3;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
