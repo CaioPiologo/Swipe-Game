@@ -842,12 +842,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             }
         } else if(inTutorial == 1) {
             if(side == LEFT && direction == Direction.LEFT){
+                if(soundOn){
+                    scoreLabel?.runAction(SKAction.playSoundFileNamed("swipe.wav", waitForCompletion: false))
+                }
                 inTutorial = 2
                 self.addScore()
                 tutorial()
             }
         } else if(inTutorial == 3) {
             if(side == RIGHT && direction == Direction.UP){
+                if(soundOn){
+                    scoreLabel?.runAction(SKAction.playSoundFileNamed("swipe.wav", waitForCompletion: false))
+                }
                 inTutorial = 4
                 self.addScore()
                 self.addScore()
@@ -855,6 +861,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             }
         } else if(inTutorial == 5) {
             if(side == LEFT && direction == Direction.DOWN){
+                if(soundOn){
+                    scoreLabel?.runAction(SKAction.playSoundFileNamed("swipe.wav", waitForCompletion: false))
+                }
                 inTutorial = 6
                 self.addScore()
                 tutorial()
@@ -1189,7 +1198,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         var wait = SKAction.waitForDuration(2)
         var setAlpha = SKAction.fadeAlphaTo(0.65, duration: 0.5)
         var block = SKAction.runBlock{
-            self.highlight!.runAction(setAlpha)
+            //self.highlight!.runAction(setAlpha)
             self.tutorialLabel1!.hidden = false
             self.tutorialLabel2!.hidden = false
             self.leftView.hidden = false
@@ -1234,8 +1243,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             self.arrowParent.addChild(self.tutorialArrow!)
             self.tutorialArrow!.runAction(SKAction.sequence([wait, move]))
             self.highlight!.position.x = self.size.width
-            self.runAction(SKAction.sequence([wait, wait, block]))
-            inTutorial = 1
+            self.highlight!.runAction(SKAction.sequence([wait, wait, setAlpha, block, SKAction.runBlock({ () -> Void in
+                self.inTutorial = 1
+            })]))
+            //inTutorial = 1
             
         } else if(inTutorial == 2){
             tutorialLabel1!.hidden = true
@@ -1256,9 +1267,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             highlight!.position.y += self.dangerZone!.size.height
             
             var move = SKAction.moveToY(tutorialArrow!.size.height, duration: 2)
-            
             tutorialArrow!.runAction(move)
-            self.runAction(SKAction.sequence([wait, block]))
+            self.highlight!.runAction(SKAction.sequence([wait, setAlpha, block]))
             inTutorial = 3
         } else if(inTutorial == 4){
             tutorialLabel1!.hidden = true
