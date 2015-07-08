@@ -376,6 +376,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     {
         userDefaults.setInteger(newScore, forKey: HIGHSCOREKEY)
         self.highScore = newScore
+        gameCenter.saveHighscore("swipe_hero_leaderboards", Score: newScore)
     }
     
     //Swipe Functions
@@ -760,7 +761,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         
         if(score > highScore){
             changeHighScore(score)
-            GameViewController().saveHighscore(score)
         }
         
         updateLabels()
@@ -1466,7 +1466,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     
     func finishedAuthenticationWithSuccess() {
         self.startButton?.hidden = false
-        self.highScore = gameCenter.gcScore
     }
     
     func finishedAuthenticationFailed() {

@@ -98,7 +98,7 @@ class GameCenterHelper: NSObject, GKGameCenterControllerDelegate {
     }
     
     
-    func saveHighscore(id: String, Score: Float){
+    func saveHighscore(id: String, Score: Int){
         if GKLocalPlayer.localPlayer().authenticated {
             var scoreReporter = GKScore(leaderboardIdentifier: id)
             scoreReporter.value = Int64(Score);
