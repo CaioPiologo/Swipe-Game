@@ -26,10 +26,20 @@ extension SKNode {
     }
 }
 
+protocol GameCenterHelperProtocol
+{
+    func didStartAuthentication()
+    func finishedAuthenticationWithSuccess()
+    func finishedAuthenticationFailed()
+    func finishedLoadingScore()
+}
+
 class GameViewController: UIViewController, GKGameCenterControllerDelegate {
     var gcScore = 0
-    var gcEnabled = Bool()
-    var gcDefaultLeaderBoard = String()
+    var leaderboardIdentifier: String? = nil
+    var gameCenterEnabled: Bool = false
+    var delegate:GameCenterHelperProtocol?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +56,7 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate {
             /* Set the scale mode to scale to fit the window */
             scene.scaleMode = .AspectFill
 
-           // authenticateLocalPlayer()
+            authenticateLocalPlayer()
             
             skView.presentScene(scene)
 
@@ -75,60 +85,89 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate {
     }
     
     //initiate gamecenter
-    func authenticateLocalPlayer(){
-        
+    func authenticateLocalPlayer()
+    {
+        if(self.delegate != nil)
+        {
+            self.delegate!.didStartAuthentication()
+        }
         var localPlayer = GKLocalPlayer.localPlayer()
-        localPlayer.authenticateHandler = {(viewController : UIViewController!, error : NSError!) -> Void in
-            if ((viewController) != nil) {
-                self.presentViewController(viewController, animated: true, completion: nil)
-            }else if (GKLocalPlayer.localPlayer().authenticated) {
-                self.gcEnabled = true
-                
-                // Get the default leaderboard ID
-                localPlayer.loadDefaultLeaderboardIdentifierWithCompletionHandler({ (leaderboardIdentifer: String!, error: NSError!) -> Void in
-                    if error != nil {
-                        println(error)
-                    } else {
-                        self.gcDefaultLeaderBoard = leaderboardIdentifer
+        localPlayer.authenticateHandler =
+            { (viewController : UIViewController!, error : NSError!) -> Void in
+                if viewController != nil
+                {
+                    self.presentViewController(viewController, animated:true, completion: nil)
+                }
+                else
+                {
+                    if localPlayer.authenticated
+                    {
+                        self.gameCenterEnabled = true
+                        localPlayer.loadDefaultLeaderboardIdentifierWithCompletionHandler
+                            { (leaderboardIdentifier, error) -> Void in
+                                if error != nil
+                                {
+                                    print("error")
+                                }
+                                else
+                                {
+                                    self.leaderboardIdentifier = leaderboardIdentifier
+                                    println("\(self.leaderboardIdentifier)")
+                                }
+                        }
+                        if(self.delegate != nil)
+                        {
+                            println(self.gcScore)
+                            self.delegate!.finishedAuthenticationWithSuccess()
+                        }
                     }
-                })
-                
-                self.getHighScore()
-            } else {
-                
-                println((GKLocalPlayer.localPlayer().authenticated))
-            }
+                    else
+                    {
+                        println("not able to authenticate fail")
+                        self.gameCenterEnabled = false
+                        
+                        if (error != nil)
+                        {
+                            println("\(error.description)")
+                        }
+                        else
+                        {
+                            println(    "error is nil")
+                        }
+                    }
+                }
         }
         
     }
     
-    //send high score to leaderboard
-    func saveHighscore(highScore: Int) {
-        
-        //check if user is signed in
+    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!) {
+        gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    
+    func saveHighscore(id: String, Score: Int){
         if GKLocalPlayer.localPlayer().authenticated {
+            var scoreReporter = GKScore(leaderboardIdentifier: id)
+            scoreReporter.value = Int64(Score);
             
-            var scoreReporter = GKScore(leaderboardIdentifier: "swipe_hero_leaderboards", player: GKLocalPlayer.localPlayer())
+            var scores = [scoreReporter]
             
-            scoreReporter.value = Int64(highScore)
-            
-            var scoreArray: [GKScore] = [scoreReporter]
-            
-            GKScore.reportScores(scoreArray, withCompletionHandler: {(error : NSError!) -> Void in
+            GKScore.reportScores(scores, withCompletionHandler: { (error : NSError!) -> Void in
+                println("reporting")
                 if error != nil {
                     println("error")
-                } else {
-                    println("score submitted")
+                    println("\(error.localizedDescription)")
+                }else{
+                    println("nice score!")
+                    
                 }
+                
             })
-            
         }
-        
     }
     
-    // gets player highScore
     func getHighScore(){
-        if (gcEnabled == true) {
+        if (GKLocalPlayer.localPlayer().authenticated) {
             let leaderBoardRequest = GKLeaderboard()
             
             leaderBoardRequest.identifier = "swipe_hero_leaderboards"
@@ -138,18 +177,15 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate {
                 } else if (scores != nil) {
                     let localPlayerScore = leaderBoardRequest.localPlayerScore
                     self.gcScore = Int(localPlayerScore.value)
-                    println("Local player's score: \(localPlayerScore.value)")
+                    println("Local player's score: \(self.gcScore)")
+                    if(self.delegate != nil){
+                        self.delegate!.finishedLoadingScore()
+                    }
                 }
             }
         } else {
-            println("putz")
+            println("OH NO you didn't connect!")
         }
-    }
-    //hides leaderboard screen
-    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!)
-    {
-        gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
-        
     }
     
     

@@ -19,8 +19,6 @@
 		252D4CA51B4448CA00F57447 /* DisposableDroidBB_bld.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 252D4CA41B4448CA00F57447 /* DisposableDroidBB_bld.ttf */; };
 		252D4CA61B44496100F57447 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25EFA1011B31901400467AD7 /* Main.storyboard */; };
 		257978D81B4555B000E61D61 /* comboParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 257978D71B4555B000E61D61 /* comboParticle.sks */; };
-		2581B0E21B4C4EEE000FD49B /* GameCenterHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2581B0E11B4C4EEE000FD49B /* GameCenterHelper.swift */; };
-		2581B0E31B4C4F02000FD49B /* GameCenterHelper.swift in Resources */ = {isa = PBXBuildFile; fileRef = 2581B0E11B4C4EEE000FD49B /* GameCenterHelper.swift */; };
 		2581B0E61B4C53E5000FD49B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2581B0E41B4C53DA000FD49B /* LaunchScreen.xib */; };
 		2581B0E81B4C61B4000FD49B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2581B0E71B4C61B4000FD49B /* GameKit.framework */; };
 		25EC12CD1B347CA500A563D2 /* ExplosionParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */; };
@@ -64,7 +62,6 @@
 		1CFF0BBE1B3496C500A2F941 /* dangerZone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = dangerZone.wav; sourceTree = "<group>"; };
 		252D4CA41B4448CA00F57447 /* DisposableDroidBB_bld.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DisposableDroidBB_bld.ttf; sourceTree = "<group>"; };
 		257978D71B4555B000E61D61 /* comboParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = comboParticle.sks; sourceTree = "<group>"; };
-		2581B0E11B4C4EEE000FD49B /* GameCenterHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterHelper.swift; sourceTree = "<group>"; };
 		2581B0E51B4C53DA000FD49B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = "Swipe Hero/Base.lproj/LaunchScreen.xib"; sourceTree = "<group>"; };
 		2581B0E71B4C61B4000FD49B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		25EC12CB1B347CA500A563D2 /* ExplosionParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ExplosionParticle.sks; sourceTree = "<group>"; };
@@ -162,7 +159,6 @@
 				8C2491F01B372A97004EEA65 /* Font */,
 				1CBCF11A1B348CB200C8A41A /* Sounds */,
 				25EFA0F91B31901400467AD7 /* AppDelegate.swift */,
-				2581B0E11B4C4EEE000FD49B /* GameCenterHelper.swift */,
 				25EFA0FB1B31901400467AD7 /* GameScene.sks */,
 				25EFA11D1B31966500467AD7 /* Arrow.swift */,
 				1C89B6CA1B42BB5300F14DFF /* Credits.swift */,
@@ -304,7 +300,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2581B0E61B4C53E5000FD49B /* LaunchScreen.xib in Resources */,
-				2581B0E31B4C4F02000FD49B /* GameCenterHelper.swift in Resources */,
 				252D4CA61B44496100F57447 /* Main.storyboard in Resources */,
 				8C0B8A981B443C6300654BAD /* Rhinocerosseamless.mp3 in Resources */,
 				1CFF0BBD1B34949700A2F941 /* explosion.wav in Resources */,
@@ -341,7 +336,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2581B0E21B4C4EEE000FD49B /* GameCenterHelper.swift in Sources */,
 				1CCB81071B45651200EFEB2F /* SettingsMenu.swift in Sources */,
 				8CEE01F21B31B25400D98C14 /* Queue.swift in Sources */,
 				25EFA0FE1B31901400467AD7 /* GameScene.swift in Sources */,

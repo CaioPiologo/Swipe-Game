@@ -91,15 +91,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     var pauseMenu : PauseMenu!
     var settingsMenu : SettingsMenu!
     var credits : Credits!
-    var gameCenter: GameCenterHelper!
+    var gameCenter: GameViewController!
     
     override func didMoveToView(view: SKView) {
         
         /* Setup your scene here */
-//        GameViewController().authenticateLocalPlayer()
-        gameCenter = GameCenterHelper(VC: GameViewController())
+        gameCenter = GameViewController()
         gameCenter.delegate = self
-        gameCenter.authenticateLocalPlayer()
         
         self.leftBulb = self.childNodeWithName("leftBulb") as? SKSpriteNode
         self.leftBulb?.zPosition = -3
@@ -124,7 +122,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         //get high score from user defaults
         self.firstTime = userDefaults.integerForKey("firstTime")
         self.highScore = userDefaults.integerForKey(HIGHSCOREKEY)
-        self.firstTime = userDefaults.integerForKey("firstTime")
         if(self.firstTime==0)
         {
             self.userDefaults.setBool(true, forKey: "soundOn")
@@ -561,6 +558,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 if(self.firstTime == 1){
                     self.restart(1);
                 } else {
+                    gameCenter.getHighScore()
                     self.tutorial()
                     self.firstTime = 1
                     userDefaults.setInteger(1, forKey: "firstTime")
@@ -769,8 +767,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     }
     
     func missAction(){
-        let initialX = self.arrowParent.position.x
-        let initialY = self.arrowParent.position.y
         let amplitudeX = 32
         let amplitudeY = 2
         var newX : CGFloat
@@ -783,11 +779,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         }
         
         for i in 0..<10 {
-            let newX = initialX + CGFloat(arc4random_uniform(UInt32(amplitudeX))) - CGFloat(amplitudeX / 2)
-            let newY = initialY + CGFloat(arc4random_uniform(UInt32(amplitudeY))) - CGFloat(amplitudeY / 2)
+            let newX = CGFloat(arc4random_uniform(UInt32(amplitudeX))) - CGFloat(amplitudeX / 2)
+            let newY = CGFloat(arc4random_uniform(UInt32(amplitudeY))) - CGFloat(amplitudeY / 2)
             randomActions.append(SKAction.moveTo(CGPointMake(newX, newY), duration: 0.015))
         }
-        randomActions.append(SKAction.moveTo(CGPoint(x: initialX, y: initialY), duration: 0.015))
+        randomActions.append(SKAction.moveTo(CGPoint(x: 0, y: 0), duration: 0.015))
         var rep = SKAction.sequence(randomActions)
         
         self.arrowParent.runAction(rep)
@@ -1475,7 +1471,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     func finishedLoadingScore() {
         if(self.highScore < gameCenter.gcScore){
             changeHighScore(gameCenter.gcScore)
-            
         }
     }
 }
