@@ -10,8 +10,6 @@ Challenge your friends with your high scores!
 
 ### Images:
 
-![Img0](/GitImages/0x0ss.jpg)
-![Img1](/GitImages/0x1ss.jpg)
-![Img2](/GitImages/0x2ss.jpg)
-![Img3](/GitImages/0x3ss.jpg)
+![Img0](/GitImages/0x0ss.jpg) ![Img1](/GitImages/0x1ss.jpg)
+![Img2](/GitImages/0x2ss.jpg) ![Img3](/GitImages/0x3ss.jpg)
 ![Img4](/GitImages/0x4ss.jpg)
